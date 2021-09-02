@@ -1,0 +1,11 @@
+PASS	Basic Statistics	stdin:fastqc_results
+PASS	Per base sequence quality	stdin:fastqc_results
+PASS	Per tile sequence quality	stdin:fastqc_results
+PASS	Per sequence quality scores	stdin:fastqc_results
+WARN	Per base sequence content	stdin:fastqc_results
+PASS	Per sequence GC content	stdin:fastqc_results
+PASS	Per base N content	stdin:fastqc_results
+PASS	Sequence Length Distribution	stdin:fastqc_results
+FAIL	Sequence Duplication Levels	stdin:fastqc_results
+WARN	Overrepresented sequences	stdin:fastqc_results
+PASS	Adapter Content	stdin:fastqc_results
