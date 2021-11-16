@@ -1,0 +1,10 @@
+PASS	Basic Statistics	stdin
+PASS	Per base sequence quality	stdin
+PASS	Per sequence quality scores	stdin
+FAIL	Per base sequence content	stdin
+WARN	Per sequence GC content	stdin
+PASS	Per base N content	stdin
+PASS	Sequence Length Distribution	stdin
+FAIL	Sequence Duplication Levels	stdin
+WARN	Overrepresented sequences	stdin
+PASS	Adapter Content	stdin
