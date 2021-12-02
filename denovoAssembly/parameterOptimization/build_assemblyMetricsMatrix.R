@@ -12,7 +12,7 @@ assemblyFilepath <- "/RAID1/IMLS_GCCO/Analysis/Stacks/denovo_paramOpt/QUAC/analy
 # colnames(assemblyMetrics.mat) <- c("depth_of_cov","assembled_loci","polymorphic_loci","number_of_snps")
 # # Save empty matrix to file, to be read in later on
 # saveRDS(assemblyMetrics.mat, file = assemblyFilepath)
-# 
+
 # %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 # %%% EXTRACT/CALCULATE ASSEMBLY METRICS %%%
 # %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -33,10 +33,12 @@ values <- c(depth.of.cov, assembled.loci, polymorphic.loci, number.of.snps)
 # Read in existing matrix
 assemblyMetrics.mat <- readRDS(assemblyFilepath)
 
-# If matrix is empty, write values to first row. Otherwise, append the values
-if(nrow(assemblyMetrics.mat)==1){
+# If the first matrix value is NA, write values to first row. Otherwise, append the values
+if(is.na(assemblyMetrics.mat[1,1])){
+  message("YOOOOO")
   assemblyMetrics.mat[1,] <- values
 } else{
+  message("DAAAWG")
   assemblyMetrics.mat <- rbind(assemblyMetrics.mat, values)
   # If the matrix has been filled (80 rows), give the rows names according to the assembly parameters
   if(nrow(assemblyMetrics.mat)==80){
