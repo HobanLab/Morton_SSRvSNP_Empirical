@@ -8,8 +8,8 @@
 assemblyFilepath <- "/RAID1/IMLS_GCCO/Analysis/Stacks/denovo_paramOpt/QUAC/analysis/assemblyMetrics.Rdata"
 # This code is commented out because it only needs to be run once
 # Create matrix of appropriate length
-# assemblyMetrics.mat <- matrix(ncol = 4)
-# colnames(assemblyMetrics.mat) <- c("depth_of_cov","assembled_loci","polymorphic_loci","number_of_snps")
+# assemblyMetrics.mat <- matrix(ncol = 5)
+# colnames(assemblyMetrics.mat) <- c("depth_of_cov","assembled_loci","polymorphic_loci","number_of_snps","pcr_duplication_rate")
 # # Save empty matrix to file, to be read in later on
 # saveRDS(assemblyMetrics.mat, file = assemblyFilepath)
 
@@ -24,8 +24,10 @@ assembled.loci <- as.numeric(unique(read.table("metric-assembled_loci", header=T
 polymorphic.loci <- sum(read.table("metric-polymorphic_loci", header=FALSE)[,1])
 # Read in total number of SNPs
 number.of.snps <- as.numeric(unique(read.table("metric-number_of_SNPs", header=TRUE, skip=3)))
+# Read in PCR duplication rate
+pcr.duplication.rate <- mean((read.table("metric-pcr_duplication_rate", header=TRUE, skip=2))[,1])
 # Combine values into a vector
-values <- c(depth.of.cov, assembled.loci, polymorphic.loci, number.of.snps)
+values <- c(depth.of.cov, assembled.loci, polymorphic.loci, number.of.snps, pcr.duplication.rate)
 
 # %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 # %%% ADD ASSEMBLY METRICS %%%
