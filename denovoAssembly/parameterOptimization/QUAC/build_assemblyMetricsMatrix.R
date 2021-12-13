@@ -7,9 +7,10 @@
 # %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 assemblyFilepath <- "/RAID1/IMLS_GCCO/Analysis/Stacks/denovo_paramOpt/QUAC/analysis/assemblyMetrics.Rdata"
 # This code is commented out because it only needs to be run once
-# Create matrix of appropriate length
-# assemblyMetrics.mat <- matrix(ncol = 5)
-# colnames(assemblyMetrics.mat) <- c("depth_of_cov","assembled_loci","polymorphic_loci","number_of_snps","pcr_duplication_rate")
+# # Create matrix of appropriate length
+# assemblyMetrics.mat <- matrix(ncol = 6)
+# colnames(assemblyMetrics.mat) <- c("depth_of_cov","weighted_cov","assembled_loci",
+#                                    "polymorphic_loci","number_of_snps","pcr_duplication_rate")
 # # Save empty matrix to file, to be read in later on
 # saveRDS(assemblyMetrics.mat, file = assemblyFilepath)
 
@@ -18,6 +19,8 @@ assemblyFilepath <- "/RAID1/IMLS_GCCO/Analysis/Stacks/denovo_paramOpt/QUAC/analy
 # %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 # Extract coverage values for each sample and calculate mean
 depth.of.cov <- mean(read.table("metric-depth_of_cov", header=FALSE, skip=2)[,1])
+# Extract weighted coverage values for each sample and calculate mean
+weighted.cov <- mean(read.table("metric-weighted_cov", header=FALSE, skip=3)[,1])
 # Read in total assembled loci
 assembled.loci <- as.numeric(unique(read.table("metric-assembled_loci", header=TRUE, skip=3)))
 # Read in total polymorphic loci (take sum of all loci that aren't monomorphic)
@@ -27,7 +30,7 @@ number.of.snps <- as.numeric(unique(read.table("metric-number_of_SNPs", header=T
 # Read in PCR duplication rate
 pcr.duplication.rate <- mean((read.table("metric-pcr_duplication_rate", header=TRUE, skip=2))[,1])
 # Combine values into a vector
-values <- c(depth.of.cov, assembled.loci, polymorphic.loci, number.of.snps, pcr.duplication.rate)
+values <- c(depth.of.cov, weighted.cov, assembled.loci, polymorphic.loci, number.of.snps, pcr.duplication.rate)
 
 # %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 # %%% ADD ASSEMBLY METRICS %%%

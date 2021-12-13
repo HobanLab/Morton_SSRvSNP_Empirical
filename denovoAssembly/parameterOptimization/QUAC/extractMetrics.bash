@@ -10,9 +10,11 @@ while IFS=, read -r assembly; do
         # %%%%%%%%%%%%%%%%%%%%%%%
 	# %%% EXTRACT METRICS %%%
 	# %%%%%%%%%%%%%%%%%%%%%%%
-	# COVERAGE
+	# GENERAL COVERAGE (unweighted)
 	stacks-dist-extract ./denovo_map.log cov_per_sample | cut -f 2 > metric-depth_of_cov
-	# Consider: do we need to grab effective coverage too? Figure out after having conversation with Sean and Emily...
+
+	# WEIGHTED COVERAGE (adjusted by number of samples present at a locus)
+	stacks-dist-extract ./gstacks.log.distribs effective_coverages_per_sample | cut -f 5 > metric-weighted_cov
 
 	# NUMBER OF ASSEMBLED LOCI
 	stacks-dist-extract ./pop_R80/populations.log.distribs loci_per_sample | cut -f 2 > metric-assembled_loci
@@ -30,10 +32,9 @@ while IFS=, read -r assembly; do
         # %%% BUILD MATRIX %%%
         # %%%%%%%%%%%%%%%%%%%%
 	# Run R script to build a matrix in R containing metrics just extracted for the current assembly. The script will save this matrix to a .Rdata file
-	Rscript /home/user/Documents/SSRvSNP/Code/denovoAssembly/parameterOptimization/build_assemblyMetricsMatrix.R
+	Rscript /home/user/Documents/SSRvSNP/Code/denovoAssembly/parameterOptimization/QUAC/build_assemblyMetricsMatrix.R
 
 	# Move back into analysis folder
 	cd ../../analysis
 
 done < ../output/QUAC_assemblies
-#done < ../output/QUAC_assemblies_subset
