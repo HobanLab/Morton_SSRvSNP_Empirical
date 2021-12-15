@@ -14,6 +14,10 @@
 # %%%%%%%%%%%%%%%%%%%%%%%
 # Source Q. robur reference genome assembly (V2_2N) from French consortium led by Christophe Plomion at INRA Bordeaux (and give it a discernible name)
 #wget -O Qrobur_V2_2N.fa.gz https://urgi.versailles.inra.fr/download/oak/Qrob_V2_2N.fa.gz
+# Unzip
+#gunzip Qrobur_V2_2N.fa.gz
+# Index using BWA
+bwa index Qrobur_V2_2N.fa -p Qrobur_db
 
 # %%%%%%%%%%%%%%%%%%%%%%%
 # %%% QUERCUS LOBATA %%%%
