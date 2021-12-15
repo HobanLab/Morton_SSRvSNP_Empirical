@@ -1,6 +1,10 @@
 #!/bin/bash
 
-# Script for extracting 4 metrics from Stacks output, in order to assess quality of denovo assembly for a specific parameter set
+# Script for extracting 4 metrics from Stacks QUAC de novo assembly output, in order to assess quality of denovo assembly for each specific parameter set
+# The while loops over a file which is simply a list of every output directory generated as part of the parameter optimization run. Directory names are combinations of parameter values.
+
+# 6 metrics are pulled from the Stacks output files of each assembly, using stacks-dist-extract. These are cleaned into simple texts files.
+# The referenced Rscript reads in these text files and builds a matrix of assembly values. That matrix is saved to an R object, which is read in a separate R script used for plotting.
 
 while IFS=, read -r assembly; do
 	echo $assembly
@@ -32,7 +36,7 @@ while IFS=, read -r assembly; do
         # %%% BUILD MATRIX %%%
         # %%%%%%%%%%%%%%%%%%%%
 	# Run R script to build a matrix in R containing metrics just extracted for the current assembly. The script will save this matrix to a .Rdata file
-	Rscript /home/user/Documents/SSRvSNP/Code/denovoAssembly/parameterOptimization/QUAC/build_assemblyMetricsMatrix.R
+	Rscript /home/user/Documents/SSRvSNP/Code/denovoAssembly/parameterOptimization/QUAC/build_QUAC_assemblyMetricsMatrix.R
 
 	# Move back into analysis folder
 	cd ../../analysis
