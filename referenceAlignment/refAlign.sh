@@ -6,8 +6,8 @@
 # %%%%% REFERENCE ALIGNMENT %%%%%
 #---------------------------------
 
-# To align RAD loci with a reference, download and install GSNAP (Genomic Short-read Nucleotide Alignment Program, version 2021-07-23)
-#wget http://research-pub.gene.com/gmap/src/gmap-gsnap-2021-07-23.tar.gz
+# BWA (Burrows-Wheeler Aligner) is an open source software that allows for short, deep-sequencing reads to be aligned to long reference sequences.
+# It is available at https://sourceforge.net/projects/bio-bwa/files/
 
 # %%%%%%%%%%%%%%%%%%%%%%%
 # %%%% QUERCUS ROBUR %%%%
@@ -16,8 +16,45 @@
 #wget -O Qrobur_V2_2N.fa.gz https://urgi.versailles.inra.fr/download/oak/Qrob_V2_2N.fa.gz
 # Unzip
 #gunzip Qrobur_V2_2N.fa.gz
-# Index using BWA
-bwa index Qrobur_V2_2N.fa -p Qrobur_db
+# Create index using BWA. This index is what allows genes to be mapped to chromosome regions at the end of an analysis
+#bwa index Qrobur_V2_2N.fa -p Qrobur_db
+
+# %%%% QUAC %%%%
+# Loop over the sample names listed in the popmap file for QUAC samples
+#cat /RAID1/IMLS_GCCO/Alignment/QUAC/QUAC_popmap | cut -f 1 |
+#while read sample; do
+	#Create variables for each sample
+#	fq1=/RAID1/IMLS_GCCO/Analysis/Stacks/process_RADtags/QUAC/${sample}.1.fq.gz # Forward reads
+#	fq2=/RAID1/IMLS_GCCO/Analysis/Stacks/process_RADtags/QUAC/${sample}.2.fq.gz # Reverse reads
+	# Align reads and process alignments
+#	bwa mem /RAID1/IMLS_GCCO/ReferenceGenome/Q_robur/Qrobur_db $fq1 $fq2 -t 24 -o /RAID1/IMLS_GCCO/Alignment/QUAC/${sample}.sam
+#done 
+
+# Read through list of sample names
+#while IFS=, read -r sample; do
+#        echo $sample
+        # Create sample name variables
+#        sam=/RAID1/IMLS_GCCO/Alignment/QUAC/${sample}.sam
+#        bam=/RAID1/IMLS_GCCO/Alignment/QUAC/${sample}.bam
+        # Compress alignments, then pass the output onto sort to generate sorted BAM file
+#        samtools view -bh --threads 24 $sam | samtools sort --threads 24 -o $bam
+#done < ./QUAC/QUAC_samples
+
+# %%%% QUBO %%%%
+# Loop over the sample names listed in the popmap file for QUAC samples
+cat /RAID1/IMLS_GCCO/Alignment/QUBO/QUBO_popmap | cut -f 1 |
+while read sample; do
+        #Create variables for each sample
+        fq1=/RAID1/IMLS_GCCO/Analysis/Stacks/process_RADtags/QUBO/${sample}.1.fq.gz # Forward reads
+        fq2=/RAID1/IMLS_GCCO/Analysis/Stacks/process_RADtags/QUBO/${sample}.2.fq.gz # Reverse reads
+	# Create sample name variables
+        sam=/RAID1/IMLS_GCCO/Alignment/QUBO/${sample}.sam
+        bam=/RAID1/IMLS_GCCO/Alignment/QUBO/${sample}.bam
+        # Align reads and process alignments
+        bwa mem /RAID1/IMLS_GCCO/ReferenceGenome/Q_robur/Qrobur_db $fq1 $fq2 -t 24 -o $sam
+        # Compress alignments, then pass the output onto sort to generate sorted BAM file
+        samtools view -bh --threads 24 $sam | samtools sort --threads 24 -o $bam
+done
 
 # %%%%%%%%%%%%%%%%%%%%%%%
 # %%% QUERCUS LOBATA %%%%

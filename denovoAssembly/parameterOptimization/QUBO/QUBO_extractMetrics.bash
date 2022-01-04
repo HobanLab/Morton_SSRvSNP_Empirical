@@ -21,13 +21,13 @@ while IFS=, read -r assembly; do
 	stacks-dist-extract ./gstacks.log.distribs effective_coverages_per_sample | cut -f 5 > metric-weighted_cov
 
 	# NUMBER OF ASSEMBLED LOCI
-	stacks-dist-extract ./populations.log.distribs loci_per_sample | cut -f 2 > metric-assembled_loci
+	stacks-dist-extract ./updated/populations.log.distribs loci_per_sample | cut -f 2 > metric-assembled_loci
 
 	# NUMBER OF POLYMORPHIC LOCI
-	stacks-dist-extract ./populations.log.distribs snps_per_loc_postfilters | tail -n +4 | cut -f 2 > metric-polymorphic_loci
+	stacks-dist-extract ./updated/populations.log.distribs snps_per_loc_postfilters | tail -n +4 | cut -f 2 > metric-polymorphic_loci
 
 	# NUMBER OF SNPS
-	stacks-dist-extract ./populations.log.distribs variant_sites_per_sample | cut -f 2 > metric-number_of_SNPs
+	stacks-dist-extract ./updated/populations.log.distribs variant_sites_per_sample | cut -f 2 > metric-number_of_SNPs
 
 	# PCR DUPLICATION RATE
 	stacks-dist-extract ./gstacks.log.distribs effective_coverages_per_sample | cut -f 8 > metric-pcr_duplication_rate
