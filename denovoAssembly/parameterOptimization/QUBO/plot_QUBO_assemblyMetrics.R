@@ -114,27 +114,27 @@ mtext(side=3, line=1.5, at=1.2, adj=0, cex=0.75, subtitle)
 # Coverage vs. M/n
 boxplot(depth_of_cov~M,data=qubo.assembly.mat, xlab="M/n", ylab="Depth of coverage")
 title(main="Depth of Coverage across M/n", line=3)
-mtext(side=3, line=1.5, at=1.2, adj=0, cex=0.75, subtitle)
+mtext(side=3, line=1.5, at=3.5, adj=0, cex=0.75, subtitle)
 
 # Weighted coverage vs. M/n
 boxplot(weighted_cov~M,data=qubo.assembly.mat, xlab="M/n", ylab="Weighted coverage")
 title(main="Weighted coverage across M/n", line=3)
-mtext(side=3, line=1.5, at=1.2, adj=0, cex=0.75, subtitle)
+mtext(side=3, line=1.5, at=3.5, adj=0, cex=0.75, subtitle)
 
 # Assembled loci vs. M/n
 boxplot(assembled_loci~M,data=qubo.assembly.mat, xlab="M/n", ylab="Assembled loci")
 title(main="Assembled loci across M/n", line=3)
-mtext(side=3, line=1.5, at=1.2, adj=0, cex=0.75, subtitle)
+mtext(side=3, line=1.5, at=3.5, adj=0, cex=0.75, subtitle)
 
 # Polymorphic loci vs. M/n
 boxplot(polymorphic_loci~M,data=qubo.assembly.mat, xlab="M/n", ylab="Polymorphic loci")
 title(main="Polymorphic loci across M/n", line=3)
-mtext(side=3, line=1.5, at=1.2, adj=0, cex=0.75, subtitle)
+mtext(side=3, line=1.5, at=3.5, adj=0, cex=0.75, subtitle)
 
 # Number of SNPs vs. M/n
 boxplot(number_of_snps~M,data=qubo.assembly.mat, xlab="M/n", ylab="Number of SNPs")
 title(main="Number of SNPs (total) across M/n", line=3)
-mtext(side=3, line=1.5, at=1.2, adj=0, cex=0.75, subtitle)
+mtext(side=3, line=1.5, at=3.5, adj=0, cex=0.75, subtitle)
 
 # %%% QUBO gt-alpha %%%
 # Coverage vs. gt-alpha
