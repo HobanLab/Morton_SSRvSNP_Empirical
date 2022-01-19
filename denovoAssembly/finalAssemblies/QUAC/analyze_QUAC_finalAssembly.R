@@ -12,6 +12,7 @@ distTable_coverage$sample[which.max(distTable_coverage$`depth of cov`)];max(dist
 mean(distTable_coverage$`% reads incorporated`)
 
 # %%% Weighted coverage values: generated during gstacks %%%
+# Weighted coverage is described as "the coverage at each locus...weighted by the number of samples present at that locus"
 distTable_wCoverage <- read.table("metric-weighted_cov", header=TRUE, skip=2, sep ="\t")
 # Mean weighted coverage and PCR duplication rate
 mean(distTable_wCoverage$mean_cov); sd(distTable_wCoverage$mean_cov)
