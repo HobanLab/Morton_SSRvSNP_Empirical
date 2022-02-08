@@ -46,3 +46,8 @@ mean(distTable_numberOfSNPs$frequency_missing)
 distTable_numberOfSNPs$sample[which.min(distTable_numberOfSNPs$frequency_missing)];min(distTable_numberOfSNPs$frequency_missing)
 distTable_numberOfSNPs$sample[which.max(distTable_numberOfSNPs$frequency_missing)];max(distTable_numberOfSNPs$frequency_missing)
 # QUAC_G_SH_Q1727, unsurprisingly, also has the greatest frequency of missing SNPs, 89.24%
+
+# %%% Missing data frequency: generated during populations %%%
+distTable_missingFrequency <- read.table("metric-missing_data_frequency", header=TRUE, skip=1, sep ="\t")
+# Mean missing data frequency
+mean(distTable_missingFrequency[,1])

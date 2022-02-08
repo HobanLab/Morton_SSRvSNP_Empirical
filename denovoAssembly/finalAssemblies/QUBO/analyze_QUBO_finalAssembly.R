@@ -42,3 +42,8 @@ mean(distTable_numberOfSNPs$frequency_missing)
 # Min and max frequency missing SNPs
 distTable_numberOfSNPs$sample[which.min(distTable_numberOfSNPs$frequency_missing)];min(distTable_numberOfSNPs$frequency_missing)
 distTable_numberOfSNPs$sample[which.max(distTable_numberOfSNPs$frequency_missing)];max(distTable_numberOfSNPs$frequency_missing)
+
+# %%% Missing data frequency: generated during populations %%%
+distTable_missingFrequency <- read.table("metric-missing_data_frequency", header=TRUE, skip=1, sep ="\t")
+# Mean missing data frequency
+mean(distTable_missingFrequency[,1])
