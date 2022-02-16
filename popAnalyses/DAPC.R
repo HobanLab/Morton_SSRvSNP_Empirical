@@ -1,20 +1,25 @@
 library(adegenet)
 library(scales)
+
+# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+# %%% DE NOVO FINAL ASSEMBLIES (DNFA) %%%
+# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 # Working directory set to /RAID1/IMLS_GCCO/Analysis/Stacks/denovo_finalAssemblies/
 
 # QUAC de novo final assembly (DNFA)----
+# Working with wild samples only (populations_wild dataset)
 # Pull in genepop object (with file suffix updated--Stacks writes as ".genepop", but needs to be ".gen")
-QUAC_DNFA.genind <- read.genepop("QUAC/output/populations_Sum/populations.snps.gen")
+QUAC_DNFA.genind <- read.genepop("QUAC/output/populations_wild/populations.snps.gen")
 # Find number of clusters
-QUAC_DNFA.grp <- find.clusters(QUAC_DNFA.genind, max.n.clust=10)
-# Number of retained PCs (here, there is no cost to retaining a lot of PCs): 200
-# Number of clusters: 4
+QUAC_DNFA.grp <- find.clusters(QUAC_DNFA.genind, max.n.clust=20)
+# Number of retained PCs (here, there is no cost to retaining a lot of PCs): 100
+# Number of clusters: 6
 QUAC_DNFA.grp
 
 # Conduct DAPC
 QUAC_DNFA.dapc1 <- dapc(x=QUAC_DNFA.genind, pop=QUAC_DNFA.grp$grp)
-# Number of retained PCs: 20
-# Number of discriminant functions to retain: 3
+# Number of retained PCs: 100
+# Number of discriminant functions to retain: 5
 str(QUAC_DNFA.dapc1)
 # List grouping of each individual (helpful for determining correct coloration)
 QUAC_DNFA.dapc1$grp
@@ -32,6 +37,7 @@ scatter(QUBO_DNFA.dapc1, scree.da=F, bg="white", pch=20, cell=0, cstar=0, solid=
         txt.leg = c("Porter/Kessler/Sugarloaf","Magazine Mt. 1","Pryor Mt.","Magazine Mt. 2"))
 
 # QUBO de novo final assembly (DNFA)----
+# Working with wild samples only (populations_wild dataset)
 # Pull in genepop object (with file suffix updated--Stacks writes as ".genepop", but needs to be ".gen")
 QUBO_DNFA.genind <- read.genepop("QUBO/output/populations_Sum/populations.snps.gen")
 # Find number of clusters
