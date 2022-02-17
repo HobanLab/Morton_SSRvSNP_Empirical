@@ -26,6 +26,23 @@ QUAC.genpop <- genind2genpop(QUAC.genind)
 QUAC.genpop@tab[1:6,1:6]
 # Separate garden and wild populations
 QUAC.genpop.garden <- QUAC.genpop[1,]
+QUAC.genpop.test <- QUAC.genpop[1,drop=TRUE]
+
+
+nLoc(QUAC.genpop)
+nLoc(QUAC.genpop, onlyObserved=TRUE)
+
+length(nAll(QUAC.genpop))
+length(nAll(QUAC.genpop, onlyObserved=TRUE))
+
+length(nAll(QUAC.genpop.garden))
+length(nAll(QUAC.genpop.garden, onlyObserved=FALSE))
+
+nLoc(QUAC.genpop.garden)
+length(alleles(QUAC.genpop.garden))
+nLoc(QUAC.genpop.test)
+length(alleles(QUAC.genpop.test))
+
 QUAC.genpop.wild <- QUAC.genpop[2:6,]
 
 # Before we determine the genetic capture of wild populations,
@@ -80,3 +97,52 @@ length(which(QUAC.genpop.wild@tab == 0))
 length(which(QUAC.genpop.garden@tab == 0))
 # So, gardens capture ~95.6% of alleles
 (length(which(QUAC.genpop.garden@tab != 0))/(nLoc(QUAC.genpop.garden)*2))*100
+
+data(nancycats)
+nancycats
+pop(nancycats) # get the populations
+indNames(nancycats) # get the labels of individuals
+locNames(nancycats) # get the labels of the loci
+alleles(nancycats)  # get the alleles
+nAll(nancycats)     # count the number of alleles
+
+head(tab(nancycats)) # get allele counts
+
+# get allele frequencies, replace NAs
+head(tab(nancycats, freq = TRUE, NA.method = "mean")) 
+
+# let's isolate populations 4 and 8
+popNames(nancycats)
+obj <- nancycats[pop=c(4, 8)]
+obj
+popNames(obj)
+pop(obj)
+nAll(obj, onlyObserved = TRUE) # count number of alleles among these two populations
+nAll(obj) # count number of columns in the data
+all(nAll(obj, onlyObserved = TRUE) == lengths(alleles(obj))) # will be FALSE since drop = FALSE
+all(nAll(obj) == lengths(alleles(obj))) # will be FALSE since drop = FALSE
+
+# let's isolate two markers, fca23 and fca90
+locNames(nancycats)
+obj <- nancycats[loc=c("fca23","fca90")]
+obj
+locNames(obj)
+
+# illustrate pop
+obj <- nancycats[sample(1:100, 10)]
+pop(obj)
+pop(obj) <- rep(c('b', 'a'), each = 5)
+pop(obj)
+
+# illustrate locNames
+locNames(obj)
+locNames(obj, withAlleles = TRUE)
+locNames(obj)[1] <- "newLocus"
+locNames(obj)
+locNames(obj, withAlleles=TRUE)
+
+# illustrate how 'other' slot is handled
+data(sim2pop)
+nInd(sim2pop)
+other(sim2pop[1:6]) # xy is subsetted automatically
+other(sim2pop[1:6, treatOther=FALSE]) # xy is left as is
