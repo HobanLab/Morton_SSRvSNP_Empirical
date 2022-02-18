@@ -35,10 +35,10 @@ QUAC.genpop.wild <- QUAC.genpop[2:6,drop=TRUE]
 ncol(QUAC.genpop.garden@tab) ; ncol(QUAC.genpop.wild@tab)
 # There are 563 alleles that are unique to the garden population (i.e. present in gardens, but not in the wild) 
 ncol(QUAC.genpop@tab) - ncol(QUAC.genpop.wild@tab)
-# Gardens capture 95.3% of wild alleles
-(length(which(colnames(QUAC.genpop.garden@tab) %in% colnames(QUAC.genpop.wild@tab)))/ncol(QUAC.genpop.wild@tab)) * 100
+# Using which to match allele names between garden and wild matrices, gardens capture 95.3% of wild alleles
+(length(which(colnames(QUAC.genpop.garden@tab) %in% colnames(QUAC.genpop.wild@tab)))/length(colnames(QUAC.genpop.wild@tab))) * 100
 
-# I'm not sure why colnames has to be used, or what the line below is comparing between the genpop objects
+# I'm not sure why colnames has to be used, or what the line below is comparing between the allele matrices
 # But, it doesn't seem to be correct
 # length(which(QUAC.genpop.garden@tab %in% QUAC.genpop.wild@tab))/ncol(QUAC.genpop.wild@tab) * 100
 
@@ -51,13 +51,16 @@ colSums(QUAC.genpop.wild@tab[,1:6])
 QUAC.wildAlleleSums <- colSums(QUAC.genpop.wild@tab)
 sum(colSums(QUAC.genpop.wild@tab))
 
-# So, there are different numbers of total alleles, for each wild population. 
+# For each allele (matrix  columnn), calculate its frequency
+# I need help with the line below. The denominator shoud just be the sum of the colsums of the allele matrix, right?
+QUAC.wildAlleleFreqs <-(colSums(QUAC.genpop.wild@tab)/sum(colSums(QUAC.genpop.wild@tab))*100)
+sum(QUAC.wildAlleleFreqs)
+# Max frequency is...0.017???
+max(QUAC.wildAlleleFreqs)
+
+# There are different numbers of total alleles for each wild population. 
 sum(QUAC.genpop.wild@tab[1,])
 sum(QUAC.genpop.wild@tab[2,])
 sum(QUAC.genpop.wild@tab[3,])
 sum(QUAC.genpop.wild@tab[4,])
 sum(QUAC.genpop.wild@tab[5,])
-
-QUAC.wildAlleleFreqs <-(colSums(QUAC.genpop.wild@tab)/sum(colSums(QUAC.genpop.wild@tab))*100)
-sum(QUAC.wildAlleleFreqs)
-max(QUAC.wildAlleleFreqs)
