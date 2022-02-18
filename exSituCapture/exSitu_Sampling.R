@@ -52,11 +52,18 @@ QUAC.wildAlleleSums <- colSums(QUAC.genpop.wild@tab)
 sum(colSums(QUAC.genpop.wild@tab))
 
 # For each allele (matrix  columnn), calculate its frequency
-# I need help with the line below. The denominator shoud just be the sum of the colsums of the allele matrix, right?
-QUAC.wildAlleleFreqs <-(colSums(QUAC.genpop.wild@tab)/sum(colSums(QUAC.genpop.wild@tab))*100)
+# I need help with the line below. Does it make sense for the denominator to be just the sum of all the colSums?
+QUAC.wildAlleleFreqs <- (colSums(QUAC.genpop.wild@tab)/sum(colSums(QUAC.genpop.wild@tab))*100)
 sum(QUAC.wildAlleleFreqs)
 # Max frequency is...0.017???
 max(QUAC.wildAlleleFreqs)
+# Sean and Kaylee's code use a denominator of population size * 2 (for diploids)
+QUAC.wildAlleleFreqs <- (colSums(QUAC.genpop.wild@tab)/(nInd(QUAC.genind)*2))*100
+sum(QUAC.wildAlleleFreqs)
+# Max frequency is 49.5%; min is 0.25%
+max(QUAC.wildAlleleFreqs)
+min(QUAC.wildAlleleFreqs)
+
 
 # There are different numbers of total alleles for each wild population. 
 sum(QUAC.genpop.wild@tab[1,])
