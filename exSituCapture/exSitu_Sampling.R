@@ -52,22 +52,14 @@ QUAC.wildAlleleSums <- colSums(QUAC.genpop.wild@tab)
 sum(colSums(QUAC.genpop.wild@tab))
 
 # For each allele (matrix  columnn), calculate its frequency
-# I need help with the line below. Does it make sense for the denominator to be just the sum of all the colSums?
-QUAC.wildAlleleFreqs <- (colSums(QUAC.genpop.wild@tab)/sum(colSums(QUAC.genpop.wild@tab))*100)
-sum(QUAC.wildAlleleFreqs)
-# Max frequency is...0.017???
-max(QUAC.wildAlleleFreqs)
-# Sean and Kaylee's code use a denominator of population size * 2 (for diploids)
+
+# Sean and Kaylee's code use a denominator of population size * 2 (for diploids; i.e. the number of chromosomes in the population)
+# These fractions demonstrate the frequency of finding an allele when drawing out a single individual
 QUAC.wildAlleleFreqs <- (colSums(QUAC.genpop.wild@tab)/(nInd(QUAC.genind)*2))*100
 sum(QUAC.wildAlleleFreqs)
 # Max frequency is 49.5%; min is 0.25%
 max(QUAC.wildAlleleFreqs)
 min(QUAC.wildAlleleFreqs)
 
-
-# There are different numbers of total alleles for each wild population. 
-sum(QUAC.genpop.wild@tab[1,])
-sum(QUAC.genpop.wild@tab[2,])
-sum(QUAC.genpop.wild@tab[3,])
-sum(QUAC.genpop.wild@tab[4,])
-sum(QUAC.genpop.wild@tab[5,])
+# This calculation, on the other hand, gives you the frequency of drwaing an allele when pulling from the entire allele pool
+# QUAC.wildAlleleFreqs <- (colSums(QUAC.genpop.wild@tab)/sum(colSums(QUAC.genpop.wild@tab))*100)
