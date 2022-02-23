@@ -56,6 +56,13 @@ cat(paste("Max wild allele frequency: ",max(QUAC.wildAlleleFreqs),"\n","Min wild
 # 100% of rare alleles
 (length(which(colnames(QUAC.genpop.garden@tab) %in% names(QUAC.wildAlleleFreqs[which(QUAC.wildAlleleFreqs < 1)])))/length(which(QUAC.wildAlleleFreqs < 1)))*100
 
+# RESAMPLING----
+
+QUAC.genind.garden <- QUAC.genind[1:100,drop=TRUE]
+
+seppop(QUAC.genind)[1]
+identical(QUAC.genind.garden, seppop(QUAC.genind)[1])
+
 # %%%%%%%%%%%%%%%%%%%%%%%%%
 # %%% QUERCUS BOYNTONII %%%
 # %%%%%%%%%%%%%%%%%%%%%%%%%
