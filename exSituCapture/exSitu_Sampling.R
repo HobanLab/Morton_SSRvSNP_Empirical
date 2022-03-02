@@ -10,14 +10,16 @@ library(doParallel)
 # %%%%%%%%%%%%%%%%%%%%%%%%%%
 
 # READ IN AND PROCESS GENEPOP FILE----
-# Using the QUAC Reference dataset (aligned using GSNAP) 
-# This generated the largest number of polymorphic loci (compared to de novo and Hybrid analyses)
-setwd("/RAID1/IMLS_GCCO/Analysis/Stacks/reference_filteredReads/QUAC/GSNAP/output/populations_sum/")
-
-# Pull in genepop object (with the file suffix updated--Stacks writes this as ".genepop", but it needs to be ".gen")
-QUAC.genind <- read.genepop("populations.snps.gen")
+# Set the filepath variable below to specify which populations directory so source the genpop file from
+# (Note that Stacks will write this files with the suffix ".genepop", but it needs to be ".gen")
+# Using the QUAC Reference dataset (aligned using GSNAP), and the "summary" populations 
+genpop.filePath <- 
+  "/RAID1/IMLS_GCCO/Analysis/Stacks/reference_filteredReads/QUAC/GSNAP/output/populations_sum/"
+setwd(genpop.filePath)
+# Pull in genepop object 
+QUAC.genind <- read.genepop(paste0(genpop.filePath,"populations.snps.gen"))
 # Read in the Stacks popmap values, and use these to replace @pop values 
-# (using the pops accessor; original pop names are incorrect)
+# (using the pops accessor; this is necessary because original pop names are incorrect)
 pop(QUAC.genind) <- factor(read.table("../../../QUAC_popmap2", header=FALSE)[,2])
 
 # Genind/genpop tab slot contains a matrix of allele counts
@@ -26,6 +28,8 @@ pop(QUAC.genind) <- factor(read.table("../../../QUAC_popmap2", header=FALSE)[,2]
 nLoc(QUAC.genind)
 # Each locus contains two alleles, which leads to 6,361 * 2 = 12,722 columns of the sample x allele matrix
 ncol(QUAC.genind@tab)
+
+
 
 # GENETIC CAPTURE OF WILD POPULATIONS----
 # Create a genpop object from genind, collapsing samples based on their populations
@@ -49,7 +53,7 @@ cat(paste("Max wild allele frequency: ",max(QUAC.wildAlleleFreqs),"\n","Min wild
 # Gardens capture:
 # 100% of very common alleles
 (length(which(colnames(QUAC.genpop.garden@tab) %in% names(QUAC.wildAlleleFreqs[which(QUAC.wildAlleleFreqs > 10)])))/length(which(QUAC.wildAlleleFreqs > 10)))*100
-# 100% of very common alleles
+# 100% of common alleles
 (length(which(colnames(QUAC.genpop.garden@tab) %in% names(QUAC.wildAlleleFreqs[which(QUAC.wildAlleleFreqs > 5)])))/length(which(QUAC.wildAlleleFreqs > 5)))*100
 # 77.4% of low frequency alleles
 (length(which(colnames(QUAC.genpop.garden@tab) %in% names(QUAC.wildAlleleFreqs[which(QUAC.wildAlleleFreqs < 10 & QUAC.wildAlleleFreqs > 1)])))/length(which(QUAC.wildAlleleFreqs < 10 & QUAC.wildAlleleFreqs > 1)))*100
@@ -58,10 +62,64 @@ cat(paste("Max wild allele frequency: ",max(QUAC.wildAlleleFreqs),"\n","Min wild
 
 # RESAMPLING----
 
-QUAC.genind.garden <- QUAC.genind[1:100,drop=TRUE]
+# Create a matrix of wild individuals versus alleles
+QUAC.genind.wild <- seppop(QUAC.genind)[2:6]
+QUAC.genind.wild <- repool(QUAC.genind.wild$porterMt,QUAC.genind.wild$magazineMt,QUAC.genind.wild$pryorMt,
+                           QUAC.genind.wild$sugarloaf_midlandPeak,QUAC.genind.wild$kessler_shaleBarrenRidge)
 
-seppop(QUAC.genind)[1]
-identical(QUAC.genind.garden, seppop(QUAC.genind)[1])
+# Function for measuring wild allelic capture of samples
+# The two arguments are the vector of frequencies of wild alleles, and the sample of the wild genind object
+get.allele.cat <- function(freq.vector, sample.mat){
+  # Calculate percentages
+  # Very common alleles (greater than 10%)
+  v_com <- (length(which(names(which(colSums(sample.mat, na.rm = TRUE)!=0)) %in% names(freq.vector[which(freq.vector > 10)])))/length(which(freq.vector > 10)))*100
+  # Common alleles (greater than 5%)
+  com <- (length(which(names(which(colSums(sample.mat, na.rm = TRUE)!=0)) %in% names(freq.vector[which(freq.vector > 5)])))/length(which(freq.vector > 5)))*100
+  # Low frequency alleles (between 1% and 10%)
+  low_freq <- (length(which(names(which(colSums(sample.mat, na.rm = TRUE)!=0)) %in% names(freq.vector[which(freq.vector < 10 & freq.vector > 1)])))/length(which(freq.vector < 10 & freq.vector > 1)))*100
+  # Rare alleles (less than 1%)
+  rare <- (length(which(names(which(colSums(sample.mat, na.rm = TRUE)!=0)) %in% names(freq.vector[which(freq.vector < 1)])))/length(which(freq.vector < 1)))*100
+  # Concatentate values to a vector, and return
+  return(c(v_com,com,low_freq,rare))
+}
+
+# Build a 3D array, with rows being sample numbers and columns being allele frequency categories
+# 3rd dimension is replicates. nrow is number of individuals-1 because sample doesn't work for vectors of length 1
+num_reps <- 10
+list_allele_cat <- c("v_com","com","low_freq","rare")
+samplingResults <- array(dim=c(nrow(QUAC.genind.wild@tab)-1,length(list_allele_cat),num_reps))
+colnames(samplingResults) <- list_allele_cat
+
+# For each replicate (which is the third dimension, in the samplingResults array)...
+for(i in 1:num_reps){
+  # loop through sampling from 2 to the maximum number of wild individuals
+  for(j in 2:nrow(QUAC.genind.wild@tab)){
+    # Create a sample of the wild allele matrix, of "j" size
+    samp <- QUAC.genind.wild@tab[sample(nrow(QUAC.genind.wild@tab), size=j, replace = FALSE),]
+    # Calculate how many alleles of each category that sample captures,
+    # and place those percentages into the row of the samplingResults array
+    samplingResults[j-1,,i] <- get.allele.cat(QUAC.wildAlleleFreqs,samp)
+  }
+}
+
+# Plotting
+v.com_means <- apply(samplingResults[,1,], 1, mean)
+v.com_sd <- apply(samplingResults[,1,], 1, sd)
+
+com_means <- apply(samplingResults[,2,], 1, mean)
+com_sd <- apply(samplingResults[,2,], 1, sd)
+
+lowfr_means <- apply(samplingResults[,3,], 1, mean)
+lowfr_sd <- apply(samplingResults[,3,], 1, sd)
+
+rare_means <- apply(samplingResults[,4,], 1, mean)
+rare_sd <- apply(samplingResults[,4,], 1, sd)
+
+plot(v.com_means)
+plot(v.com_means, ylim=c(0,110))
+points(com_means)
+points(lowfr_means)
+points(rare_means)
 
 # %%%%%%%%%%%%%%%%%%%%%%%%%
 # %%% QUERCUS BOYNTONII %%%
