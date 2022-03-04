@@ -4,6 +4,7 @@ library(adegenet)
 library(hierfstat)
 library(parallel)
 library(doParallel)
+library(RColorBrewer)
 
 # %%%%%%%%%%%%%%%%%%%%%%%%%%
 # %%% QUERCUS ACERIFOLIA %%%
@@ -29,8 +30,6 @@ nLoc(QUAC.genind)
 # Each locus contains two alleles, which leads to 6,361 * 2 = 12,722 columns of the sample x allele matrix
 ncol(QUAC.genind@tab)
 
-
-
 # GENETIC CAPTURE OF WILD POPULATIONS----
 # Create a genpop object from genind, collapsing samples based on their populations
 QUAC.genpop <- genind2genpop(QUAC.genind)
@@ -39,10 +38,26 @@ QUAC.genpop.garden <- QUAC.genpop[1,drop=TRUE]
 QUAC.genpop.wild <- QUAC.genpop[2:6,drop=TRUE]
 # 12,157 alleles across garden samples; 12,159 across wild populations
 ncol(QUAC.genpop.garden@tab) ; ncol(QUAC.genpop.wild@tab)
-# There are 563 alleles that are unique to the garden population (i.e. present in gardens, but not in the wild) 
-ncol(QUAC.genpop@tab) - ncol(QUAC.genpop.wild@tab)
 # Using which to match allele names between garden and wild matrices, gardens capture 95.3% of wild alleles
 (length(which(colnames(QUAC.genpop.garden@tab) %in% colnames(QUAC.genpop.wild@tab)))/length(colnames(QUAC.genpop.wild@tab)))*100
+
+# Draft: GENETIC CAPTURE--JUST GENIND----
+str(QUAC.genind@tab)
+unique(colSums(QUAC.genind@tab))
+# Why are there...so few unique colSums values
+which(colSums(QUAC.genind@tab) == 4)
+QUAC.genind@tab[,which(colSums(QUAC.genind@tab) == 4)]
+QUAC.genind@tab[,402:403]
+
+ncol(QUAC.genind@tab)
+
+QUAC.genind.wild <- seppop(QUAC.genind)[2:6]
+QUAC.genind.wild <- repool(QUAC.genind.wild$porterMt,QUAC.genind.wild$magazineMt,QUAC.genind.wild$pryorMt,
+                           QUAC.genind.wild$sugarloaf_midlandPeak,QUAC.genind.wild$kessler_shaleBarrenRidge)
+ncol(QUAC.genind.wild@tab)
+QUAC.genind.garden <- seppop(QUAC.genind, keepNA=TRUE)[1]$garden
+
+ncol(QUAC.genind.garden@tab)
 
 # ALLELE CATEGORIES----
 # Categorize wild alleles, then determine how many of each allele category gardens are capturing
@@ -66,6 +81,14 @@ cat(paste("Max wild allele frequency: ",max(QUAC.wildAlleleFreqs),"\n","Min wild
 QUAC.genind.wild <- seppop(QUAC.genind)[2:6]
 QUAC.genind.wild <- repool(QUAC.genind.wild$porterMt,QUAC.genind.wild$magazineMt,QUAC.genind.wild$pryorMt,
                            QUAC.genind.wild$sugarloaf_midlandPeak,QUAC.genind.wild$kessler_shaleBarrenRidge)
+# Processing duplicates
+# Only one duplicate, in QUAC Wild data set
+which(rownames(QUAC.genind.wild@tab) == "QUAC_W_DUP_SH_Q2121")
+QUAC.genind.wild@tab[65:66,1:4] # QUAC_W_SH_Q2121 and QUAC_W_DUP_SH_Q2121
+length(which(QUAC.genind.wild@tab[65,] != QUAC.genind.wild@tab[66,]))
+# 874/12,159 alleles (7.19%) are different between these duplicate samples
+# For now, just removing duplicate sample
+QUAC.genind.wild@tab <- QUAC.genind.wild@tab[-66,]
 
 # Function for measuring wild allelic capture of samples
 # The two arguments are the vector of frequencies of wild alleles, and the sample of the wild genind object
@@ -115,11 +138,16 @@ lowfr_sd <- apply(samplingResults[,3,], 1, sd)
 rare_means <- apply(samplingResults[,4,], 1, mean)
 rare_sd <- apply(samplingResults[,4,], 1, sd)
 
-plot(v.com_means)
-plot(v.com_means, ylim=c(0,110))
-points(com_means)
-points(lowfr_means)
-points(rare_means)
+plotColors <- brewer.pal(n=4, name="Dark2")
+plot(v.com_means, ylim=c(0,110), col=plotColors[1], pch=16, main="QUAC: Resampling Curve (10 replicates)",
+     xlab="Number of samples", ylab="Mean percent captured")
+points(com_means, col=plotColors[2], pch=16)
+points(lowfr_means, col=plotColors[3], pch=16)
+points(rare_means, col=plotColors[4], pch=16)
+legend("bottomright", inset = 0.05, legend = c("Very common: >10%","Common: >5%","Low frequency: 1--10%", "Rare: <1%"),
+       col=plotColors, pch = c(20,20,20), cex=1, pt.cex = 2)
+
+
 
 # %%%%%%%%%%%%%%%%%%%%%%%%%
 # %%% QUERCUS BOYNTONII %%%
