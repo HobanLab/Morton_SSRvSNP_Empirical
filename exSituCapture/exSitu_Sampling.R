@@ -22,7 +22,6 @@ QUAC.genind <- read.genepop(paste0(genpop.filePath,"populations.snps.gen"))
 # Read in the Stacks popmap values, and use these to replace @pop values 
 # (using the pops accessor; this is necessary because original pop names are incorrect)
 pop(QUAC.genind) <- factor(read.table("../../../QUAC_popmap2", header=FALSE)[,2])
-
 # Genind/genpop tab slot contains a matrix of allele counts
 # Total loci in assembly (after Stacks populations -R80 filtering) is 14,033. But, this includes monomorphic loci
 # Genpop file only includes polymorphic loci, of which there are 6,361
@@ -31,33 +30,30 @@ nLoc(QUAC.genind)
 ncol(QUAC.genind@tab)
 
 # GENETIC CAPTURE OF WILD POPULATIONS----
-# Create a genpop object from genind, collapsing samples based on their populations
-QUAC.genpop <- genind2genpop(QUAC.genind)
-# Separate garden and wild populations, dropping alleles that are absent from each dataset
-QUAC.genpop.garden <- QUAC.genpop[1,drop=TRUE]
-QUAC.genpop.wild <- QUAC.genpop[2:6,drop=TRUE]
-# 12,157 alleles across garden samples; 12,159 across wild populations
-ncol(QUAC.genpop.garden@tab) ; ncol(QUAC.genpop.wild@tab)
-# Using which to match allele names between garden and wild matrices, gardens capture 95.3% of wild alleles
-(length(which(colnames(QUAC.genpop.garden@tab) %in% colnames(QUAC.genpop.wild@tab)))/length(colnames(QUAC.genpop.wild@tab)))*100
+# How many garden individuals
+garden.inds <- length(which(pop(QUAC.genind)=="garden"))
+# Row in QUAC.genind@tab matrix where wild individuals start
+wild.index <- garden.ind + 1
+# Garden allele columns that are empty (sum to 0) and non-empty (present)
+length(which(colSums(QUAC.genind@tab[1:garden.ind,], na.rm = TRUE) == 0))
+garden.alleles.present <- which(colSums(QUAC.genind@tab[1:garden.ind,], na.rm = TRUE) != 0)
+# Wild allele columns present
+wild.alleles.present <- which(colSums(QUAC.genind@tab[wild.index:nInd(QUAC.genind),], na.rm = TRUE) != 0)
+# Number of captured wild alleles
+length(which(garden.alleles.present %in% wild.alleles.present))
+# Gardens capture 95.35% of wild alleles
+(length(which(garden.alleles.present %in% wild.alleles.present))/length(wild.alleles.present))*100
 
-# Draft: GENETIC CAPTURE--JUST GENIND----
-str(QUAC.genind@tab)
-unique(colSums(QUAC.genind@tab))
-# Why are there...so few unique colSums values
-which(colSums(QUAC.genind@tab) == 4)
-QUAC.genind@tab[,which(colSums(QUAC.genind@tab) == 4)]
-QUAC.genind@tab[,402:403]
-
-ncol(QUAC.genind@tab)
-
-QUAC.genind.wild <- seppop(QUAC.genind)[2:6]
-QUAC.genind.wild <- repool(QUAC.genind.wild$porterMt,QUAC.genind.wild$magazineMt,QUAC.genind.wild$pryorMt,
-                           QUAC.genind.wild$sugarloaf_midlandPeak,QUAC.genind.wild$kessler_shaleBarrenRidge)
-ncol(QUAC.genind.wild@tab)
-QUAC.genind.garden <- seppop(QUAC.genind, keepNA=TRUE)[1]$garden
-
-ncol(QUAC.genind.garden@tab)
+# Old approach, using names
+# # Create a genpop object from genind, collapsing samples based on their populations
+# QUAC.genpop <- genind2genpop(QUAC.genind)
+# # Separate garden and wild populations, dropping alleles that are absent from each dataset
+# QUAC.genpop.garden <- QUAC.genpop[1,drop=TRUE]
+# QUAC.genpop.wild <- QUAC.genpop[2:6,drop=TRUE]
+# # 12,157 alleles across garden samples; 12,159 across wild populations
+# ncol(QUAC.genpop.garden@tab) ; ncol(QUAC.genpop.wild@tab)
+# # Using which to match allele names between garden and wild matrices, gardens capture 95.3% of wild alleles
+# (length(which(colnames(QUAC.genpop.garden@tab) %in% colnames(QUAC.genpop.wild@tab)))/length(colnames(QUAC.genpop.wild@tab)))*100
 
 # ALLELE CATEGORIES----
 # Categorize wild alleles, then determine how many of each allele category gardens are capturing
