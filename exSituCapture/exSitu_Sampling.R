@@ -11,14 +11,14 @@ library(RColorBrewer)
 # %%%%%%%%%%%%%%%%%%%%%%%%%%
 
 # READ IN AND PROCESS GENEPOP FILE----
-# Set the filepath variable below to specify which populations directory so source the genpop file from
+# Set the filepath variable below to specify which populations directory to source the genpop file from
 # (Note that Stacks will write this files with the suffix ".genepop", but it needs to be ".gen")
 # Using the QUAC Reference dataset (aligned using GSNAP), and the "summary" populations 
 # This dataset uses an -R 80 parameter, meaning loci had to be present in 80% of all samples to be retained
 genpop.filePath <- 
   "/RAID1/IMLS_GCCO/Analysis/Stacks/reference_filteredReads/QUAC/GSNAP/output/populations_sum/"
 setwd(genpop.filePath)
-# Pull in genepop object 
+# Pull in genepop object. For RADseq data, ncode argument = 2 (default) 
 QUAC.genind <- read.genepop(paste0(genpop.filePath,"populations.snps.gen"))
 # Read in the Stacks popmap values, and use these to replace @pop values 
 # (using the pops accessor; this is necessary because original pop names are incorrect)
@@ -29,100 +29,156 @@ pop(QUAC.genind) <- factor(read.table("../../../QUAC_popmap2", header=FALSE)[,2]
 nLoc(QUAC.genind)
 # Each locus contains two alleles, which leads to 6,361 * 2 = 12,722 columns of the sample x allele matrix
 ncol(QUAC.genind@tab)
-# Make variables for number of garden and wild individuals
-QUAC.garden.inds <- length(which(pop(QUAC.genind)=="garden")); QUAC.wild.inds <- nInd(QUAC.genind)-QUAC.garden.inds
-# Row in QUAC.genind@tab matrix where wild individuals start
-QUAC.wild.index <- QUAC.garden.inds + 1
-
-# GENETIC CAPTURE OF WILD POPULATIONS----
-# %%% All alleles %%%
-# Garden allele columns that are non-empty (present)
-QUAC.garden.alleles.present <- which(colSums(QUAC.genind@tab[1:QUAC.garden.inds,], na.rm = TRUE) != 0)
-# Wild allele columns present
-QUAC.wild.alleles.present <- which(colSums(QUAC.genind@tab[QUAC.wild.index:nInd(QUAC.genind),], na.rm = TRUE) != 0)
-# Number of captured wild alleles
-length(which(QUAC.garden.alleles.present %in% QUAC.wild.alleles.present))
-# Gardens capture 95.35% of wild alleles
-(length(which(QUAC.garden.alleles.present %in% QUAC.wild.alleles.present))/length(QUAC.wild.alleles.present))*100
-
-# %%% Singletons/doubletons removed %%%
-# Create allele matrix with wild singletons/doubletons removed
-# Take all rows of the genind tab object, but only the columns with sums greater than or equal to 3
-QUAC.genind.SDR <- QUAC.genind@tab[,which(colSums(QUAC.genind@tab, na.rm=TRUE) >= 3)]
-# Garden allele columns that are non-empty (present)
-QUAC.garden.alleles.present.SDR <- which(colSums(QUAC.genind.SDR[1:QUAC.garden.inds,], na.rm = TRUE) != 0)
-# Wild allele columns present
-QUAC.wild.alleles.present.SDR <- which(colSums(QUAC.genind.SDR[QUAC.wild.index:nrow(QUAC.genind.SDR),], na.rm = TRUE) != 0)
-# Number of captured wild alleles
-length(which(QUAC.garden.alleles.present.SDR %in% QUAC.wild.alleles.present.SDR))
-# Gardens capture 95.35% of wild alleles, with wild singletons/doubletons removed
-(length(which(QUAC.garden.alleles.present.SDR %in% QUAC.wild.alleles.present.SDR))/length(QUAC.wild.alleles.present.SDR))*100
-# So, there are no singleton/doubleton alleles (which(colSums(QUAC.genind@tab, na.rm=TRUE) <= 2) == 0)
-
-# Old approach, using names
-# Create a genpop object from genind, collapsing samples based on their populations
-QUAC.genpop <- genind2genpop(QUAC.genind)
-# Separate garden and wild populations, dropping alleles that are absent from each dataset
-QUAC.genpop.garden <- QUAC.genpop[1,drop=TRUE]
-QUAC.genpop.wild <- QUAC.genpop[2:6,drop=TRUE]
-# 12,157 alleles across garden samples; 12,159 across wild populations
-ncol(QUAC.genpop.garden@tab) ; ncol(QUAC.genpop.wild@tab)
-# Using which to match allele names between garden and wild matrices, gardens capture 95.3% of wild alleles
-(length(which(colnames(QUAC.genpop.garden@tab) %in% colnames(QUAC.genpop.wild@tab)))/length(colnames(QUAC.genpop.wild@tab)))*100
+# Create vectors corresponding to sample numbers of garden and wild individuals using seq
+QUAC.garden <- seq_len(length(which(pop(QUAC.genind)=="garden")))
+QUAC.wild <- seq(from=length(which(pop(QUAC.genind)=="garden"))+1, to=nInd(QUAC.genind))
+QUAC.wild.N <- length(QUAC.wild)
+# rownames(QUAC.genind@tab[QUAC.garden,]) # Demonstration
+# rownames(QUAC.genind@tab[QUAC.wild,]) # Demonstration
 
 # ALLELE CATEGORIES----
-# %%% All alleles %%%
 # Categorize wild alleles, then determine how many of each allele category gardens are capturing
-# These fractions demonstrate the frequency of finding an allele when drawing out a single individual by
-# taking the colSums of the matrix for wild individuals and dividing it by the number of individuals * 2 (diploids)
-# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-# Calculate wild allele frequencies
-# Subset the rows to just look at wild samples, and the columns to only look at alleles present in wild samples
-QUAC.wildAlleleFreqs <- (colSums(QUAC.genind@tab[QUAC.wild.index:nInd(QUAC.genind),QUAC.wild.alleles.present], na.rm = TRUE)/(QUAC.wild.inds*2))*100
-# Calculate allelic capture for different categories, based on garden.alleles.present vector from before
-# The lines below step through the buildup to the final calculation of the garden genetic capture (for very common alleles)
-# Wild allele frequencies that are very common (greater than 10%)
-which(QUAC.wildAlleleFreqs > 10)
-# Vector of TRUE/FALSE for garden alleles being included within the very common wild alleles
-QUAC.garden.alleles.present %in% which(QUAC.wildAlleleFreqs > 10)
-# Garden alleles that ARE included within very common wild alleles (i.e. get TRUE values)
-which(QUAC.garden.alleles.present %in% which(QUAC.wildAlleleFreqs > 10))
-# NUMBER of garden alleles included within very common wild alleles
-length(which(QUAC.garden.alleles.present %in% which(QUAC.wildAlleleFreqs > 10)))
-# Number of garden alleles included within very common wild alleles, divided by number of very common alleles
-length(which(QUAC.garden.alleles.present %in% which(QUAC.wildAlleleFreqs > 10)))/length(which(QUAC.wildAlleleFreqs > 10))*100
-# Common alleles
-length(which(QUAC.garden.alleles.present %in% which(QUAC.wildAlleleFreqs > 5)))/length(which(QUAC.wildAlleleFreqs > 5))*100
-# Low frequency alleles
-length(which(QUAC.garden.alleles.present %in% which(QUAC.wildAlleleFreqs < 10 & QUAC.wildAlleleFreqs > 1)))/length(which(QUAC.wildAlleleFreqs < 10 & QUAC.wildAlleleFreqs > 1))*100
-# Rare alleles
-length(which(QUAC.garden.alleles.present %in% which(QUAC.wildAlleleFreqs < 1)))/length(which(QUAC.wildAlleleFreqs < 1))*100
 
-# %%% Singletons/doubletons removed %%%
-# Calculate wild allele frequencies
-# Take the colSums of the matrix for wild individuals and divide it by the number of individuals * 2 (diploids)
-QUAC.wildAlleleFreqs.SDR <- (colSums(QUAC.genind.SDR[QUAC.wild.index:nrow(QUAC.genind.SDR),QUAC.wild.alleles.present.SDR], na.rm = TRUE)/(QUAC.wild.inds*2))*100
-# Calculate allelic capture for different categories, based on garden.alleles.present vector from before
-# The steps below show the buildup of calculating the capture in gardens (for very common alleles)
-# Wild allele frequencies that are very common (greater than 10%)
-which(QUAC.wildAlleleFreqs.SDR > 10)
-# Vector of TRUE/FALSE for garden alleles being included within the very common wild alleles
-QUAC.garden.alleles.present.SDR %in% which(QUAC.wildAlleleFreqs.SDR > 10)
-# Garden alleles that ARE included within very common wild alleles (i.e. get TRUE values)
-which(QUAC.garden.alleles.present.SDR %in% which(QUAC.wildAlleleFreqs.SDR > 10))
-# NUMBER of garden alleles included within very common wild alleles
-length(which(QUAC.garden.alleles.present.SDR %in% which(QUAC.wildAlleleFreqs.SDR > 10)))
-# Number of garden alleles included within very common wild alleles, divided by number of very common alleles
-length(which(QUAC.garden.alleles.present.SDR %in% which(QUAC.wildAlleleFreqs.SDR > 10)))/length(which(QUAC.wildAlleleFreqs.SDR > 10))*100
-# Common alleles
-length(which(QUAC.garden.alleles.present.SDR %in% which(QUAC.wildAlleleFreqs.SDR > 5)))/length(which(QUAC.wildAlleleFreqs.SDR > 5))*100
-# Low frequency alleles
-length(which(QUAC.garden.alleles.present.SDR %in% which(QUAC.wildAlleleFreqs.SDR < 10 & QUAC.wildAlleleFreqs.SDR > 1)))/length(which(QUAC.wildAlleleFreqs.SDR < 10 & QUAC.wildAlleleFreqs.SDR > 1))*100
-# Rare alleles
-length(which(QUAC.garden.alleles.present.SDR %in% which(QUAC.wildAlleleFreqs.SDR < 1)))/length(which(QUAC.wildAlleleFreqs.SDR < 1))*100
+# ALL ALLELES----
+# Wild allele frequency vector
+demo_wildFreqs <- colSums(QUAC.genind@tab[QUAC.wild,], na.rm = TRUE)/(QUAC.wild.N*2)*100
 
-# # Old approach, using QUAC.genpop object
-# QUAC.wildAlleleFreqs <- (colSums(QUAC.genpop.wild@tab)/(QUAC.wild.inds*2))*100
+# What percentage of total wild alleles are seen in the (present) garden alleles
+length(which(which(demo_wildFreqs > 0) %in% which(colSums(QUAC.genind@tab[QUAC.garden,], na.rm = TRUE) > 0)))/length(which(demo_wildFreqs > 0))*100
+# What percentage of the very common wild alleles are seen in the (present) garden alleles
+length(which(which(demo_wildFreqs > 10) %in% which(colSums(QUAC.genind@tab[QUAC.garden,], na.rm = TRUE) > 0)))/length(which(demo_wildFreqs > 10))*100
+# What percentage of the common wild alleles are seen in the (present) garden alleles
+length(which(which(demo_wildFreqs > 5) %in% which(colSums(QUAC.genind@tab[QUAC.garden,], na.rm = TRUE) > 0)))/length(which(demo_wildFreqs > 5))*100
+# What percentage of the low frequency alleles are seen in the (present) garden alleles
+length(which(which(demo_wildFreqs < 10 & demo_wildFreqs > 1) %in% which(colSums(QUAC.genind@tab[QUAC.garden,], na.rm = TRUE) > 0)))/length(which(demo_wildFreqs < 10 & demo_wildFreqs > 1))*100
+# What percentage of the rare alleles are seen in the (present) garden alleles
+length(which(which(demo_wildFreqs < 1) %in% which(colSums(QUAC.genind@tab[QUAC.garden,], na.rm = TRUE) > 0)))/length(which(demo_wildFreqs < 1))*100
+# Alternate rare calculation, corresponding to QUHA approach, generates 
+length(which(which(demo_wildFreqs < 1 & demo_wildFreqs > min(demo_wildFreqs)) %in% which(colSums(QUAC.genind@tab[QUAC.garden,], na.rm = TRUE) > 0)))/length(which(demo_wildFreqs < 1 & demo_wildFreqs > min(demo_wildFreqs)))*100
+
+# WITHOUT GARDEN-SPECIFIC ALLELES----
+# How many alleles are absent in wild samples (i.e. exclusive to gardens)?
+length(which(demo_wildFreqs == 0)) # 563 alleles
+# Because including these alleles confounds the calculation of rare wild allele capture, we remove them
+demo_wildFreqs <- demo_wildFreqs[which(demo_wildFreqs > 0)]
+
+# What percentage of total wild alleles are seen in the (present) garden alleles
+length(which(which(demo_wildFreqs > 0) %in% which(colSums(QUAC.genind@tab[QUAC.garden,names(demo_wildFreqs)], na.rm = TRUE) > 0)))/length(which(demo_wildFreqs > 0))*100
+# What percentage of the very common wild alleles are seen in the (present) garden alleles
+length(which(which(demo_wildFreqs > 10) %in% which(colSums(QUAC.genind@tab[QUAC.garden,names(demo_wildFreqs)], na.rm = TRUE) > 0)))/length(which(demo_wildFreqs > 10))*100
+# What percentage of the common wild alleles are seen in the (present) garden alleles
+length(which(which(demo_wildFreqs > 5) %in% which(colSums(QUAC.genind@tab[QUAC.garden,names(demo_wildFreqs)], na.rm = TRUE) > 0)))/length(which(demo_wildFreqs > 5))*100
+# What percentage of the low frequency alleles are seen in the (present) garden alleles
+length(which(which(demo_wildFreqs < 10 & demo_wildFreqs > 1) %in% which(colSums(QUAC.genind@tab[QUAC.garden,names(demo_wildFreqs)], na.rm = TRUE) > 0)))/length(which(demo_wildFreqs < 10 & demo_wildFreqs > 1))*100
+# What percentage of the rare alleles are seen in the (present) garden alleles
+length(which(which(demo_wildFreqs < 1) %in% which(colSums(QUAC.genind@tab[QUAC.garden,names(demo_wildFreqs)], na.rm = TRUE) > 0)))/length(which(demo_wildFreqs < 1))*100
+
+# REMOVING WILD SINGLETONS/DOUBLETONS----
+# How many wild alleles only show up once or twice, i.e. colSums = 0, 1, or 2?
+which(colSums(QUAC.genind@tab[QUAC.wild,], na.rm = TRUE) <= 2) # To see examples, look at alleles 2, 6, 8, 10
+length(which(colSums(QUAC.genind@tab[QUAC.wild,], na.rm = TRUE) <= 2)) #2673
+# Subset wild allele frequency vectorto only contain alleles with colSums greater than 3
+demo_wildFreqs <- colSums(QUAC.genind@tab[QUAC.wild,which(colSums(QUAC.genind@tab[QUAC.wild,], na.rm = TRUE) >= 3)], na.rm = TRUE)/(QUAC.wild.N*2)*100
+
+# What percentage of total wild alleles are seen in the (present) garden alleles
+length(which(which(demo_wildFreqs > 0) %in% which(colSums(QUAC.genind@tab[QUAC.garden,names(demo_wildFreqs)], na.rm = TRUE) > 0)))/length(which(demo_wildFreqs > 0))*100
+# What percentage of the very common wild alleles are seen in the (present) garden alleles
+length(which(which(demo_wildFreqs > 10) %in% which(colSums(QUAC.genind@tab[QUAC.garden,names(demo_wildFreqs)], na.rm = TRUE) > 0)))/length(which(demo_wildFreqs > 10))*100
+# What percentage of the common wild alleles are seen in the (present) garden alleles
+length(which(which(demo_wildFreqs > 5) %in% which(colSums(QUAC.genind@tab[QUAC.garden,names(demo_wildFreqs)], na.rm = TRUE) > 0)))/length(which(demo_wildFreqs > 5))*100
+# What percentage of the low frequency alleles are seen in the (present) garden alleles
+length(which(which(demo_wildFreqs < 10 & demo_wildFreqs > 1) %in% which(colSums(QUAC.genind@tab[QUAC.garden,names(demo_wildFreqs)], na.rm = TRUE) > 0)))/length(which(demo_wildFreqs < 10 & demo_wildFreqs > 1))*100
+# What percentage of the rare alleles are seen in the (present) garden alleles
+length(which(which(demo_wildFreqs < 1) %in% which(colSums(QUAC.genind@tab[QUAC.garden,names(demo_wildFreqs)], na.rm = TRUE) > 0)))/length(which(demo_wildFreqs < 1))*100
+
+# DEMO: ALLELES 11-20----
+# Number of garden and wild individuals with alleles 11-20
+colSums(QUAC.genind@tab[QUAC.garden,11:20], na.rm = TRUE) 
+colSums(QUAC.genind@tab[QUAC.wild,11:20], na.rm = TRUE)
+
+# Wild allele frequency vector
+demo_wildFreqs <- colSums(QUAC.genind@tab[QUAC.wild,11:20], na.rm = TRUE)/(QUAC.wild.N*2)*100
+# Check out vectors: wild frequencies, and numbers of garden alleles present
+demo_wildFreqs
+colSums(QUAC.genind@tab[QUAC.garden,11:20], na.rm = TRUE)
+
+# Buildup: Very common wild alleles
+which(demo_wildFreqs > 10)
+# Which garden alleles are present
+which(colSums(QUAC.genind@tab[QUAC.garden,11:20], na.rm = TRUE) > 0)
+# Are the very common wild alleles are seen in the (present) garden alleles
+which(demo_wildFreqs > 10) %in% which(colSums(QUAC.genind@tab[QUAC.garden,11:20], na.rm = TRUE) > 0)
+# Which very common wild alleles are seen in the (present) garden alleles
+which(which(demo_wildFreqs > 10) %in% which(colSums(QUAC.genind@tab[QUAC.garden,11:20], na.rm = TRUE) > 0))
+# How many very common wild alleles are seen in the (present) garden alleles
+length(which(which(demo_wildFreqs > 10) %in% which(colSums(QUAC.genind@tab[QUAC.garden,11:20], na.rm = TRUE) > 0)))
+# What percentage of the very common wild alleles are seen in the (present) garden alleles
+length(which(which(demo_wildFreqs > 10) %in% which(colSums(QUAC.genind@tab[QUAC.garden,11:20], na.rm = TRUE) > 0)))/length(which(demo_wildFreqs > 10))*100
+
+# What percentage of total wild alleles are seen in the (present) garden alleles
+length(which(which(demo_wildFreqs > 0) %in% which(colSums(QUAC.genind@tab[QUAC.garden,11:20], na.rm = TRUE) > 0)))/length(which(demo_wildFreqs > 0))*100
+# What percentage of the very common wild alleles are seen in the (present) garden alleles
+length(which(which(demo_wildFreqs > 10) %in% which(colSums(QUAC.genind@tab[QUAC.garden,11:20], na.rm = TRUE) > 0)))/length(which(demo_wildFreqs > 10))*100
+# What percentage of the common wild alleles are seen in the (present) garden alleles
+length(which(which(demo_wildFreqs > 5) %in% which(colSums(QUAC.genind@tab[QUAC.garden,11:20], na.rm = TRUE) > 0)))/length(which(demo_wildFreqs > 5))*100
+# Which low frequency alleles are seen (present) in the garden alleles
+which(demo_wildFreqs < 10 & demo_wildFreqs > 1) %in% which(colSums(QUAC.genind@tab[QUAC.garden,11:20], na.rm = TRUE) > 0)
+# What percentage of the low frequency alleles are seen in the (present) garden alleles
+length(which(which(demo_wildFreqs < 10 & demo_wildFreqs > 1) %in% which(colSums(QUAC.genind@tab[QUAC.garden,11:20], na.rm = TRUE) > 0)))/length(which(demo_wildFreqs < 10 & demo_wildFreqs > 1))*100
+# What percentage of the rare alleles are seen in the (present) garden alleles
+length(which(which(demo_wildFreqs < 1) %in% which(colSums(QUAC.genind@tab[QUAC.garden,11:20], na.rm = TRUE) > 0)))/length(which(demo_wildFreqs < 1))*100
+
+# DEMO: ALLELES 11-30----
+# Number of garden and wild individuals with alleles 11-30
+colSums(QUAC.genind@tab[QUAC.garden,11:30], na.rm = TRUE) 
+colSums(QUAC.genind@tab[QUAC.wild,11:30], na.rm = TRUE)
+
+# Wild allele frequency vector
+demo_wildFreqs <- colSums(QUAC.genind@tab[QUAC.wild,11:30], na.rm = TRUE)/(QUAC.wild.N*2)*100
+# Check out vectors: wild frequencies, and numbers of garden alleles present
+demo_wildFreqs
+colSums(QUAC.genind@tab[QUAC.garden,11:30], na.rm = TRUE)
+
+# Buildup: Very common wild alleles
+which(demo_wildFreqs > 10)
+# Which garden alleles are present
+which(colSums(QUAC.genind@tab[QUAC.garden,11:30], na.rm = TRUE) > 0)
+# Are the very common wild alleles are seen in the (present) garden alleles
+which(demo_wildFreqs > 10) %in% which(colSums(QUAC.genind@tab[QUAC.garden,11:30], na.rm = TRUE) > 0)
+# Which very common wild alleles are seen in the (present) garden alleles
+which(which(demo_wildFreqs > 10) %in% which(colSums(QUAC.genind@tab[QUAC.garden,11:30], na.rm = TRUE) > 0))
+# How many very common wild alleles are seen in the (present) garden alleles
+length(which(which(demo_wildFreqs > 10) %in% which(colSums(QUAC.genind@tab[QUAC.garden,11:30], na.rm = TRUE) > 0)))
+# What percentage of the very common wild alleles are seen in the (present) garden alleles
+length(which(which(demo_wildFreqs > 10) %in% which(colSums(QUAC.genind@tab[QUAC.garden,11:30], na.rm = TRUE) > 0)))/length(which(demo_wildFreqs > 10))*100
+
+# What percentage of total wild alleles are seen in the (present) garden alleles
+length(which(which(demo_wildFreqs > 0) %in% which(colSums(QUAC.genind@tab[QUAC.garden,11:30], na.rm = TRUE) > 0)))/length(which(demo_wildFreqs > 0))*100
+# What percentage of the very common wild alleles are seen in the (present) garden alleles
+length(which(which(demo_wildFreqs > 10) %in% which(colSums(QUAC.genind@tab[QUAC.garden,11:30], na.rm = TRUE) > 0)))/length(which(demo_wildFreqs > 10))*100
+# What percentage of the common wild alleles are seen in the (present) garden alleles
+length(which(which(demo_wildFreqs > 5) %in% which(colSums(QUAC.genind@tab[QUAC.garden,11:30], na.rm = TRUE) > 0)))/length(which(demo_wildFreqs > 5))*100
+# What percentage of the low frequency alleles are seen in the (present) garden alleles
+length(which(which(demo_wildFreqs < 10 & demo_wildFreqs > 1) %in% which(colSums(QUAC.genind@tab[QUAC.garden,11:30], na.rm = TRUE) > 0)))/length(which(demo_wildFreqs < 10 & demo_wildFreqs > 1))*100
+# What percentage of the rare alleles are seen in the (present) garden alleles
+length(which(which(demo_wildFreqs < 1) %in% which(colSums(QUAC.genind@tab[QUAC.garden,11:30], na.rm = TRUE) > 0)))/length(which(demo_wildFreqs < 1))*100
+
+
+# OLD----
+
+# # Overall genetic capture, using names
+# # Create a genpop object from genind, collapsing samples based on their populations
+# QUAC.genpop <- genind2genpop(QUAC.genind)
+# # Separate garden and wild populations, dropping alleles that are absent from each dataset
+# QUAC.genpop.garden <- QUAC.genpop[1,drop=TRUE]
+# QUAC.genpop.wild <- QUAC.genpop[2:6,drop=TRUE]
+# # 12,157 alleles across garden samples; 12,159 across wild populations
+# ncol(QUAC.genpop.garden@tab) ; ncol(QUAC.genpop.wild@tab)
+# # Using which to match allele names between garden and wild matrices, gardens capture 95.3% of wild alleles
+# (length(which(colnames(QUAC.genpop.garden@tab) %in% colnames(QUAC.genpop.wild@tab)))/length(colnames(QUAC.genpop.wild@tab)))*100
+
+# Allele categories, using names
+# QUAC.wildAlleleFreqs <- (colSums(QUAC.genpop.wild@tab)/(QUAC.wild.N*2))*100
 # # Max frequency is 49.5%; min is 0.25%
 # cat(paste("Max wild allele frequency: ",max(QUAC.wildAlleleFreqs),"\n","Min wild allele frequency: ",min(QUAC.wildAlleleFreqs)))
 # # Gardens capture:
