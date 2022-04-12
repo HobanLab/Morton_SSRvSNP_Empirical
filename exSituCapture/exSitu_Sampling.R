@@ -502,37 +502,46 @@ samplingResults[,1,]
 apply(samplingResults[,1,],1,mean)
 # 60 samples captures 95% of total genetic diversity
 
-# Heterozygosity in wild and garden samples----
-# Pull in genpop object 
-QUAC.genind <- read.genepop(paste0(genpop.filePath,"populations.snps.gen"))
-# Assign populations
-pop(QUAC.genind) <- factor(read.table("../../../QUAC_popmap3", header=FALSE)[,2])
-
+# POPULATION GENETIC STATISTICS----
+# %%% Heterozygosity %%%
 Hs(QUAC.genind)
-mean(summary(QUAC.genind)[7]$Hexp)
-sd(summary(QUAC.genind)[7]$Hexp)
 
-QUAC_hexp_mean_df <- as.data.frame(rbind(mean(QUAC_hexp[[1]][,1]), mean(QUAC_hexp[[2]][,1])))
-QUAC_hexp_mean_df$pop_type <- NA
-QUAC_hexp_mean_df$pop_type <- c("Garden", "Wild")
-
-
-# Barplot for expected heterozygosity, microsattelite markers (sourced from 3_QUAC_garden_wild_comparison.R)
-barplot(QUAC_hexp_mean_df[,1], beside = TRUE, 
-        ylim = c(0,1), col = c("darkgreen", "darkseagreen1"),
-        names = c("Garden", "Wild"), 
+# Barplot for expected heterozygosity, SNP markers
+barplot(Hs(QUAC.genind), beside = TRUE, 
+        ylim = c(0,0.06), col = c("darkseagreen1", rep("darkgreen", 5)),
+        names = c("Garden", "Porter Mt.", "Magazine Mt.", "Pryor Mt.", "Sugarloaf", 
+                  "Kessler, Shale Barren Ridge"), 
         main = "Heterozygosity: SNPs", 
         xlab = "Population Type", ylab = "Expected Heterozygosity")
 abline(h = 0)
 
-# Barplot for expected heterozygosity, SNP markers
-barplot(Hs(QUAC.genind), beside = TRUE, 
-        ylim = c(0,1), col = c("darkgreen", "darkseagreen1"),
-        names = c("Garden", "Wild"), 
-        main = "Heterozygosity: Microsatellites", 
-        xlab = "Population Type", ylab = "Expected Heterozygosity")
-abline(h = 0)
-
+# %%% Allelic richness %%%
+# %%% Fst %%%
+# Stacks exports an Fst table when the populations command is given the --fstats argument. Read this in
+QUAC.fst.mat <- as.matrix(read.table("populations.fst_summary.tsv", header=TRUE, row.names=1, sep = "\t"))
+# Add a row at the bottom to make matrix symmetrical (nrow=ncol)
+QUAC.fst.mat <- rbind(QUAC.fst.mat, rep(NA,6))
+# Update row and column names
+# rownames(QUAC.fst.mat) <- colnames(QUAC.fst.mat) <- levels(unique(pop(QUAC.genind)))
+QUAC_popNames <- c("Garden", "Porter Mt.", "Magazine Mt.", "Pryor Mt.", "Sugarloaf", 
+  "Kessler")
+rownames(QUAC.fst.mat) <- colnames(QUAC.fst.mat) <- QUAC_popNames
+# Use image command to plot a heatmap
+# First two arguments specify the boundaries of the heatmap; z provides actual values
+# z is transposed in order to plot numeral values later on
+image(x=1:ncol(QUAC.fst.mat), y=1:nrow(QUAC.fst.mat), z=t(QUAC.fst.mat), axes=FALSE, xlab="", ylab="", 
+      main="QUAC Fst Values: SNPs")
+# Add boundary lines
+grid(nx=ncol(QUAC.fst.mat), ny=nrow(QUAC.fst.mat), col="black", lty=1)
+# Include sample names, to understand the context of genetic distances
+axis(1, 1:ncol(QUAC.fst.mat), colnames(QUAC.fst.mat), cex.axis=1.2, tick=FALSE)
+text(1, c(1:5), labels=rownames(QUAC.fst.mat), cex=1.2)
+for(x in 1:ncol(QUAC.fst.mat)){
+  for(y in 1:nrow(QUAC.fst.mat)){
+    text(x, y, QUAC.fst.mat[y,x], cex=1.5)
+  }
+}
+# Need to fix values, make sure names are being graphed correctly
 
 # %%%%%%%%%%%%%%%%%%%%%%%%%
 # %%% QUERCUS BOYNTONII %%%
