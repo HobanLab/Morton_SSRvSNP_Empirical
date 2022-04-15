@@ -45,8 +45,6 @@ QUAC.wild.N <- length(QUAC.wild)
 # ALL ALLELES----
 # Wild allele frequency vector
 QUAC_wildFreqs <- colSums(QUAC.genind@tab[QUAC.wild,], na.rm = TRUE)/(QUAC.wild.N*2)*100
-# Line below only considers PRESENT wild alleles, which changes allelic capture percentages pretty significantly
-# QUAC_wildFreqs <- QUAC_wildFreqs[which(QUAC_wildFreqs > 0)]
 
 # Total
 length(which(names(which(QUAC_wildFreqs > 0)) %in% names(which(colSums(QUAC.genind@tab[QUAC.garden,], na.rm = TRUE) > 0))))/length(which(QUAC_wildFreqs > 0))*100
@@ -511,49 +509,52 @@ apply(samplingResults[,1,],1,mean)
 # %%%%%%%%%%%%%%%%%%%%%%%%%
 
 # READ IN AND PROCESS GENEPOP FILE----
-# Using the QUBO Reference dataset (aligned using GSNAP) 
-# This generated the largest number of polymorphic loci (compared to de novo and Hybrid analyses)
+# Set the filepath variable below to specify which populations directory to source the genpop file from
+# (Note that Stacks will write this files with the suffix ".genepop", but it needs to be ".gen")
+# Using the QUBO Reference dataset (aligned using GSNAP), and the "summary" populations 
 # This dataset uses an -R 80 parameter, meaning loci had to be present in 80% of all samples to be retained
-setwd("/RAID1/IMLS_GCCO/Analysis/Stacks/reference_filteredReads/QUBO/GSNAP/output/populations_sum/")
-
-# Pull in genepop object (with the file suffix updated--Stacks writes this as ".genepop", but it needs to be ".gen")
-QUBO.genind <- read.genepop("populations.snps.gen")
+genpop.filePath <- 
+  "/RAID1/IMLS_GCCO/Analysis/Stacks/reference_filteredReads/QUBO/GSNAP/output/populations_sum/"
+setwd(genpop.filePath)
+# Pull in genepop object. For RADseq data, ncode argument = 2 (default) 
+QUBO.genind <- read.genepop(paste0(genpop.filePath,"populations.snps.gen"))
 # Read in the Stacks popmap values, and use these to replace @pop values 
-# (using the pops accessor; original pop names are incorrect)
+# (using the pops accessor; this is necessary because original pop names are incorrect)
 pop(QUBO.genind) <- factor(read.table("../../../QUBO_popmap2", header=FALSE)[,2])
-
-# Genind/genpop tab slot contains a matrix of allele counts
-# Total loci in assembly (after Stacks populations -R80 filtering) is 29,964. But, this includes monomorphic loci
-# Genpop file only includes polymorphic loci, of which there are 13,821
-nLoc(QUBO.genind)
-# Each locus contains two alleles, which leads to 13,821 * 2 = 27,642 columns of the sample x allele matrix
-ncol(QUBO.genind@tab)
-
-# GENETIC CAPTURE OF WILD POPULATIONS----
-# Create a genpop object from genind, collapsing samples based on their populations
-QUBO.genpop <- genind2genpop(QUBO.genind)
-# Separate garden and wild populations, dropping alleles that are absent from each dataset
-QUBO.genpop.garden <- QUBO.genpop[1,drop=TRUE]
-QUBO.genpop.wild <- QUBO.genpop[2:12,drop=TRUE]
-# 25,817 alleles across garden samples; 26,711 across wild populations
-ncol(QUBO.genpop.garden@tab) ; ncol(QUBO.genpop.wild@tab)
-# There are 931 alleles that are unique to the garden population (i.e. present in gardens, but not in the wild) 
-ncol(QUBO.genpop@tab) - ncol(QUBO.genpop.wild@tab)
-# Using which to match allele names between garden and wild matrices, gardens capture 93.2% of wild alleles
-(length(which(colnames(QUBO.genpop.garden@tab) %in% colnames(QUBO.genpop.wild@tab)))/length(colnames(QUBO.genpop.wild@tab)))*100
+# Create vectors corresponding to sample numbers of garden and wild individuals using seq
+QUBO.garden <- seq_len(length(which(pop(QUBO.genind)=="garden")))
+QUBO.wild <- seq(from=length(which(pop(QUBO.genind)=="garden"))+1, to=nInd(QUBO.genind))
+QUBO.wild.N <- length(QUBO.wild)
 
 # ALLELE CATEGORIES----
 # Categorize wild alleles, then determine how many of each allele category gardens are capturing
-# These fractions demonstrate the frequency of finding an allele when drawing out a single individual
-QUBO.wildAlleleFreqs <- (colSums(QUBO.genpop.wild@tab)/(nInd(QUBO.genind)*2))*100
-# Max frequency is 53.0%; min is 0.28%
-cat(paste("Max wild allele frequency: ",max(QUBO.wildAlleleFreqs),"\n","Min wild allele frequency: ",min(QUBO.wildAlleleFreqs)))
-# Gardens capture:
-# 99.99281% of very common alleles
-(length(which(colnames(QUBO.genpop.garden@tab) %in% names(QUBO.wildAlleleFreqs[which(QUBO.wildAlleleFreqs > 10)])))/length(which(QUBO.wildAlleleFreqs > 10)))*100
-# 99.98578% of very common alleles
-(length(which(colnames(QUBO.genpop.garden@tab) %in% names(QUBO.wildAlleleFreqs[which(QUBO.wildAlleleFreqs > 5)])))/length(which(QUBO.wildAlleleFreqs > 5)))*100
-# 71.9% of very common alleles
-(length(which(colnames(QUBO.genpop.garden@tab) %in% names(QUBO.wildAlleleFreqs[which(QUBO.wildAlleleFreqs < 10 & QUBO.wildAlleleFreqs > 1)])))/length(which(QUBO.wildAlleleFreqs < 10 & QUBO.wildAlleleFreqs > 1)))*100
-# 94.9% of rare alleles
-(length(which(colnames(QUBO.genpop.garden@tab) %in% names(QUBO.wildAlleleFreqs[which(QUBO.wildAlleleFreqs < 1)])))/length(which(QUBO.wildAlleleFreqs < 1)))*100
+
+# ALL ALLELES----
+# Wild allele frequency vector
+QUBO_wildFreqs <- colSums(QUBO.genind@tab[QUBO.wild,], na.rm = TRUE)/(QUBO.wild.N*2)*100
+
+# Total
+length(which(names(which(QUBO_wildFreqs > 0)) %in% names(which(colSums(QUBO.genind@tab[QUBO.garden,], na.rm = TRUE) > 0))))/length(which(QUBO_wildFreqs > 0))*100
+# Very common
+length(which(names(which(QUBO_wildFreqs > 10)) %in% names(which(colSums(QUBO.genind@tab[QUBO.garden,], na.rm = TRUE) > 0))))/length(which(QUBO_wildFreqs > 10))*100
+# Common
+length(which(names(which(QUBO_wildFreqs > 5)) %in% names(which(colSums(QUBO.genind@tab[QUBO.garden,], na.rm = TRUE) > 0))))/length(which(QUBO_wildFreqs > 5))*100
+# Low frequency
+length(which(names(which(QUBO_wildFreqs < 10 & QUBO_wildFreqs > 1)) %in% names(which(colSums(QUBO.genind@tab[QUBO.garden,], na.rm = TRUE) > 0))))/length(which(QUBO_wildFreqs < 10 & QUBO_wildFreqs > 1))*100
+# Rare
+length(which(names(which(QUBO_wildFreqs < 1)) %in% names(which(colSums(QUBO.genind@tab[QUBO.garden,], na.rm = TRUE) > 0))))/length(which(QUBO_wildFreqs < 1))*100
+
+# REMOVING WILD SINGLETONS/DOUBLETONS----
+# Subset wild allele frequency vector to only contain alleles with colSums greater than 3
+QUBO_wildFreqs <- colSums(QUBO.genind@tab[QUBO.wild,which(colSums(QUBO.genind@tab[QUBO.wild,], na.rm = TRUE) >= 3)], na.rm = TRUE)/(QUBO.wild.N*2)*100
+
+# What percentage of total wild alleles are seen in the (present) garden alleles
+length(which(names(which(QUBO_wildFreqs > 0)) %in% names(which(colSums(QUBO.genind@tab[QUBO.garden,names(QUBO_wildFreqs)], na.rm = TRUE) > 0))))/length(which(QUBO_wildFreqs > 0))*100
+# What percentage of the very common wild alleles are seen in the (present) garden alleles
+length(which(names(which(QUBO_wildFreqs > 10)) %in% names(which(colSums(QUBO.genind@tab[QUBO.garden,names(QUBO_wildFreqs)], na.rm = TRUE) > 0))))/length(which(QUBO_wildFreqs > 10))*100
+# What percentage of the common wild alleles are seen in the (present) garden alleles
+length(which(names(which(QUBO_wildFreqs > 5)) %in% names(which(colSums(QUBO.genind@tab[QUBO.garden,names(QUBO_wildFreqs)], na.rm = TRUE) > 0))))/length(which(QUBO_wildFreqs > 5))*100
+# What percentage of the low frequency alleles are seen in the (present) garden alleles
+length(which(names(which(QUBO_wildFreqs < 10 & QUBO_wildFreqs > 1)) %in% names(which(colSums(QUBO.genind@tab[QUBO.garden,names(QUBO_wildFreqs)], na.rm = TRUE) > 0))))/length(which(QUBO_wildFreqs < 10 & QUBO_wildFreqs > 1))*100
+# What percentage of the rare alleles are seen in the (present) garden alleles
+length(which(names(which(QUBO_wildFreqs < 1)) %in% names(which(colSums(QUBO.genind@tab[QUBO.garden,names(QUBO_wildFreqs)], na.rm = TRUE) > 0))))/length(which(QUBO_wildFreqs < 1))*100
