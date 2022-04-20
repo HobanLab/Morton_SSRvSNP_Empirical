@@ -36,6 +36,7 @@ ncol(QUAC.genind@tab)
 QUAC.garden <- seq_len(length(which(pop(QUAC.genind)=="garden")))
 QUAC.wild <- seq(from=length(which(pop(QUAC.genind)=="garden"))+1, to=nInd(QUAC.genind))
 QUAC.wild.N <- length(QUAC.wild)
+QUAC.garden.N <- length(QUAC.garden)
 # rownames(QUAC.genind@tab[QUAC.garden,]) # Demonstration
 # rownames(QUAC.genind@tab[QUAC.wild,]) # Demonstration
 
@@ -72,17 +73,21 @@ length(which(names(which(QUAC_wildFreqs < 1)) %in% names(which(colSums(QUAC.geni
 # length(which(which(QUAC_wildFreqs < 1) %in% which(colSums(QUAC.genind@tab[QUAC.garden,], na.rm = TRUE) > 0)))/length(which(QUAC_wildFreqs < 1))*100
 
 # 100% Rare allele capture exploration----
-# How are rare wild alleles total?
-length(which(QUAC_wildFreqs < 1))
+# Vector of wild alleles, along with their frequencies
+QUAC_rareWildAlleles <- QUAC_wildFreqs[which(QUAC_wildFreqs < 1 & QUAC_wildFreqs > 0)]
+# Number of rare alleles (with and without absent alleles)
+length(QUAC_rareWildAlleles) ; length(which(QUAC_rareWildAlleles > 0))
 
 # How many rare wild alleles captured?
 length(which(names(which(QUAC_wildFreqs < 1)) %in% names(which(colSums(QUAC.genind@tab[QUAC.garden,], na.rm = TRUE) > 0))))
 
-# Confirming result
+# Names of the alleles that are absent (0) in the garden
 names(which(colSums(QUAC.genind@tab[QUAC.garden,], na.rm = TRUE) == 0))
 
+# Matching the names of the rare wild alleles and the names of the garden alleles that are absent
 unique(match(names(QUAC_rareWildAlleles), names(which(colSums(QUAC.genind@tab[QUAC.garden,], na.rm = TRUE) == 0))))
 unique(names(QUAC_rareWildAlleles) %in% names(which(colSums(QUAC.genind@tab[QUAC.garden,], na.rm = TRUE) == 0)))
+# None of the alleles that are missing in the garden samples match the names of rare wild alleles
 
 # Building a list of garden+wild sample combinations, for samples containing rare wild alleles
 garden_wild_rareMatches <- list()
@@ -91,6 +96,22 @@ for(i in 1:length(QUAC_rareWildAlleles)){
 }
 garden_wild_rareMatches
 unique(sapply(garden_wild_rareMatches, length))
+
+# Checking out which alleles are rare in the gardens
+QUAC_gardenFreqs <- colSums(QUAC.genind@tab[QUAC.garden,], na.rm = TRUE)/(QUAC.garden.N*2)*100
+length(which(QUAC_gardenFreqs < 1)) # 1,439 rare garden alleles
+# Garden rare alleles
+QUAC_rareGardenAlleles <- QUAC_gardenFreqs[which(QUAC_gardenFreqs < 1 & QUAC_gardenFreqs > 0)]
+# Number of rare alleles (with and without absent alleles); very similar numbers between garden and wild samples
+length(QUAC_rareGardenAlleles) ; length(which(QUAC_rareGardenAlleles > 0))
+
+# Building a list of garden+wild sample combinations, for samples containing rare garden alleles
+wild_garden_rareMatches <- list()
+for(i in 1:length(QUAC_rareGardenAlleles)){
+  wild_garden_rareMatches[[i]] <- which(QUAC.genind@tab[,names(QUAC_rareGardenAlleles)[i]] != 0)
+}
+wild_garden_rareMatches
+unique(sapply(wild_garden_rareMatches, length))
 
 # REMOVING WILD SINGLETONS/DOUBLETONS----
 # How many wild alleles only show up once or twice, i.e. colSums = 0, 1, or 2?
@@ -392,7 +413,7 @@ samplingResults.OLD[,,2]
 samplingResults.OLD[,,3]
 samplingResults.OLD[,,4]
 samplingResults.OLD[,,5]
-# 
+
 # # Old function for measuring wild allelic capture of samples
 # # The two arguments are the vector of frequencies of wild alleles, and the sample of the wild genind object
 # get.allele.cat <- function(freq.vector, sample.mat){
