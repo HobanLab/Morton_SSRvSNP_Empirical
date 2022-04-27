@@ -544,6 +544,7 @@ QUBO.genind <- read.genepop(paste0(genpop.filePath,"populations.snps.gen"))
 pop(QUBO.genind) <- factor(read.table("../../../QUBO_popmap2", header=FALSE)[,2])
 # Create vectors corresponding to sample numbers of garden and wild individuals using seq
 QUBO.garden <- seq_len(length(which(pop(QUBO.genind)=="garden")))
+QUBO.garden.N <- length(QUBO.garden)
 QUBO.wild <- seq(from=length(which(pop(QUBO.genind)=="garden"))+1, to=nInd(QUBO.genind))
 QUBO.wild.N <- length(QUBO.wild)
 
