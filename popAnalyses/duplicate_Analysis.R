@@ -63,6 +63,39 @@ nInd(QUBO.R.genind)
 nLoc(QUBO.R.genind.dup) - nLoc(QUBO.R.genind)
 # 97 fewer loci in the dataset with duplicates
 
+# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+# %%% REFERENCE -- FILTERED, GSNAP2 %%%
+# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+# QUAC----
+# With duplicates included
+genpop.filePath <- 
+  "/RAID1/IMLS_GCCO/Analysis/Stacks/reference_filteredReads/QUAC/GSNAP2/output/populations_sum/"
+setwd(genpop.filePath)
+# Reading in and processing .gen file
+QUAC.RG2.genind.dup <- read.genepop(paste0(genpop.filePath,"populations.snps.gen"))
+pop(QUAC.RG2.genind.dup) <- factor(read.table("../../../QUAC_popmap2", header=FALSE)[,2])
+# How many loci are present?
+nLoc(QUAC.RG2.genind.dup) ; ncol(QUAC.RG2.genind.dup@tab)
+# How many samples?
+nInd(QUAC.RG2.genind.dup)
+
+# Without duplicates
+genpop.filePath <- 
+  "/RAID1/IMLS_GCCO/Analysis/Stacks/reference_filteredReads/QUAC/GSNAP2/output/populations_noDuplicates/"
+setwd(genpop.filePath)
+# Reading in and processing .gen file
+QUAC.RG2.genind <- read.genepop(paste0(genpop.filePath,"populations.snps.gen"))
+pop(QUAC.RG2.genind) <- factor(read.table("./QUAC_popmap_noDuplicates", header=FALSE)[,2])
+# How many loci are present?
+nLoc(QUAC.RG2.genind) ; ncol(QUAC.RG2.genind@tab)
+# How many samples?
+nInd(QUAC.RG2.genind)
+
+# How many loci are different between the dataset with and without duplicates?
+nLoc(QUAC.RG2.genind.dup) - nLoc(QUAC.RG2.genind)
+# 28 more loci in the dataset with duplicates
+
 # %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 # %%% DE NOVO -- FINAL ASSEMBLIES %%%
 # %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
