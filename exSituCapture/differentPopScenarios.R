@@ -24,7 +24,7 @@ reportAllelicCapture_Together <- function(gen.obj){
   # Low frequency
   lowFrequency <- length(which(names(which(wildFreqs < 10 & wildFreqs > 1)) %in% names(which(colSums(gen.obj@tab[garden.Rows,], na.rm = TRUE) > 0))))/length(which(wildFreqs < 10 & wildFreqs > 1))*100
   # Rare
-  rare <- length(which(names(which(wildFreqs < 1)) %in% names(which(colSums(gen.obj@tab[garden.Rows,], na.rm = TRUE) > 0))))/length(which(wildFreqs < 1))*100
+  rare <- length(which(names(which(wildFreqs < 1 & wildFreqs > 0)) %in% names(which(colSums(gen.obj@tab[garden.Rows,], na.rm = TRUE) > 0))))/length(which(wildFreqs < 1 & wildFreqs > 0))*100
   # Build list of rates
   captureRates <- c(total,veryCommon,common,lowFrequency,rare)
   names(captureRates) <- c("Total","Very common (>10%)","Common (>5%)","Low frequency (1% -- 10%)","Rare (<1%)")
@@ -46,7 +46,7 @@ reportAllelicCapture_Separate <- function(gen.obj.garden, gen.obj.wild){
   # Low frequency
   lowFrequency <- length(which(names(which(wildFreqs < 10 & wildFreqs > 1)) %in% colnames(gen.obj.garden@tab)))/length(which(wildFreqs < 10 & wildFreqs > 1))*100
   # Rare
-  rare <- length(which(names(which(wildFreqs < 1)) %in% colnames(gen.obj.garden@tab)))/length(which(wildFreqs < 1))*100
+  rare <- length(which(names(which(wildFreqs < 1 & wildFreqs > 0)) %in% colnames(gen.obj.garden@tab)))/length(which(wildFreqs < 1 & wildFreqs > 0))*100
   # Build list of rates
   captureRates <- c(total,veryCommon,common,lowFrequency,rare)
   names(captureRates) <- c("Total","Very common (>10%)","Common (>5%)","Low frequency (1% -- 10%)","Rare (<1%)")
@@ -66,6 +66,7 @@ QUAC.R0.genind <- read.genepop(paste0(genpop.filePath,"populations.snps.gen"), q
 pop(QUAC.R0.genind) <- factor(read.table("QUAC_popmap2", header=FALSE)[,2])
 # R0 Capture rates
 reportAllelicCapture_Together(QUAC.R0.genind)
+nLoc(QUAC.R0.genind)
 
 # R80 ----
 # Read in genind file
@@ -77,6 +78,7 @@ QUAC.R80.genind <- read.genepop(paste0(genpop.filePath,"populations.snps.gen"), 
 pop(QUAC.R80.genind) <- factor(read.table("QUAC_popmap2", header=FALSE)[,2])
 # R80 Capture rates
 reportAllelicCapture_Together(QUAC.R80.genind)
+nLoc(QUAC.R80.genind)
 
 # R100 ----
 # Read in genind file
@@ -88,6 +90,7 @@ QUAC.R100.genind <- read.genepop(paste0(genpop.filePath,"populations.snps.gen"),
 pop(QUAC.R100.genind) <- factor(read.table("QUAC_popmap2", header=FALSE)[,2])
 # R100 Capture rates
 reportAllelicCapture_Together(QUAC.R100.genind)
+nLoc(QUAC.R100.genind)
 
 # ----TWO GENINDS ----
 # R0 ----
@@ -109,6 +112,8 @@ pop(QUAC.R0.wild.genind) <- factor(read.table("QUAC_popmap_wild", header=FALSE)[
 
 # R0 Capture rates
 reportAllelicCapture_Separate(QUAC.R0.garden.genind, QUAC.R0.wild.genind)
+nLoc(QUAC.R0.garden.genind)
+nLoc(QUAC.R0.wild.genind)
 
 # R80 ----
 # GARDEN
@@ -129,6 +134,8 @@ pop(QUAC.R80.wild.genind) <- factor(read.table("QUAC_popmap_wild", header=FALSE)
 
 # R80 Capture rates
 reportAllelicCapture_Separate(QUAC.R80.garden.genind, QUAC.R80.wild.genind)
+nLoc(QUAC.R80.garden.genind)
+nLoc(QUAC.R80.wild.genind)
 
 # R100 ----
 # GARDEN
@@ -149,6 +156,8 @@ pop(QUAC.R100.wild.genind) <- factor(read.table("QUAC_popmap_wild", header=FALSE
 
 # R100 Capture rates
 reportAllelicCapture_Separate(QUAC.R100.garden.genind, QUAC.R100.wild.genind)
+nLoc(QUAC.R100.garden.genind)
+nLoc(QUAC.R100.wild.genind)
 
 # ---- NO MINOR ALLELE FREQUENCY (NOMAF) ----
 # ---- SINGLE GENIND ----
@@ -162,6 +171,7 @@ QUAC.R0_NOMAF.genind <- read.genepop(paste0(genpop.filePath,"populations.snps.ge
 pop(QUAC.R0_NOMAF.genind) <- factor(read.table("QUAC_popmap2", header=FALSE)[,2])
 # R0_NOMAF Capture rates
 reportAllelicCapture_Together(QUAC.R0_NOMAF.genind)
+nLoc(QUAC.R0_NOMAF.genind)
 
 # R80 ----
 # Read in genind file
@@ -173,6 +183,7 @@ QUAC.R80_NOMAF.genind <- read.genepop(paste0(genpop.filePath,"populations.snps.g
 pop(QUAC.R80_NOMAF.genind) <- factor(read.table("QUAC_popmap2", header=FALSE)[,2])
 # R80_NOMAF Capture rates
 reportAllelicCapture_Together(QUAC.R80_NOMAF.genind)
+nLoc(QUAC.R80_NOMAF.genind)
 
 # R100 ----
 # Read in genind file
@@ -184,6 +195,7 @@ QUAC.R100_NOMAF.genind <- read.genepop(paste0(genpop.filePath,"populations.snps.
 pop(QUAC.R100_NOMAF.genind) <- factor(read.table("QUAC_popmap2", header=FALSE)[,2])
 # R100_NOMAF Capture rates
 reportAllelicCapture_Together(QUAC.R100_NOMAF.genind)
+nLoc(QUAC.R100_NOMAF.genind)
 
 # ----TWO GENINDS ----
 # R0 ----
@@ -205,6 +217,8 @@ pop(QUAC.R0_NOMAF.wild.genind) <- factor(read.table("QUAC_popmap_wild", header=F
 
 # R0 Capture rates
 reportAllelicCapture_Separate(QUAC.R0_NOMAF.garden.genind, QUAC.R0_NOMAF.wild.genind)
+nLoc(QUAC.R0_NOMAF.garden.genind)
+nLoc(QUAC.R0_NOMAF.wild.genind)
 
 # R80 ----
 # GARDEN
@@ -225,6 +239,8 @@ pop(QUAC.R80_NOMAF.wild.genind) <- factor(read.table("QUAC_popmap_wild", header=
 
 # R80 Capture rates
 reportAllelicCapture_Separate(QUAC.R80_NOMAF.garden.genind, QUAC.R80_NOMAF.wild.genind)
+nLoc(QUAC.R80_NOMAF.garden.genind)
+nLoc(QUAC.R80_NOMAF.wild.genind)
 
 # R100 ----
 # GARDEN
@@ -245,6 +261,8 @@ pop(QUAC.R100_NOMAF.wild.genind) <- factor(read.table("QUAC_popmap_wild", header
 
 # R100 Capture rates
 reportAllelicCapture_Separate(QUAC.R100_NOMAF.garden.genind, QUAC.R100_NOMAF.wild.genind)
+nLoc(QUAC.R100_NOMAF.garden.genind)
+nLoc(QUAC.R100_NOMAF.wild.genind)
 
 # TROUBLESHOOTING ----
 # TWO GENINDS 
@@ -360,6 +378,7 @@ QUBO.R0.genind <- read.genepop(paste0(genpop.filePath,"populations.snps.gen"), q
 pop(QUBO.R0.genind) <- factor(read.table("QUBO_popmap2", header=FALSE)[,2])
 # R0 Capture rates
 reportAllelicCapture_Together(QUBO.R0.genind)
+nLoc(QUBO.R0.genind)
 
 # R80 ----
 # Read in genind file
@@ -371,6 +390,7 @@ QUBO.R80.genind <- read.genepop(paste0(genpop.filePath,"populations.snps.gen"), 
 pop(QUBO.R80.genind) <- factor(read.table("QUBO_popmap2", header=FALSE)[,2])
 # R80 Capture rates
 reportAllelicCapture_Together(QUBO.R80.genind)
+nLoc(QUBO.R80.genind)
 
 # R100 ----
 # Read in genind file
@@ -382,6 +402,7 @@ QUBO.R100.genind <- read.genepop(paste0(genpop.filePath,"populations.snps.gen"),
 pop(QUBO.R100.genind) <- factor(read.table("QUBO_popmap2", header=FALSE)[,2])
 # R100 Capture rates
 reportAllelicCapture_Together(QUBO.R100.genind)
+nLoc(QUBO.R100.genind)
 
 # ----TWO GENINDS ----
 # R0 ----
@@ -403,6 +424,8 @@ pop(QUBO.R0.wild.genind) <- factor(read.table("QUBO_popmap_wild", header=FALSE)[
 
 # R0 Capture rates
 reportAllelicCapture_Separate(QUBO.R0.garden.genind, QUBO.R0.wild.genind)
+nLoc(QUBO.R0.garden.genind)
+nLoc(QUBO.R0.wild.genind)
 
 # R80 ----
 # GARDEN
@@ -423,6 +446,8 @@ pop(QUBO.R80.wild.genind) <- factor(read.table("QUBO_popmap_wild", header=FALSE)
 
 # R80 Capture rates
 reportAllelicCapture_Separate(QUBO.R80.garden.genind, QUBO.R80.wild.genind)
+nLoc(QUBO.R80.garden.genind)
+nLoc(QUBO.R80.wild.genind)
 
 # R100 ----
 # GARDEN
@@ -443,6 +468,8 @@ pop(QUBO.R100.wild.genind) <- factor(read.table("QUBO_popmap_wild", header=FALSE
 
 # R100 Capture rates
 reportAllelicCapture_Separate(QUBO.R100.garden.genind, QUBO.R100.wild.genind)
+nLoc(QUBO.R100.garden.genind)
+nLoc(QUBO.R100.wild.genind)
 
 # ---- NO MINOR ALLELE FREQUENCY (NOMAF) ----
 # ---- SINGLE GENIND ----
@@ -456,6 +483,7 @@ QUBO.R0_NOMAF.genind <- read.genepop(paste0(genpop.filePath,"populations.snps.ge
 pop(QUBO.R0_NOMAF.genind) <- factor(read.table("QUBO_popmap2", header=FALSE)[,2])
 # R0_NOMAF Capture rates
 reportAllelicCapture_Together(QUBO.R0_NOMAF.genind)
+nLoc(QUBO.R0_NOMAF.genind)
 
 # R80 ----
 # Read in genind file
@@ -467,6 +495,7 @@ QUBO.R80_NOMAF.genind <- read.genepop(paste0(genpop.filePath,"populations.snps.g
 pop(QUBO.R80_NOMAF.genind) <- factor(read.table("QUBO_popmap2", header=FALSE)[,2])
 # R80_NOMAF Capture rates
 reportAllelicCapture_Together(QUBO.R80_NOMAF.genind)
+nLoc(QUBO.R80_NOMAF.genind)
 
 # R100 ----
 # Read in genind file
@@ -478,6 +507,7 @@ QUBO.R100_NOMAF.genind <- read.genepop(paste0(genpop.filePath,"populations.snps.
 pop(QUBO.R100_NOMAF.genind) <- factor(read.table("QUBO_popmap2", header=FALSE)[,2])
 # R100_NOMAF Capture rates
 reportAllelicCapture_Together(QUBO.R100_NOMAF.genind)
+nLoc(QUBO.R100_NOMAF.genind)
 
 # ----TWO GENINDS ----
 # R0 ----
@@ -499,6 +529,8 @@ pop(QUBO.R0_NOMAF.wild.genind) <- factor(read.table("QUBO_popmap_wild", header=F
 
 # R0_NOMAF Capture rates
 reportAllelicCapture_Separate(QUBO.R0_NOMAF.garden.genind, QUBO.R0_NOMAF.wild.genind)
+nLoc(QUBO.R0_NOMAF.garden.genind)
+nLoc(QUBO.R0_NOMAF.wild.genind)
 
 # R80 ----
 # GARDEN
@@ -519,6 +551,8 @@ pop(QUBO.R80_NOMAF.wild.genind) <- factor(read.table("QUBO_popmap_wild", header=
 
 # R80_NOMAF Capture rates
 reportAllelicCapture_Separate(QUBO.R80_NOMAF.garden.genind, QUBO.R80_NOMAF.wild.genind)
+nLoc(QUBO.R80_NOMAF.garden.genind)
+nLoc(QUBO.R80_NOMAF.wild.genind)
 
 # R100 ----
 # GARDEN
@@ -539,3 +573,5 @@ pop(QUBO.R100_NOMAF.wild.genind) <- factor(read.table("QUBO_popmap_wild", header
 
 # R100_NOMAF Capture rates
 reportAllelicCapture_Separate(QUBO.R100_NOMAF.garden.genind, QUBO.R100_NOMAF.wild.genind)
+nLoc(QUBO.R100_NOMAF.garden.genind)
+nLoc(QUBO.R100_NOMAF.wild.genind)
