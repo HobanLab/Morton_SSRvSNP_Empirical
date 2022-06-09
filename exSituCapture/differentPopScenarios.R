@@ -7,6 +7,7 @@ library(adegenet)
 # ---- FUNCTIONS ----
 # Function for reporting allelic capture rates, using a single genind object
 reportAllelicCapture_Together <- function(gen.obj){
+  #browser()
   # Generate numberical vectors corresponding to garden and wild rows, for later calculations
   garden.Rows <- seq_len(length(which(pop(gen.obj)=="garden")))
   wild.Rows <- seq(from=length(which(pop(gen.obj)=="garden"))+1, to=nInd(gen.obj))
@@ -561,3 +562,14 @@ reportAllelicCapture_Separate(QUBO.R100_NOMAF.garden.genind, QUBO.R100_NOMAF.wil
 reportAllelicCapture_Separate_NEW(QUBO.R100_NOMAF.garden.genind, QUBO.R100_NOMAF.wild.genind)
 nLoc(QUBO.R100_NOMAF.garden.genind)
 nLoc(QUBO.R100_NOMAF.wild.genind)
+
+# TROUBLESHOOTING: ALLELE NAMES----
+reportAllelicCapture_Together(QUBO.R0.genind)
+# assign("QUBO_R0_AllNames", names(wildFreqs), envir = .GlobalEnv)
+nLoc(QUBO.R0.genind)
+# Names of loci
+head(locNames(QUBO.R0.genind))
+# Names of loci with alleles
+locNames(QUBO.R0.genind, withAlleles=TRUE)
+ 
+
