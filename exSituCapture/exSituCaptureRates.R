@@ -603,7 +603,7 @@ reportAllelicCapture_Together(QUBO.R100_NOMAF.genind)
 reportAllelicCapture_Together_Partial(QUBO.R100_NOMAF.genind)
 nLoc(QUBO.R100_NOMAF.genind)
 
-# R100 ----
+# R100, ALL SNPS ----
 # Read in genind file
 genpop.filePath <- 
   "/RAID1/IMLS_GCCO/Analysis/Stacks/reference_filteredReads/QUBO/GSNAP4/output/populations_R100_NOMAF/"
