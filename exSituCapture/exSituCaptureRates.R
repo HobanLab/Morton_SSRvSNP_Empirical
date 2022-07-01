@@ -32,6 +32,8 @@
 # If an analysis doesn't have NOMAF, then the minor allele frequency filter is 1%
 # -AllSNPs: means every SNP is written for every locus. 
 # Otherwise, only a single (random) SNP is written per locus
+# -TwoPops: means all wild samples are grouped into a single population (called "wild") in the Stacks 
+# popmap file. Otherwise, Stacks popmaps assign each wild sample to its source population
 
 library(adegenet)
 
@@ -269,9 +271,10 @@ pop(QUAC.R0_NOMAF.genind) <- factor(read.table("QUAC_popmap2", header=FALSE)[,2]
 # R0_NOMAF Capture rates
 reportAllelicCapture_Together(QUAC.R0_NOMAF.genind)
 reportAllelicCapture_Together_Partial(QUAC.R0_NOMAF.genind)
-nLoc(QUAC.R0_NOMAF.genind)
+nLoc(QUAC.R0_NOMAF.genind); ncol(QUAC.R0_NOMAF.genind@tab)
 
 # R0, ALL SNPS----
+# Read in genind file
 genpop.filePath <- 
   "/RAID1/IMLS_GCCO/Analysis/Stacks/denovo_finalAssemblies/QUAC/output/populations_R0_NOMAF_AllSNPs/"
 setwd(genpop.filePath)
@@ -281,6 +284,19 @@ pop(QUAC.R0_NOMAF_AllSNPs.genind) <- factor(read.table("QUAC_popmap2", header=FA
 # R0_NOMAF Capture rates
 reportAllelicCapture_Together(QUAC.R0_NOMAF_AllSNPs.genind)
 reportAllelicCapture_Together_Partial(QUAC.R0_NOMAF_AllSNPs.genind)
+
+# R0, TWO POPULATIONS----
+# Read in genind file
+genpop.filePath <- 
+  "/RAID1/IMLS_GCCO/Analysis/Stacks/denovo_finalAssemblies/QUAC/output/populations_R0_NOMAF_TwoPops/"
+setwd(genpop.filePath)
+QUAC.R0_NOMAF_TwoPops.genind <- read.genepop(paste0(genpop.filePath,"populations.snps.gen"), quiet = TRUE)
+# Correct popNames
+pop(QUAC.R0_NOMAF_TwoPops.genind) <- factor(read.table("QUAC_popmap_GardenWild", header=FALSE)[,2])
+# R0_NOMAF Capture rates
+reportAllelicCapture_Together(QUAC.R0_NOMAF_TwoPops.genind)
+reportAllelicCapture_Together_Partial(QUAC.R0_NOMAF_TwoPops.genind)
+nLoc(QUAC.R0_NOMAF_TwoPops.genind)
 
 # R80 ----
 # Read in genind file
@@ -554,6 +570,7 @@ reportAllelicCapture_Together_Partial(QUBO.R0_NOMAF.genind)
 nLoc(QUBO.R0_NOMAF.genind)
 
 # R0, ALL SNPS----
+# Read in genind file
 genpop.filePath <- 
   "/RAID1/IMLS_GCCO/Analysis/Stacks/reference_filteredReads/QUBO/GSNAP4/output/populations_R0_NOMAF_AllSNPs/"
 setwd(genpop.filePath)
@@ -563,6 +580,19 @@ pop(QUBO.R0_NOMAF_AllSNPs.genind) <- factor(read.table("QUBO_popmap2", header=FA
 # R0_NOMAF Capture rates
 reportAllelicCapture_Together(QUBO.R0_NOMAF_AllSNPs.genind)
 reportAllelicCapture_Together_Partial(QUBO.R0_NOMAF_AllSNPs.genind)
+
+# R0, TWO POPULATIONS ----
+# Read in genind file
+genpop.filePath <- 
+  "/RAID1/IMLS_GCCO/Analysis/Stacks/reference_filteredReads/QUBO/GSNAP4/output/populations_R0_NOMAF_TwoPops/"
+setwd(genpop.filePath)
+QUBO.R0_NOMAF_TwoPops.genind <- read.genepop(paste0(genpop.filePath,"populations.snps.gen"), quiet = TRUE)
+# Correct popNames
+pop(QUBO.R0_NOMAF_TwoPops.genind) <- factor(read.table("QUBO_popmap_GardenWild", header=FALSE)[,2])
+# R0_NOMAF Capture rates
+reportAllelicCapture_Together(QUBO.R0_NOMAF_TwoPops.genind)
+reportAllelicCapture_Together_Partial(QUBO.R0_NOMAF_TwoPops.genind)
+nLoc(QUBO.R0_NOMAF_TwoPops.genind)
 
 # R80 ----
 # Read in genind file
