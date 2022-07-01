@@ -7,10 +7,11 @@
 # and Quercus boyntonii (QUBO; GSNAP4 alignment with Quercus robur reference) NextRAD samples
 
 library(adegenet)
+library(RColorBrewer)
 
 # %%%% FUNCTIONS %%%% ----
 # Function for reporting capture rates, using a sample matrix and a vector of allele frequencies
-get.allele.cat <- function(freq.vector, sample.mat){
+get.allele.cat.NEW <- function(freq.vector, sample.mat){
   # Total alleles
   # Determine how many alleles in the sample (i.e. greater than 0) are found in the frequency vector 
   total <- length(which(names(which(freq.vector > 0)) %in% names(which(colSums(sample.mat, na.rm = TRUE) > 0))))/length(which(freq.vector > 0))*100
@@ -21,8 +22,8 @@ get.allele.cat <- function(freq.vector, sample.mat){
   # Low frequency alleles (between 1% and 10%)
   low_freq <- length(which(names(which(freq.vector < 10 & freq.vector > 1)) %in% names(which(colSums(sample.mat, na.rm = TRUE) > 0))))/length(which(freq.vector < 10 & freq.vector > 1))*100
   # Rare alleles (less than 1%)
-  rare <- length(which(names(which(freq.vector < 1)) %in% names(which(colSums(sample.mat, na.rm = TRUE) > 0))))/length(which(freq.vector < 1))*100
-  # Concatentate values to a vector, and return
+  rare <- length(which(names(which(freq.vector < 1 & freq.vector > 0)) %in% names(which(colSums(sample.mat, na.rm = TRUE) > 0))))/length(which(freq.vector < 1 & freq.vector > 0))*100
+  # Concatenate values to a vector, and return
   return(c(total,v_com,com,low_freq,rare))
 }
 
@@ -64,7 +65,7 @@ for(i in 1:num_reps){
     samp <- QUAC.wild.mat[sample(nrow(QUAC.wild.mat), size=j, replace = FALSE),]
     # Calculate how many alleles of each category that sample captures,
     # and place those percentages into the row of the samplingResults array
-    samplingResults_QUAC[j-1,,i] <- get.allele.cat(QUAC_wildFreqs,samp)
+    samplingResults_QUAC[j-1,,i] <- get.allele.cat.NEW(QUAC_wildFreqs,samp)
   }
 }
 str(samplingResults_QUAC)
@@ -72,6 +73,38 @@ str(samplingResults_QUAC)
 # the minimum number of samples required to capture 95% wild genetic diversity
 # (We average samplingResults[,1,], since this column contains the total genetic diversity)
 min(which(apply(samplingResults_QUAC[,1,],1,mean) > 95))
+
+# PLOTTING ----
+# Calculate means and standard deviations, for each capture rate category
+total_means <- apply(samplingResults_QUAC[,1,], 1, mean)
+total_sd <- apply(samplingResults_QUAC[,1,], 1, sd)
+
+v.com_means <- apply(samplingResults_QUAC[,2,], 1, mean)
+v.com_sd <- apply(samplingResults_QUAC[,2,], 1, sd)
+
+com_means <- apply(samplingResults_QUAC[,3,], 1, mean)
+com_sd <- apply(samplingResults_QUAC[,3,], 1, sd)
+
+lowfr_means <- apply(samplingResults_QUAC[,4,], 1, mean)
+lowfr_sd <- apply(samplingResults_QUAC[,4,], 1, sd)
+
+rare_means <- apply(samplingResults_QUAC[,5,], 1, mean)
+rare_sd <- apply(samplingResults_QUAC[,5,], 1, sd)
+# Plots all sets of points onto single graph, as well as 95% threshold line
+plotColors <- brewer.pal(n=5, name="Dark2")
+# plotColors <- c("red","firebrick","darkorange3","coral","deeppink4")
+plot(total_means, ylim=c(0,110), col=plotColors[1], pch=16, 
+     xlab="Number of Individuals", ylab="Percent Diversity Capture",
+     main="QUAC (R0, NOMAF) Resampling")
+points(v.com_means, col=plotColors[2], pch=16)
+points(com_means, col=plotColors[3], pch=16)
+points(lowfr_means, col=plotColors[4], pch=16)
+points(rare_means, col=plotColors[5], pch=16)
+legend(x=83, y=20.13276, inset = 0.05, legend = c("Total","Very common","Common","Low frequency", "Rare"),
+       col=plotColors, pch = c(20,20,20), cex=1, pt.cex = 2, bty="n", y.intersp = 0.4)
+# Lines for 95% threshold
+abline(h=95, col="black", lty=3)
+abline(v=81, col="black")
 
 # %%%% QUBO %%%% ----
 # READ IN GENIND FILE (QUBO DNFA; R0, min-maf=0; 1 SNP/locus) ----
@@ -111,7 +144,7 @@ for(i in 1:num_reps){
     samp <- QUBO.wild.mat[sample(nrow(QUBO.wild.mat), size=j, replace = FALSE),]
     # Calculate how many alleles of each category that sample captures,
     # and place those percentages into the row of the samplingResults array
-    samplingResults_QUBO[j-1,,i] <- get.allele.cat(QUBO_wildFreqs,samp)
+    samplingResults_QUBO[j-1,,i] <- get.allele.cat.NEW(QUBO_wildFreqs,samp)
   }
 }
 str(samplingResults_QUBO)
