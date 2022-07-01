@@ -69,12 +69,14 @@ for(i in 1:num_reps){
   }
 }
 str(samplingResults_QUAC)
+
+# CALCULATE MEANS AND PLOT ----
+
 # Average results across replicates (slices) of the sampling array, to determine
 # the minimum number of samples required to capture 95% wild genetic diversity
 # (We average samplingResults[,1,], since this column contains the total genetic diversity)
-min(which(apply(samplingResults_QUAC[,1,],1,mean) > 95))
+min_95 <- min(which(apply(samplingResults_QUAC[,1,],1,mean) > 95)); min_95
 
-# PLOTTING ----
 # Calculate means and standard deviations, for each capture rate category
 total_means <- apply(samplingResults_QUAC[,1,], 1, mean)
 total_sd <- apply(samplingResults_QUAC[,1,], 1, sd)
@@ -104,7 +106,7 @@ legend(x=83, y=20.13276, inset = 0.05, legend = c("Total","Very common","Common"
        col=plotColors, pch = c(20,20,20), cex=1, pt.cex = 2, bty="n", y.intersp = 0.4)
 # Lines for 95% threshold
 abline(h=95, col="black", lty=3)
-abline(v=81, col="black")
+abline(v=min_95, col="black")
 
 # %%%% QUBO %%%% ----
 # READ IN GENIND FILE (QUBO DNFA; R0, min-maf=0; 1 SNP/locus) ----
@@ -148,7 +150,41 @@ for(i in 1:num_reps){
   }
 }
 str(samplingResults_QUBO)
+
+# CALCULATE MEANS AND PLOT ----
+
 # Average results across replicates (slices) of the sampling array, to determine
 # the minimum number of samples required to capture 95% wild genetic diversity
 # (We average samplingResults[,1,], since this column contains the total genetic diversity)
-min(which(apply(samplingResults_QUBO[,1,],1,mean) > 95))
+min_95 <- min(which(apply(samplingResults_QUBO[,1,],1,mean) > 95)); min_95
+
+# Calculate means and standard deviations, for each capture rate category
+total_means <- apply(samplingResults_QUBO[,1,], 1, mean)
+total_sd <- apply(samplingResults_QUBO[,1,], 1, sd)
+
+v.com_means <- apply(samplingResults_QUBO[,2,], 1, mean)
+v.com_sd <- apply(samplingResults_QUBO[,2,], 1, sd)
+
+com_means <- apply(samplingResults_QUBO[,3,], 1, mean)
+com_sd <- apply(samplingResults_QUBO[,3,], 1, sd)
+
+lowfr_means <- apply(samplingResults_QUBO[,4,], 1, mean)
+lowfr_sd <- apply(samplingResults_QUBO[,4,], 1, sd)
+
+rare_means <- apply(samplingResults_QUBO[,5,], 1, mean)
+rare_sd <- apply(samplingResults_QUBO[,5,], 1, sd)
+# Plots all sets of points onto single graph, as well as 95% threshold line
+plotColors <- brewer.pal(n=5, name="Dark2")
+# plotColors <- c("red","firebrick","darkorange3","coral","deeppink4")
+plot(total_means, ylim=c(0,110), col=plotColors[1], pch=16, 
+     xlab="Number of Individuals", ylab="Percent Diversity Capture",
+     main="QUBO (R0, NOMAF) Resampling")
+points(v.com_means, col=plotColors[2], pch=16)
+points(com_means, col=plotColors[3], pch=16)
+points(lowfr_means, col=plotColors[4], pch=16)
+points(rare_means, col=plotColors[5], pch=16)
+legend(x=83, y=20.13276, inset = 0.05, legend = c("Total","Very common","Common","Low frequency", "Rare"),
+       col=plotColors, pch = c(20,20,20), cex=1, pt.cex = 2, bty="n", y.intersp = 0.4)
+# Lines for 95% threshold
+abline(h=95, col="black", lty=3)
+abline(v=min_95, col="black")
