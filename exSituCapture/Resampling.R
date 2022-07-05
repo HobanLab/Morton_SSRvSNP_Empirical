@@ -8,6 +8,7 @@
 
 library(adegenet)
 library(RColorBrewer)
+library(scales)
 
 # %%%% FUNCTIONS %%%% ----
 # Function for reporting capture rates, using a sample matrix and a vector of allele frequencies
@@ -28,13 +29,13 @@ get.allele.cat.NEW <- function(freq.vector, sample.mat){
 }
 
 # %%%% QUAC %%%% ----
-# READ IN GENIND FILE (QUAC DNFA; R0, min-maf=0; 1 SNP/locus) ----
+# READ IN GENIND FILE (QUAC DNFA; R0, min-maf=0; 1 SNP/locus; 2 populations, garden and wild) ----
 genpop.filePath <- 
-  "/RAID1/IMLS_GCCO/Analysis/Stacks/denovo_finalAssemblies/QUAC/output/populations_R0_NOMAF/"
+  "/RAID1/IMLS_GCCO/Analysis/Stacks/denovo_finalAssemblies/QUAC/output/populations_R0_NOMAF_TwoPops/"
 setwd(genpop.filePath)
 QUAC.R0_NOMAF.genind <- read.genepop(paste0(genpop.filePath,"populations.snps.gen"), quiet = TRUE)
 # Correct popNames
-pop(QUAC.R0_NOMAF.genind) <- factor(read.table("QUAC_popmap2", header=FALSE)[,2])
+pop(QUAC.R0_NOMAF.genind) <- factor(read.table("QUAC_popmap_GardenWild", header=FALSE)[,2])
 # Number of variant sites (number of loci, and 1 SNP/locus)
 nLoc(QUAC.R0_NOMAF.genind)
 
@@ -75,7 +76,7 @@ str(samplingResults_QUAC)
 # Average results across replicates (slices) of the sampling array, to determine
 # the minimum number of samples required to capture 95% wild genetic diversity
 # (We average samplingResults[,1,], since this column contains the total genetic diversity)
-min_95 <- min(which(apply(samplingResults_QUAC[,1,],1,mean) > 95)); min_95
+min_95_QUAC <- min(which(apply(samplingResults_QUAC[,1,],1,mean) > 95)); min_95_QUAC
 
 # Calculate means and standard deviations, for each capture rate category
 total_means <- apply(samplingResults_QUAC[,1,], 1, mean)
@@ -92,9 +93,11 @@ lowfr_sd <- apply(samplingResults_QUAC[,4,], 1, sd)
 
 rare_means <- apply(samplingResults_QUAC[,5,], 1, mean)
 rare_sd <- apply(samplingResults_QUAC[,5,], 1, sd)
-# Plots all sets of points onto single graph, as well as 95% threshold line
+# Pick colors, with transparency for values other than Total
 plotColors <- brewer.pal(n=5, name="Dark2")
 # plotColors <- c("red","firebrick","darkorange3","coral","deeppink4")
+plotColors[2:5] <- alpha(plotColors[2:5], 0.5)
+# Plots all sets of points onto single graph, as well as 95% threshold line
 plot(total_means, ylim=c(0,110), col=plotColors[1], pch=16, 
      xlab="Number of Individuals", ylab="Percent Diversity Capture",
      main="QUAC (R0, NOMAF) Resampling")
@@ -106,16 +109,16 @@ legend(x=83, y=20.13276, inset = 0.05, legend = c("Total","Very common","Common"
        col=plotColors, pch = c(20,20,20), cex=1, pt.cex = 2, bty="n", y.intersp = 0.4)
 # Lines for 95% threshold
 abline(h=95, col="black", lty=3)
-abline(v=min_95, col="black")
+abline(v=min_95_QUAC, col="black")
 
 # %%%% QUBO %%%% ----
-# READ IN GENIND FILE (QUBO DNFA; R0, min-maf=0; 1 SNP/locus) ----
+# READ IN GENIND FILE (QUBO DNFA; R0, min-maf=0; 1 SNP/locus; 2 populations, garden and wild) ----
 genpop.filePath <- 
-  "/RAID1/IMLS_GCCO/Analysis/Stacks/reference_filteredReads/QUBO/GSNAP4/output/populations_R0_NOMAF/"
+  "/RAID1/IMLS_GCCO/Analysis/Stacks/reference_filteredReads/QUBO/GSNAP4/output/populations_R0_NOMAF_TwoPops/"
 setwd(genpop.filePath)
 QUBO.R0_NOMAF.genind <- read.genepop(paste0(genpop.filePath,"populations.snps.gen"), quiet = TRUE)
 # Correct popNames
-pop(QUBO.R0_NOMAF.genind) <- factor(read.table("QUBO_popmap2", header=FALSE)[,2])
+pop(QUBO.R0_NOMAF.genind) <- factor(read.table("QUBO_popmap_GardenWild", header=FALSE)[,2])
 # Number of variant sites (number of loci, and 1 SNP/locus)
 nLoc(QUBO.R0_NOMAF.genind)
 
@@ -156,7 +159,7 @@ str(samplingResults_QUBO)
 # Average results across replicates (slices) of the sampling array, to determine
 # the minimum number of samples required to capture 95% wild genetic diversity
 # (We average samplingResults[,1,], since this column contains the total genetic diversity)
-min_95 <- min(which(apply(samplingResults_QUBO[,1,],1,mean) > 95)); min_95
+min_95_QUBO <- min(which(apply(samplingResults_QUBO[,1,],1,mean) > 95)); min_95_QUBO
 
 # Calculate means and standard deviations, for each capture rate category
 total_means <- apply(samplingResults_QUBO[,1,], 1, mean)
@@ -173,9 +176,11 @@ lowfr_sd <- apply(samplingResults_QUBO[,4,], 1, sd)
 
 rare_means <- apply(samplingResults_QUBO[,5,], 1, mean)
 rare_sd <- apply(samplingResults_QUBO[,5,], 1, sd)
-# Plots all sets of points onto single graph, as well as 95% threshold line
+# Pick colors, with transparency for values other than Total
 plotColors <- brewer.pal(n=5, name="Dark2")
 # plotColors <- c("red","firebrick","darkorange3","coral","deeppink4")
+plotColors[2:5] <- alpha(plotColors[2:5], 0.5)
+# Plots all sets of points onto single graph, as well as 95% threshold line
 plot(total_means, ylim=c(0,110), col=plotColors[1], pch=16, 
      xlab="Number of Individuals", ylab="Percent Diversity Capture",
      main="QUBO (R0, NOMAF) Resampling")
@@ -185,6 +190,5 @@ points(lowfr_means, col=plotColors[4], pch=16)
 points(rare_means, col=plotColors[5], pch=16)
 legend(x=83, y=20.13276, inset = 0.05, legend = c("Total","Very common","Common","Low frequency", "Rare"),
        col=plotColors, pch = c(20,20,20), cex=1, pt.cex = 2, bty="n", y.intersp = 0.4)
-# Lines for 95% threshold
 abline(h=95, col="black", lty=3)
-abline(v=min_95, col="black")
+abline(v=min_95_QUBO, col="black")
