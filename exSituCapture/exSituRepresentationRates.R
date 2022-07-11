@@ -346,6 +346,19 @@ reportAllelicRepresentation_Together(QUAC.R80_NOMAF_AllSNPs.genind)
 reportAllelicRepresentation_Together_Partial(QUAC.R80_NOMAF_AllSNPs.genind)
 nLoc(QUAC.R80_NOMAF_AllSNPs.genind)
 
+# R80, TWO POPULATIONS, FIRST SNP ----
+# Read in genind file
+genpop.filePath <- 
+  "/RAID1/IMLS_GCCO/Analysis/Stacks/denovo_finalAssemblies/QUAC/output/populations_R80_NOMAF_1SNP_2Pops/"
+setwd(genpop.filePath)
+QUAC.R80_NOMAF_1SNP.TwoPops.genind <- read.genepop(paste0(genpop.filePath,"populations.snps.gen"), quiet = TRUE)
+# Correct popNames
+pop(QUAC.R80_NOMAF_1SNP.TwoPops.genind) <- factor(read.table("QUAC_popmap_GardenWild", header=FALSE)[,2])
+# R80_NOMAF Representation rates
+reportAllelicRepresentation_Together(QUAC.R80_NOMAF_1SNP.TwoPops.genind)
+reportAllelicRepresentation_Together_Partial(QUAC.R80_NOMAF_1SNP.TwoPops.genind)
+nLoc(QUAC.R80_NOMAF_1SNP.TwoPops.genind)
+
 # R100 ----
 # Read in genind file
 genpop.filePath <- 
@@ -667,6 +680,19 @@ pop(QUBO.R80_NOMAF_AllSNPs.genind) <- factor(read.table("QUBO_popmap2", header=F
 reportAllelicRepresentation_Together(QUBO.R80_NOMAF_AllSNPs.genind)
 reportAllelicRepresentation_Together_Partial(QUBO.R80_NOMAF_AllSNPs.genind)
 nLoc(QUBO.R80_NOMAF_AllSNPs.genind)
+
+# R80, TWO POPULATIONS, FIRST SNP ----
+# Read in genind file
+genpop.filePath <- 
+  "/RAID1/IMLS_GCCO/Analysis/Stacks/reference_filteredReads/QUBO/GSNAP4/output/populations_R80_NOMAF_1SNP_2Pops//"
+setwd(genpop.filePath)
+QUBO.R80_NOMAF_1SNP.TwoPops.genind <- read.genepop(paste0(genpop.filePath,"populations.snps.gen"), quiet = TRUE)
+# Correct popNames
+pop(QUBO.R80_NOMAF_1SNP.TwoPops.genind) <- factor(read.table("QUBO_popmap_GardenWild", header=FALSE)[,2])
+# R80_NOMAF Representation rates
+reportAllelicRepresentation_Together(QUBO.R80_NOMAF_1SNP.TwoPops.genind)
+reportAllelicRepresentation_Together_Partial(QUBO.R80_NOMAF_1SNP.TwoPops.genind)
+nLoc(QUBO.R80_NOMAF_1SNP.TwoPops.genind)
 
 # R100 ----
 # Read in genind file
