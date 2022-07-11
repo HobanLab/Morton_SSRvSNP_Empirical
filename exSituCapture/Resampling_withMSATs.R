@@ -33,11 +33,11 @@ get.allele.cat.NEW <- function(freq.vector, sample.mat){
 
 # %%%% QUAC %%%% ----
 # ---- MSATs ----
-# READ IN GENIND FILE (QUAC_insitu_exsitu repo; QUAC_garden_wild_clean.gen) ----
+# READ IN GENIND FILE (GCC_QUAC_ZAIN repo; QUAC_wK_garden_wild_clean.gen) ----
 genpop.filePath <- 
-  "~/Documents/peripheralProjects/QUAC_insitu_exsitu/QUAC_data_files/QUAC_adegenet_files/Garden_Wild/"
+  "~/Documents/peripheralProjects/GCC_QUAC_ZAIN/Data_Files/Adegenet_Files/Garden_Wild/"
 setwd(genpop.filePath)
-QUAC.MSAT.genind <- read.genepop("QUAC_garden_wild_clean.gen", quiet = TRUE, ncode = 3)
+QUAC.MSAT.genind <- read.genepop("QUAC_wK_garden_wild_clean.gen", quiet = TRUE, ncode = 3)
 # Correct popNames: pop1 is Garden, pop2 is Wild
 pop(QUAC.MSAT.genind) <- gsub("pop1", "garden", pop(QUAC.MSAT.genind))
 pop(QUAC.MSAT.genind) <- gsub("pop2", "wild", pop(QUAC.MSAT.genind))
