@@ -1,0 +1,26 @@
+Loading required package: ade4
+
+   /// adegenet 2.1.5 is loaded ////////////
+
+   > overview: '?adegenet'
+   > tutorials/doc/questions: 'adegenetWeb()' 
+   > bug reports/feature requests: adegenetIssues()
+
+
+
+Attaching package: ‘hierfstat’
+
+The following objects are masked from ‘package:adegenet’:
+
+    Hs, read.fstat
+
+[1] "Start time: 2022-04-22 11:58:32"
+
+ Converting data from a Genepop .gen file to a genind object... 
+
+
+File description:  # Stacks v2.59; GenePop v4.1.3; February 04, 2022 
+
+...done.
+
+[1] "Stop time: 2022-04-22 13:17:14"
