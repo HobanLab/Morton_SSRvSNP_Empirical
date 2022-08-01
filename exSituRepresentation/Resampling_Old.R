@@ -1,6 +1,6 @@
-# %%%%%%%%%%%%%%%%%%
+# %%%%%%%%%%%%%%%%%%%%%%
 # %%% RESAMPLING_OLD %%%
-# %%%%%%%%%%%%%%%%%%
+# %%%%%%%%%%%%%%%%%%%%%%
 
 # This script uses the approach taken in the QUAC in situ/ex situ
 # analyses to generate Resampling arrays, and plots their results.
