@@ -23,16 +23,16 @@ read.CLUMPP <- function(clumpp.outputFile){
   return(Qmat)
 }
 
-# Plotting function for K of a single value
-plot_singleK <- function(kList, kColors, ...){
+# Plotting function for single K value
+plot_singleK <- function(kList, kColors, title, ...){
   # Graphing parameters
-  par(mar=c(7,2,6,3)+0.1, mgp = c(3,1,1))
+  par(mar=c(3,2,6,3)+0.1, mgp = c(3,1,1))
   # Plotting 
   for(i in 1:length(kList)){
     if(i==1){
       # Initial barplot
       barplot(kList[,i], xlim=c(0,(nrow(kList)+20)), horiz=F, beside=F, col=kColors[i], 
-              axisnames=T, space=0.2, yaxt= "n", main="")
+              axisnames=T, space=0.2, yaxt= "n", main=title)
       off.value <- kList[,i]
     }else{
       # Subsequent barplots with offset
@@ -45,180 +45,143 @@ plot_singleK <- function(kList, kColors, ...){
   axis(2, at = c(0, 0.25, 0.5, 0.75, 1), labels=c("0", "0.25", "0.50", "0.75", "1.00"), cex.axis = 1, las = 2, pos = -0.2, xpd=T)
 }
 
-plot_singleK <- function(kList, kColors, ...){
-  # Graphing parameters
-  par(mar=c(7,2,6,3)+0.1, mgp = c(3,1,1))
-  # Plotting 
+# Plotting function for multiple K values
+plot_multipleK <- function(kList, kValues, kColors, ...){
+  # Determine the number of individuals by counting rows of the kList object
+  nInds <- nrow(kList[[1]])
+  # Set graphing parameters to allow for multiple rows (for each K value)
+  par(mfrow = c(length(kList),1), mar = c(1.5,1,3,1) + 0.1, oma = c(1,0,3,0), mgp = c(2,1,0))
+  # Loop through list of Q matrices
   for(i in 1:length(kList)){
-    if(i==1){
-      # Initial barplot
-      barplot(kList[,i], xlim=c(0,(nrow(kList)+20)), horiz=F, beside=F, col=kColors[i], 
-              axisnames=T, space=0.2, yaxt= "n", main="")
-      off.value <- kList[,i]
-    }else{
-      if(i > 96){
-        # Subsequent barplots with offset
-        barplot(kList[,i], offset=off.value, add=T, beside=F, xlim=c(0,(nrow(kList)+20)), 
-                horiz=F, col="black", yaxt= "n")
-        off.value <- off.value + kList[,i]
-      } else {
-        # Subsequent barplots with offset
-        barplot(kList[,i], offset=off.value, add=T, beside=F, xlim=c(0,(nrow(kList)+20)), 
-                horiz=F, col=kColors[i], yaxt= "n")
-        off.value <- off.value + kList[,i]
-      }
-    }
-  }
-  # y axis
-  axis(2, at = c(0, 0.25, 0.5, 0.75, 1), labels=c("0", "0.25", "0.50", "0.75", "1.00"), cex.axis = 1, las = 2, pos = -0.2, xpd=T)
-}
-
-
-# plot chains with species labels 
-plot_multipleK <- function(nInds, kList, kValues, kColors, ...){
-  # Define colors
-  # cols <- c("#2171B5","#D95F02","#7570B3","#E7298A","#66A61E","#8C510A","#666666","#B3E2CD","#FDCDAC","#CBD5E8","#F4CAE4","#E6F5C9","#FFF2AE","#F1E2CC","#CCCCCC")
-  # Set graphing parameters, in order to fit specified number of Ks
-  par(mfrow = c(length(kList),1), mar = c(1.5,1,1.3,1) + 0.1, oma = c(5,0,1,0), mgp = c(2,1,0))
-  # locations of each column
-  # b <- as.data.frame(matrix(ncol = 1, nrow = nInds))
-  # b[,1] <- barplot(t(kList[[1]][1]), beside= F, col= kColors, cex.name= 1, cex.axis= 1.2, border = 1, space = 0.05, xaxt = 'n', yaxt = 'n', cex.lab = 1, cex.main=1.6)
-  # Plot 
-  for(i in 1:length(kList)){
-    # main plot call, and title call
-    barplot(t(kList[[i]]), beside= F, col= kColors, border = 1, space = 0.05, xaxt = 'n', yaxt = 'n', cex.lab = 1.2)
+    # Main plot call, and title call
+    barplot(t(kList[[i]]), beside= F, col=kColors, border = 1, space = 0.05, 
+            xaxt = 'n', yaxt = 'n', cex.lab = 1.2)
     title(main = paste("K =", kValues[i], sep = ' '), line=0.2, cex.main=1.6)
     # y axis
     axis(2, at = c(0, 0.25, 0.5, 0.75, 1), cex.axis = 1, las = 2, pos = -0.02)
   }
 }
 
-# Function for plotting multiple
-structure_plot <- function(nInds, klist, Ks, Kcolors){
-  # define colors (16, for maximum number of Ks)
-  # cols <- c("#2171B5","#D95F02","#7570B3","#E7298A","#66A61E","#8C510A","#666666","#B3E2CD","#FDCDAC","#CBD5E8","#F4CAE4","#E6F5C9","#FFF2AE","#F1E2CC","#CCCCCC")
-  # locations of each column
-  b <- as.data.frame(matrix(ncol = 1, nrow = nInds))
-  b[,1] <- barplot(t(klist[[1]][1]), beside= F, col= Kcolors, cex.name= 1, cex.axis= 1.2, border = 1, space = 0.05, xaxt = 'n', yaxt = 'n', cex.lab = 1, cex.main=1.6)
-  # plot
-  plot_q_per_chain(klist, Ks)
-}
-
-# Plot chains with species labels 
-plot_q_per_chain <- function(kqlist, Ks, ...){
-  # Define colors
-  cols <- c("#2171B5","#D95F02","#7570B3","#E7298A","#66A61E","#8C510A","#666666","#B3E2CD","#FDCDAC","#CBD5E8","#F4CAE4","#E6F5C9","#FFF2AE","#F1E2CC","#CCCCCC")
-  # par(mfrow = c(length(kqlist),1), mar = c(1.5,1,1.3,1) + 0.1, oma = c(5,0,1,0), mgp = c(2,1,0))
-  par(mfrow = c(length(kqlist),1), mar = c(4,1,1.3,1) + 0.1, oma = c(5,0,1,0), mgp = c(2,1,0))
-  for(i in 1:length(kqlist)){
-    # main plot call, and title call
-    barplot(t(kqlist[[i]]), beside= F, col= cols, border = 1, space = 0.05, xaxt = 'n', yaxt = 'n', cex.lab = 1.2)
-    title(main = paste("K =", Ks[i], sep = ' '), line=0.2, cex.main=1.6)
-    # y axis
-    axis(2, at = c(0, 0.25, 0.5, 0.75, 1), cex.axis = 1, las = 2, pos = -0.02)
-  }
-}
 
 # %%%% QUAC %%%% ----
 # Variable file path: directory containing all CLUMPPs output to read in
-clumppDir <- 
+QUAC.clumppDir <- 
   "/RAID1/IMLS_GCCO/Analysis/structure/denovo_finalAssemblies/QUAC/R80/garden_wild/firstSNP/output/CLUMPAK/QUAC_gardenAndWild_CLUMPAK/"
 
 # Single K (QUAC garden and wild, K=6)
-clummppFilepath <- paste0(clumppDir, "/K6/CLUMPP.files/ClumppIndFile.output")
-
-test <- read.table(clummppFilepath, header=T)
-test <- test[,-(1:5)]
-
-testColors <- brewer.pal(6,"Dark2")
-plot_singleK(test, kColors = testColors)
-
-# Plotting lines beneath groups
-lineWidth <- 1.9; lineHeight <- rep(-0.015,2)
-
-lines(x = c(0.3,95.7), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
-lines(x = c(29.4,34.4), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
-
-# Multiple Ks (QUAC garden and wild, K=2-7)
-K2filepath <- paste0(clumppDir, "/K2/CLUMPP.files/ClumppIndFile.output")
-K2clumpp <- read.CLUMPP(K2filepath)
-
-K3filepath <- paste0(clumppDir, "/K3/CLUMPP.files/ClumppIndFile.output")
-K3clumpp <- read.CLUMPP(K3filepath)
-
-K4filepath <- paste0(clumppDir, "/K4/CLUMPP.files/ClumppIndFile.output")
-K4clumpp <- read.CLUMPP(K4filepath)
-
-K5filepath <- paste0(clumppDir, "/K5/CLUMPP.files/ClumppIndFile.output")
-K5clumpp <- read.CLUMPP(K5filepath)
-
-K6filepath <- paste0(clumppDir, "/K6/CLUMPP.files/ClumppIndFile.output")
-K6clumpp <- read.CLUMPP(K6filepath)
-
-K7filepath <- paste0(clumppDir, "/K7/CLUMPP.files/ClumppIndFile.output")
-K7clumpp <- read.CLUMPP(K7filepath)
-
-K2_4 <- list(K2clumpp, K3clumpp, K4clumpp)
-K5_7 <- list(K5clumpp, K6clumpp, K7clumpp)
-K2_7 <- list(K2clumpp, K3clumpp, K4clumpp, 
-             K5clumpp, K6clumpp, K7clumpp)
-
-structure_plot(nInds = 193, klist = K2_4, Ks=(2:4), Kcolors = testColors)
-structure_plot(nInds = 193, klist = K5_7, Ks=(5:7), Kcolors = testColors)
-structure_plot(nInds = 193, klist = K2_7, Ks=(2:7), Kcolors = testColors)
+# Read in Q matrix for single K value (QUAC garden and wild, K=6)
+QUAC.K6.clummppFilepath <- paste0(QUAC.clumppDir, "/K6/CLUMPP.files/ClumppIndFile.output")
+QUAC.K6 <- read.CLUMPP(QUAC.K6.clummppFilepath)
+# Plot QUAC K=6 values
+QUAC.K6.Colors <- brewer.pal(6,"Dark2")
+plot_singleK(QUAC.K6, kColors = QUAC.K6.Colors, title = "QUAC K6")
 
 # Designate groups beneath K charts. 1-96 are garden; 97-193 are wild
-lineWidth <- 1.9; lineHeight <- rep(-0.1,2)
+lineWidth <- 1.9; lineHeight <- rep(-0.025,2)
+labelPositions <- c(48, 167); labelNames <- c("garden", "wild")
+
+# Plot lines
+lines(x = c(0.3,114.8), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
+lines(x = c(115.5,232), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
+# Add group labels
+text(x=labelPositions, y=-0.035, srt=35, adj=1, xpd=TRUE, labels=labelNames, cex=1.2)
+
+# Multiple Ks (QUAC garden and wild, K=2-7)
+# Read in Q matrices
+K2filepath <- paste0(QUAC.clumppDir, "/K2/CLUMPP.files/ClumppIndFile.output")
+K2clumpp <- read.CLUMPP(K2filepath)
+
+K3filepath <- paste0(QUAC.clumppDir, "/K3/CLUMPP.files/ClumppIndFile.output")
+K3clumpp <- read.CLUMPP(K3filepath)
+
+K4filepath <- paste0(QUAC.clumppDir, "/K4/CLUMPP.files/ClumppIndFile.output")
+K4clumpp <- read.CLUMPP(K4filepath)
+
+K5filepath <- paste0(QUAC.clumppDir, "/K5/CLUMPP.files/ClumppIndFile.output")
+K5clumpp <- read.CLUMPP(K5filepath)
+
+K6filepath <- paste0(QUAC.clumppDir, "/K6/CLUMPP.files/ClumppIndFile.output")
+K6clumpp <- read.CLUMPP(K6filepath)
+K6clumpp.garden <- K6clumpp[1:96,] ; K6clumpp.wild <- K6clumpp[97:193,]
+
+K7filepath <- paste0(QUAC.clumppDir, "/K7/CLUMPP.files/ClumppIndFile.output")
+K7clumpp <- read.CLUMPP(K7filepath)
+K7clumpp.garden <- K7clumpp[1:96,] ; K7clumpp.wild <- K7clumpp[97:193,]
+
+# K6 values: all, garden, and wild
+QUAC.K6_all <- list(K6clumpp, K6clumpp.garden, K6clumpp.wild)
+plot_multipleK(kList=QUAC.K6_all, kValues = rep(6,3), kColors=testColors)
+
+# K7 values: all, garden, and wild
+QUAC.K7_all <- list(K7clumpp, K7clumpp.garden, K7clumpp.wild)
+plot_multipleK(kList=QUAC.K7_all, kValues = rep(7,3), kColors=testColors)
+
+# Across K values
+QUAC.K2_4 <- list(K2clumpp, K3clumpp, K4clumpp)
+QUAC.K5_7 <- list(K5clumpp, K6clumpp, K7clumpp)
+QUAC.K2_7 <- list(K2clumpp, K3clumpp, K4clumpp, 
+             K5clumpp, K6clumpp, K7clumpp)
+plot_multipleK(kList = QUAC.K2_4, kValues=(2:4), kColors = testColors)
+plot_multipleK(kList = QUAC.K5_7, kValues=(5:7), kColors = testColors)
+plot_multipleK(kList = QUAC.K2_7, kValues=(2:7), kColors = testColors)
+
+# Designate groups beneath K charts. 1-96 are garden; 97-193 are wild
+lineWidth <- 1.9; lineHeight <- rep(-0.2,2)
 labelPositions <- c(48, 144); labelNames <- c("garden", "wild")
 
 # Plot lines
-lines(x = c(0.2,100), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
-lines(x = c(101.5,202.5), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
+lines(x = c(0.2,100.7), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
+lines(x = c(101.2,202.5), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
 # Add group labels
-text(x=labelPositions, y=-0.2, srt=35, adj=1, xpd=TRUE, labels=labelNames, cex=1.2)
+text(x=labelPositions, y=-0.3, srt=35, adj=1, xpd=TRUE, labels=labelNames, cex=1.2)
 
 # %%%% QUBO %%%% ----
 # Variable file path: directory containing all CLUMPPs output to read in
-clumppDir <- 
+QUBO.clumppDir <- 
   "/RAID1/IMLS_GCCO/Analysis/structure/reference_filteredReads/QUBO/R80/garden_wild/firstSNP/output/CLUMPAK/QUBO_gardenAndWild_CLUMPAK_1658769113/"
 
 # Multiple Ks (QUBO garden and wild, K=2-8)
-K2filepath <- paste0(clumppDir, "/K2/CLUMPP.files/ClumppIndFile.output")
+K2filepath <- paste0(QUBO.clumppDir, "/K2/CLUMPP.files/ClumppIndFile.output")
 K2clumpp <- read.CLUMPP(K2filepath)
 
-K3filepath <- paste0(clumppDir, "/K3/CLUMPP.files/ClumppIndFile.output")
+K3filepath <- paste0(QUBO.clumppDir, "/K3/CLUMPP.files/ClumppIndFile.output")
 K3clumpp <- read.CLUMPP(K3filepath)
 
-K4filepath <- paste0(clumppDir, "/K4/CLUMPP.files/ClumppIndFile.output")
+K4filepath <- paste0(QUBO.clumppDir, "/K4/CLUMPP.files/ClumppIndFile.output")
 K4clumpp <- read.CLUMPP(K4filepath)
 
-K5filepath <- paste0(clumppDir, "/K5/CLUMPP.files/ClumppIndFile.output")
+K5filepath <- paste0(QUBO.clumppDir, "/K5/CLUMPP.files/ClumppIndFile.output")
 K5clumpp <- read.CLUMPP(K5filepath)
 
-K6filepath <- paste0(clumppDir, "/K6/CLUMPP.files/ClumppIndFile.output")
+K6filepath <- paste0(QUBO.clumppDir, "/K6/CLUMPP.files/ClumppIndFile.output")
 K6clumpp <- read.CLUMPP(K6filepath)
 
-K7filepath <- paste0(clumppDir, "/K7/CLUMPP.files/ClumppIndFile.output")
+K7filepath <- paste0(QUBO.clumppDir, "/K7/CLUMPP.files/ClumppIndFile.output")
 K7clumpp <- read.CLUMPP(K7filepath)
 
-K8filepath <- paste0(clumppDir, "/K8/CLUMPP.files/ClumppIndFile.output")
+K8filepath <- paste0(QUBO.clumppDir, "/K8/CLUMPP.files/ClumppIndFile.output")
 K8clumpp <- read.CLUMPP(K8filepath)
+K8clumpp.garden <- K8clumpp[1:85,] ; K8clumpp.wild <- K8clumpp[86:180,]
 
-K2_4 <- list(K2clumpp, K3clumpp, K4clumpp)
-K5_8 <- list(K5clumpp, K6clumpp, K7clumpp, K8clumpp)
-K2_8 <- list(K2clumpp, K3clumpp, K4clumpp, 
+# K8 values: all, garden, and wild
+QUBO.K8_all <- list(K8clumpp, K8clumpp.garden, K8clumpp.wild)
+plot_multipleK(kList=QUBO.K8_all, kValues = rep(8,3), kColors=testColors)
+
+# Across K values
+QUBO.K2_4 <- list(K2clumpp, K3clumpp, K4clumpp)
+QUBO.K5_8 <- list(K5clumpp, K6clumpp, K7clumpp, K8clumpp)
+QUBO.K2_8 <- list(K2clumpp, K3clumpp, K4clumpp, 
              K5clumpp, K6clumpp, K7clumpp, K8clumpp)
-
-structure_plot(nInds = 180, klist = K2_4, Ks=(2:4), Kcolors = testColors)
-structure_plot(nInds = 180, klist = K5_8, Ks=(5:8), Kcolors = testColors)
-structure_plot(nInds = 180, klist = K2_8, Ks=(2:8), Kcolors = testColors)
+plot_multipleK(kList = QUBO.K2_4, kValues=(2:4), kColors = testColors)
+plot_multipleK(kList = QUBO.K5_8, kValues=(5:8), kColors = testColors)
+plot_multipleK(kList = QUBO.K2_8, kValues=(2:8), kColors = testColors)
 
 # Designate groups beneath K charts. 1-85 are garden; 86-180 are wild
-lineWidth <- 1.9; lineHeight <- rep(-0.1,2)
+lineWidth <- 1.9; lineHeight <- rep(-0.2,2)
 labelPositions <- c(42.5, 133); labelNames <- c("garden", "wild")
 
 # Plot lines
 lines(x = c(0.2,89), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
 lines(x = c(90.2,189), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
 # Add group labels
-text(x=labelPositions, y=-0.2, srt=35, adj=1, xpd=TRUE, labels=labelNames, cex=1.2)
+text(x=labelPositions, y=-0.3, srt=35, adj=1, xpd=TRUE, labels=labelNames, cex=1.2)
