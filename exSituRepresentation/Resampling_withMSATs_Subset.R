@@ -6,8 +6,9 @@
 # for Quercus acerifolia (QUAC; optimized Stacks de novo assembly, m 7, M/n 4, gt-alpha 0.01) 
 # and Quercus boyntonii (QUBO; GSNAP4 alignment with Quercus robur reference) NextRAD samples
 
-# In addition to processing SNP datasets, this script reads in the QUAC and QUBO microsatellite (MSAT)
-# genind files as well, to compare results between marker types. Both SNP and MSAT files are then subset
+# In addition to processing SNP datasets (described above), this script also 
+# reads in the QUAC and QUBO microsatellite (MSAT)genind files as well, 
+# to compare results between marker types. Both SNP and MSAT files are then subset
 # to contain only samples shared between the two datasets, and resampling analyses are conducted with this
 # shared sample set for each marker type.
 
