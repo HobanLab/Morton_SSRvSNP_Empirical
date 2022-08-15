@@ -8,7 +8,7 @@ library(parallel)
 # Source required functions
 setwd("~/Documents/SSRvSNP/Code/exSituRepresentation/")
 source("functions_exSituRepresentation.R")
-# # Set up relevant cores
+# Set up relevant cores
 num_cores <- detectCores() - 1 ; cl <- makeCluster(num_cores)
 
 # Read in QUAC genind object, and create sample matrix
@@ -33,7 +33,8 @@ clusterEvalQ(cl, library(adegenet))
 num_reps <- 1000 ; print(paste0("Number of replicates: ", num_reps))
 print(paste0("Number of cores: ", num_cores))
 # Export relevant functions and variables
-clusterExport(cl, varlist = c("get.allele.cat", "exSituSample", "exSituResample", "num_reps", "QUAC.SNP.wildMat"))
+clusterExport(cl, varlist = c("getAlleleCategories", "exSitu_Sample", "exSitu_Resample", 
+                              "num_reps", "QUAC.SNP.wildMat"))
 
 # Print start time
 print(paste0("Resamping start time: ",Sys.time()))
@@ -41,7 +42,7 @@ print(paste0("Resamping start time: ",Sys.time()))
 # Run resampling in parallel, to generate an array
 samplingResults_QUAC.SNP <- 
   parSapply(cl, 1:num_reps, 
-            function(a) exSituResample(wildMat=QUAC.SNP.wildMat), simplify = "array")
+            function(a) exSitu_Resample(wildMat=QUAC.SNP.wildMat), simplify = "array")
 # Close cores
 stopCluster(cl)
 
@@ -52,6 +53,6 @@ print(paste0("Resamping stop time: ",Sys.time()))
 min_95_QUAC.SNP <- min(which(apply(samplingResults_QUAC.SNP[,1,],1,mean) > 95)) 
 print(paste0("Minimum sampling size: ",min_95_QUAC.SNP))
 
-# Export the sampling results array to R data file, in the main code repository
+# Export the resampling results array to R data file, in the main code repository
 setwd("~/Documents/SSRvSNP/Code/exSituRepresentation/")
 saveRDS(samplingResults_QUAC.SNP, file = "QUAC.SNP.samplingArray.Rdata")
