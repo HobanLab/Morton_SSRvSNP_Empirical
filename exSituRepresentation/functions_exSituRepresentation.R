@@ -7,7 +7,7 @@
 
 # ---- FUNCTIONS ----
 # Function for reporting representation rates, using a sample matrix and a vector of allele frequencies
-get.allele.cat <- function(freqVector, sampleMat){
+getAlleleCategories <- function(freqVector, sampleMat){
   # Total alleles
   # Determine how many alleles in the sample (i.e. greater than 0) are found in the frequency vector 
   total <- length(which(names(which(freqVector > 0)) %in% names(which(colSums(sampleMat, na.rm = TRUE) > 0))))/length(which(freqVector > 0))*100
@@ -27,22 +27,22 @@ get.allele.cat <- function(freqVector, sampleMat){
 
 # Ex situ sample function, which finds the level of ex situ representation of a sample of individuals
 # (using the get.allele.cat function above)
-exSituSample <- function(wildMat, numSamples){
+exSitu_Sample <- function(wildMat, numSamples){
   # Calculate a vector of allele frequencies, based on the total sample matrix
   freqVector <- colSums(wildMat, na.rm = TRUE)/(nrow(wildMat)*2)*100
   # From a matrix of individuals, select a set of random individuals (rows)
   samp <- wildMat[sample(nrow(wildMat), size=numSamples, replace = FALSE),]
   # Calculate how many alleles (of each category) that sample captures, and return
-  repRates <- get.allele.cat(freqVector, samp)
+  repRates <- getAlleleCategories(freqVector, samp)
   return(repRates)
 }
 
 # Wrapper for the exSituSample function, iterating that function over the entire sample matrix
-exSituResample <- function(wildMat){
+exSitu_Resample <- function(wildMat){
   # Apply the exSituSample function to all rows of the sample matrix
   # (except row 1, because we need at least 2 individuals to sample)
   # Resulting matrix needs to be transposed in order to keep columns as different allele categories
-  representationMatrix <- t(sapply(2:nrow(wildMat), function(x) exSituSample(wildMat, x)))
+  representationMatrix <- t(sapply(2:nrow(wildMat), function(x) exSitu_Sample(wildMat, x)))
   # Name columns according to categories of allelic representation, and return matrix
   colnames(representationMatrix) <- c("Total","Very common","Common","Low frequency","Rare")
   return(representationMatrix)
