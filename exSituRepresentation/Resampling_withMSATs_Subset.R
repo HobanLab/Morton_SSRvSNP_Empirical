@@ -8,37 +8,26 @@
 
 # In addition to processing SNP datasets, this script reads in the QUAC and QUBO microsatellite (MSAT)
 # genind files as well, to compare results between marker types. Both SNP and MSAT files are then subset
-# to contain only samples share between the two datasets, and resampling analyses are conducted with this
-# shared sample set.
+# to contain only samples shared between the two datasets, and resampling analyses are conducted with this
+# shared sample set for each marker type.
 
 library(adegenet)
 library(RColorBrewer)
 library(scales)
+library(parallel)
 
 # %%%% FUNCTIONS %%%% ----
-# Function for reporting capture rates, using a sample matrix and a vector of allele frequencies
-get.allele.cat.NEW <- function(freq.vector, sample.mat){
-  # Total alleles
-  # Determine how many alleles in the sample (i.e. greater than 0) are found in the frequency vector 
-  total <- length(which(names(which(freq.vector > 0)) %in% names(which(colSums(sample.mat, na.rm = TRUE) > 0))))/length(which(freq.vector > 0))*100
-  # Very common alleles (greater than 10%)
-  v_com <- length(which(names(which(freq.vector > 10)) %in% names(which(colSums(sample.mat, na.rm = TRUE) > 0))))/length(which(freq.vector > 10))*100
-  # Common alleles (greater than 5%)
-  com <- length(which(names(which(freq.vector > 5)) %in% names(which(colSums(sample.mat, na.rm = TRUE) > 0))))/length(which(freq.vector > 5))*100
-  # Low frequency alleles (between 1% and 10%)
-  low_freq <- length(which(names(which(freq.vector < 10 & freq.vector > 1)) %in% names(which(colSums(sample.mat, na.rm = TRUE) > 0))))/length(which(freq.vector < 10 & freq.vector > 1))*100
-  # Rare alleles (less than 1%)
-  rare <- length(which(names(which(freq.vector < 1 & freq.vector > 0)) %in% names(which(colSums(sample.mat, na.rm = TRUE) > 0))))/length(which(freq.vector < 1 & freq.vector > 0))*100
-  # Concatenate values to a vector, and return
-  return(c(total,v_com,com,low_freq,rare))
-}
+# Read in relevant functions required for resampling analyses
+SSRvSNP.wd <- "~/Documents/SSRvSNP/Code/"
+setwd(SSRvSNP.wd)
+source("exSituRepresentation/functions_exSituRepresentation.R")
 
 # %%%% QUAC %%%% ----
 # ---- PROCESS MSATS ----
 # Read in genind file (GCC_QUAC_ZAIN repo; QUAC_wK_garden_wild_clean.gen)
-genpop.filePath <- 
+QUAC.MSAT.genpop.filePath <- 
   "~/Documents/peripheralProjects/GCC_QUAC_ZAIN/Data_Files/Adegenet_Files/Garden_Wild/"
-setwd(genpop.filePath)
+setwd(QUAC.MSAT.genpop.filePath)
 QUAC.MSAT.genind <- read.genepop("QUAC_wK_garden_wild_clean.gen", quiet = TRUE, ncode = 3)
 # Correct popNames: pop1 is Garden, pop2 is Wild
 pop(QUAC.MSAT.genind) <- gsub("pop1", "garden", pop(QUAC.MSAT.genind))
@@ -52,69 +41,47 @@ QUAC.MSAT.wildMat <- QUAC.MSAT.genind@tab[which(pop(QUAC.MSAT.genind) == "wild")
 
 # ---- PROCESS SNPS ----
 # Read in genind file (QUAC DNFA; R0, min-maf=0; 1 SNP/locus; 2 populations, garden and wild)
-genpop.filePath <- 
-  "/RAID1/IMLS_GCCO/Analysis/Stacks/denovo_finalAssemblies/QUAC/output/populations_R0_NOMAF_TwoPops/"
-setwd(genpop.filePath)
-QUAC.R0_NOMAF.genind <- read.genepop(paste0(genpop.filePath,"populations.snps.gen"), quiet = TRUE)
+QUAC.SNP.genpop.filePath <- 
+  "/RAID1/IMLS_GCCO/Analysis/Stacks/denovo_finalAssemblies/QUAC/output/populations_R0_NOMAF_1SNP_2Pops/"
+setwd(QUAC.SNP.genpop.filePath)
+QUAC.R0_NOMAF.genind <- read.genepop(paste0(genpop.filePath,"populations.snps.gen"))
 # Correct popNames
 pop(QUAC.R0_NOMAF.genind) <- factor(read.table("QUAC_popmap_GardenWild", header=FALSE)[,2])
 # Create a matrix of strictly wild samples
 QUAC.SNP.wildMat <- QUAC.R0_NOMAF.genind@tab[which(pop(QUAC.R0_NOMAF.genind) == "wild"),]
 # Get QUAC SNP wild sample names, and rename wild SNP matrix
-QUAC.SNP.sampleNames_filepath <- "~/Documents/SSRvSNP/Code/exSituCapture/QUAC_TissueDatabaseNames.csv"
+QUAC.SNP.sampleNames_filepath <- "~/Documents/SSRvSNP/Code/exSituRepresentation/QUAC_TissueDatabaseNames.csv"
 QUAC.SNP.sampleNames <- unlist(read.csv2(QUAC.SNP.sampleNames_filepath, header = TRUE, sep = ",")[3])
 rownames(QUAC.SNP.wildMat) <- QUAC.SNP.sampleNames
 
-# ---- GENERATE SHARE SAMPLE DATASET ----
+# ---- GENERATE DATASET OF SHARED SAMPLES ----
 # Subset SNP sample names by those that are also seen within the MSAT samples (all of them, for QUAC)
 QUAC_sharedSamples <- sort(QUAC.SNP.sampleNames[which(QUAC.SNP.sampleNames %in% QUAC.MSAT.sampleNames)])
-# Demonstrating that which can be used regardless of the names vector that comes first
+# Demonstration that which can be used regardless of the names vector that comes first
 # QUAC_sharedSamples_TEST <- sort(QUAC.MSAT.sampleNames[which(QUAC.MSAT.sampleNames %in% QUAC.SNP.sampleNames)])
 # identical(unname(QUAC_sharedSamples), unname(QUAC_sharedSamples_TEST))
 # Subset MSAT and SNP wild matrix objects to strictly shared samples
 QUAC.SNP.wildMat <- QUAC.SNP.wildMat[QUAC_sharedSamples,]
 QUAC.MSAT.wildMat <- QUAC.MSAT.wildMat[QUAC_sharedSamples,]
-# Generate allele frequency vectors for each dataset
-QUAC.MSAT_wildFreqs <- colSums(QUAC.MSAT.wildMat, na.rm = TRUE)/(nrow(QUAC.MSAT.wildMat)*2)*100
-QUAC.SNP_wildFreqs <- colSums(QUAC.SNP.wildMat, na.rm = TRUE)/(nrow(QUAC.SNP.wildMat)*2)*100
 
 # ---- BUILD SAMPLING RESULTS ARRAYS ----
-# TO DO: build a single (4D? 5D?) array that contains both MSAT and SNP values
-# MSAT Sampling Results array
-num_reps <- 25
-list_allele_cat <- c("tot","v_com","com","low_freq","rare")
-samplingResults_QUAC.MSAT <- array(dim=c(nrow(QUAC.MSAT.wildMat)-1,length(list_allele_cat),num_reps))
-colnames(samplingResults_QUAC.MSAT) <- list_allele_cat
-# For each replicate (which is the third dimension, in the samplingResults array)...
-for(i in 1:num_reps){
-  # loop through sampling from 2 to the maximum number of wild individuals
-  for(j in 2:nrow(QUAC.MSAT.wildMat)){
-    # Create a sample of the wild allele matrix, of "j" size
-    samp <- QUAC.MSAT.wildMat[sample(nrow(QUAC.MSAT.wildMat), size=j, replace = FALSE),]
-    # Calculate how many alleles of each category that sample captures,
-    # and place those percentages into the row of the samplingResults array
-    samplingResults_QUAC.MSAT[j-1,,i] <- get.allele.cat.NEW(QUAC.MSAT_wildFreqs,samp)
-  }
-}
-str(samplingResults_QUAC.MSAT)
+# Specify the number of replicates
+num_reps <- 5
+# Build microsatellite sampling array
+# # Generate an array of sampling results using replicate (a wrapper for sapply)
+# samplingResults_QUAC.MSAT <- 
+#   replicate(num_reps, exSituResample(wildMatrix=QUAC.MSAT.wildMat), simplify = "array")
+# Generate a list of matrices of sampling results using sapply
+samplingResults_QUAC.MSAT <- 
+  sapply(1:num_reps, function(a) exSituResample(wildMatrix=QUAC.MSAT.wildMat), simplify = "array")
 
-# SNP Sampling Results array
-num_reps <- 25
-list_allele_cat <- c("tot","v_com","com","low_freq","rare")
-samplingResults_QUAC.SNP <- array(dim=c(nrow(QUAC.SNP.wildMat)-1,length(list_allele_cat),num_reps))
-colnames(samplingResults_QUAC.SNP) <- list_allele_cat
-# For each replicate (which is the third dimension, in the samplingResults array)...
-for(i in 1:num_reps){
-  # loop through sampling from 2 to the maximum number of wild individuals
-  for(j in 2:nrow(QUAC.SNP.wildMat)){
-    # Create a sample of the wild allele matrix, of "j" size
-    samp <- QUAC.SNP.wildMat[sample(nrow(QUAC.SNP.wildMat), size=j, replace = FALSE),]
-    # Calculate how many alleles of each category that sample captures,
-    # and place those percentages into the row of the samplingResults array
-    samplingResults_QUAC.SNP[j-1,,i] <- get.allele.cat.NEW(QUAC.SNP_wildFreqs,samp)
-  }
-}
-str(samplingResults_QUAC.SNP)
+# Build SNP sampling array
+# # Generate an array of sampling results using replicate (a wrapper for sapply)
+# samplingResults_QUAC.SNP <- 
+#   replicate(num_reps, exSituResample(wildMatrix=QUAC.SNP.wildMat), simplify = "array")
+# Generate a list of matrices of sampling results using sapply
+samplingResults_QUAC.SNP <- 
+  sapply(1:num_reps, function(a) exSituResample(wildMatrix=QUAC.SNP.wildMat), simplify = "array")
 
 # ---- CALCULATE MEANS AND PLOT ----
 # Set plotting window to stack 2 graphs vertically
@@ -207,7 +174,7 @@ QUBO.SNP.sampleNames <- gsub("SH_Q2186",replacement = "IMLS017", QUBO.SNP.sample
 # Rename sample matrix
 rownames(QUBO.SNP.wildMat) <- QUBO.SNP.sampleNames
 
-# ---- GENERATE SHARED SAMPLE DATASET ----
+# ---- GENERATE DATASET OF SHARED SAMPLES ----
 # Subset SNP sample names by those that are also seen within the MSAT samples
 QUBO_sharedSamples <- sort(QUBO.SNP.sampleNames[which(QUBO.SNP.sampleNames %in% QUBO.MSAT.sampleNames)])
 # Demonstrating that which can be used regardless of the names vector that comes first
@@ -216,47 +183,25 @@ QUBO_sharedSamples <- sort(QUBO.SNP.sampleNames[which(QUBO.SNP.sampleNames %in% 
 # Subset MSAT and SNP wild matrix objects to strictly shared samples
 QUBO.SNP.wildMat <- QUBO.SNP.wildMat[QUBO_sharedSamples,]
 QUBO.MSAT.wildMat <- QUBO.MSAT.wildMat[QUBO_sharedSamples,]
-# Generate allele frequency vectors for each dataset
-QUBO.MSAT_wildFreqs <- colSums(QUBO.MSAT.wildMat, na.rm = TRUE)/(nrow(QUBO.MSAT.wildMat)*2)*100
-QUBO.SNP_wildFreqs <- colSums(QUBO.SNP.wildMat, na.rm = TRUE)/(nrow(QUBO.SNP.wildMat)*2)*100
 
 # ---- BUILD SAMPLING RESULTS ARRAYS ----
-# TO DO: build a single (4D? 5D?) array that contains both MSAT and SNP values
-# MSAT Sampling Results array
-num_reps <- 25
-list_allele_cat <- c("tot","v_com","com","low_freq","rare")
-samplingResults_QUBO.MSAT <- array(dim=c(nrow(QUBO.MSAT.wildMat)-1,length(list_allele_cat),num_reps))
-colnames(samplingResults_QUBO.MSAT) <- list_allele_cat
-# For each replicate (which is the third dimension, in the samplingResults array)...
-for(i in 1:num_reps){
-  # loop through sampling from 2 to the maximum number of wild individuals
-  for(j in 2:nrow(QUBO.MSAT.wildMat)){
-    # Create a sample of the wild allele matrix, of "j" size
-    samp <- QUBO.MSAT.wildMat[sample(nrow(QUBO.MSAT.wildMat), size=j, replace = FALSE),]
-    # Calculate how many alleles of each category that sample captures,
-    # and place those percentages into the row of the samplingResults array
-    samplingResults_QUBO.MSAT[j-1,,i] <- get.allele.cat.NEW(QUBO.MSAT_wildFreqs,samp)
-  }
-}
-str(samplingResults_QUBO.MSAT)
+# Specify the number of replicates
+num_reps <- 5
+# Build microsatellite sampling array
+# # Generate an array of sampling results using replicate (a wrapper for sapply)
+# samplingResults_QUBO.MSAT <- 
+#   replicate(num_reps, exSituResample(wildMatrix=QUBO.MSAT.wildMat), simplify = "array")
+# Generate a list of matrices of sampling results using sapply
+samplingResults_QUBO.MSAT <- 
+  sapply(1:num_reps, function(a) exSituResample(wildMatrix=QUBO.MSAT.wildMat), simplify = "array")
 
-# SNP Sampling Results array
-num_reps <- 25
-list_allele_cat <- c("tot","v_com","com","low_freq","rare")
-samplingResults_QUBO.SNP <- array(dim=c(nrow(QUBO.SNP.wildMat)-1,length(list_allele_cat),num_reps))
-colnames(samplingResults_QUBO.SNP) <- list_allele_cat
-# For each replicate (which is the third dimension, in the samplingResults array)...
-for(i in 1:num_reps){
-  # loop through sampling from 2 to the maximum number of wild individuals
-  for(j in 2:nrow(QUBO.SNP.wildMat)){
-    # Create a sample of the wild allele matrix, of "j" size
-    samp <- QUBO.SNP.wildMat[sample(nrow(QUBO.SNP.wildMat), size=j, replace = FALSE),]
-    # Calculate how many alleles of each category that sample captures,
-    # and place those percentages into the row of the samplingResults array
-    samplingResults_QUBO.SNP[j-1,,i] <- get.allele.cat.NEW(QUBO.SNP_wildFreqs,samp)
-  }
-}
-str(samplingResults_QUBO.SNP)
+# Build SNP sampling array
+# # Generate an array of sampling results using replicate (a wrapper for sapply)
+# samplingResults_QUBO.SNP <- 
+#   replicate(num_reps, exSituResample(wildMatrix=QUBO.SNP.wildMat), simplify = "array")
+# Generate a list of matrices of sampling results using sapply
+samplingResults_QUBO.SNP <- 
+  sapply(1:num_reps, function(a) exSituResample(wildMatrix=QUBO.SNP.wildMat), simplify = "array")
 
 # ---- CALCULATE MEANS AND PLOT ----
 # Average results across replicates (slices) of the sampling array, to determine
