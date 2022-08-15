@@ -4,13 +4,18 @@
 
 # This script generates Resampling arrays, and plots their results, 
 # for Quercus acerifolia (QUAC; optimized Stacks de novo assembly, m 7, M/n 4, gt-alpha 0.01) 
-# and Quercus boyntonii (QUBO; GSNAP4 alignment with Quercus robur reference) NextRAD samples
+# and Quercus boyntonii (QUBO; GSNAP4 alignment with Quercus robur reference) NextRAD samples.
+
+# Resampling arrays are collections of values indicating the percentage of total wild alleles
+# that are represented by a (random) subset of wild samples. Each column of these arrays corresponds
+# to the category of allelic representation of the random subset of wild samples (total allelic diversity,
+# very common alleles, common alleles, low frequency alleles, and rare alleles).
 
 # In addition to processing SNP datasets (described above), this script also 
 # reads in the QUAC and QUBO microsatellite (MSAT)genind files as well, 
-# to compare results between marker types. Both SNP and MSAT files are then subset
-# to contain only samples shared between the two datasets, and resampling analyses are conducted with this
-# shared sample set for each marker type.
+# To allow for direct comparisons between markers, both SNP and MSAT files are first subset
+# to contain only samples shared between the two datasets, before resampling analyses are conducted 
+# on this shared sample set for each marker type.
 
 library(adegenet)
 library(RColorBrewer)
