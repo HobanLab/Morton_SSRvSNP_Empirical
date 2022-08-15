@@ -44,7 +44,7 @@ QUAC.MSAT.wildMat <- QUAC.MSAT.genind@tab[which(pop(QUAC.MSAT.genind) == "wild")
 QUAC.SNP.genpop.filePath <- 
   "/RAID1/IMLS_GCCO/Analysis/Stacks/denovo_finalAssemblies/QUAC/output/populations_R0_NOMAF_1SNP_2Pops/"
 setwd(QUAC.SNP.genpop.filePath)
-QUAC.R0_NOMAF.genind <- read.genepop(paste0(genpop.filePath,"populations.snps.gen"))
+QUAC.R0_NOMAF.genind <- read.genepop(paste0(QUAC.SNP.genpop.filePath,"populations.snps.gen"))
 # Correct popNames
 pop(QUAC.R0_NOMAF.genind) <- factor(read.table("QUAC_popmap_GardenWild", header=FALSE)[,2])
 # Create a matrix of strictly wild samples
@@ -66,22 +66,16 @@ QUAC.MSAT.wildMat <- QUAC.MSAT.wildMat[QUAC_sharedSamples,]
 
 # ---- BUILD SAMPLING RESULTS ARRAYS ----
 # Specify the number of replicates
-num_reps <- 5
+num_reps <- 100
 # Build microsatellite sampling array
-# # Generate an array of sampling results using replicate (a wrapper for sapply)
-# samplingResults_QUAC.MSAT <- 
-#   replicate(num_reps, exSituResample(wildMatrix=QUAC.MSAT.wildMat), simplify = "array")
 # Generate a list of matrices of sampling results using sapply
 samplingResults_QUAC.MSAT <- 
-  sapply(1:num_reps, function(a) exSituResample(wildMatrix=QUAC.MSAT.wildMat), simplify = "array")
+  sapply(1:num_reps, function(a) exSitu_Resample(wildMat=QUAC.MSAT.wildMat), simplify = "array")
 
 # Build SNP sampling array
-# # Generate an array of sampling results using replicate (a wrapper for sapply)
-# samplingResults_QUAC.SNP <- 
-#   replicate(num_reps, exSituResample(wildMatrix=QUAC.SNP.wildMat), simplify = "array")
 # Generate a list of matrices of sampling results using sapply
 samplingResults_QUAC.SNP <- 
-  sapply(1:num_reps, function(a) exSituResample(wildMatrix=QUAC.SNP.wildMat), simplify = "array")
+  sapply(1:num_reps, function(a) exSitu_Resample(wildMat=QUAC.SNP.wildMat), simplify = "array")
 
 # ---- CALCULATE MEANS AND PLOT ----
 # Set plotting window to stack 2 graphs vertically
@@ -186,22 +180,16 @@ QUBO.MSAT.wildMat <- QUBO.MSAT.wildMat[QUBO_sharedSamples,]
 
 # ---- BUILD SAMPLING RESULTS ARRAYS ----
 # Specify the number of replicates
-num_reps <- 5
+num_reps <- 100
 # Build microsatellite sampling array
-# # Generate an array of sampling results using replicate (a wrapper for sapply)
-# samplingResults_QUBO.MSAT <- 
-#   replicate(num_reps, exSituResample(wildMatrix=QUBO.MSAT.wildMat), simplify = "array")
 # Generate a list of matrices of sampling results using sapply
 samplingResults_QUBO.MSAT <- 
-  sapply(1:num_reps, function(a) exSituResample(wildMatrix=QUBO.MSAT.wildMat), simplify = "array")
+  sapply(1:num_reps, function(a) exSitu_Resample(wildMat=QUBO.MSAT.wildMat), simplify = "array")
 
 # Build SNP sampling array
-# # Generate an array of sampling results using replicate (a wrapper for sapply)
-# samplingResults_QUBO.SNP <- 
-#   replicate(num_reps, exSituResample(wildMatrix=QUBO.SNP.wildMat), simplify = "array")
 # Generate a list of matrices of sampling results using sapply
 samplingResults_QUBO.SNP <- 
-  sapply(1:num_reps, function(a) exSituResample(wildMatrix=QUBO.SNP.wildMat), simplify = "array")
+  sapply(1:num_reps, function(a) exSitu_Resample(wildMat=QUBO.SNP.wildMat), simplify = "array")
 
 # ---- CALCULATE MEANS AND PLOT ----
 # Average results across replicates (slices) of the sampling array, to determine
