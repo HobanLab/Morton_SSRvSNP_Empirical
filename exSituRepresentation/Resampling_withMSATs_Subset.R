@@ -72,7 +72,7 @@ QUAC.MSAT.wildMat <- QUAC.MSAT.wildMat[QUAC_sharedSamples,]
 
 # ---- BUILD SAMPLING RESULTS ARRAYS ----
 # Specify the number of replicates
-num_reps <- 100
+num_reps <- 10
 # Build microsatellite sampling array
 # Generate a list of matrices of sampling results using sapply
 samplingResults_QUAC.MSAT <- 
@@ -186,7 +186,7 @@ QUBO.MSAT.wildMat <- QUBO.MSAT.wildMat[QUBO_sharedSamples,]
 
 # ---- BUILD SAMPLING RESULTS ARRAYS ----
 # Specify the number of replicates
-num_reps <- 100
+num_reps <- 10
 # Build microsatellite sampling array
 # Generate a list of matrices of sampling results using sapply
 samplingResults_QUBO.MSAT <- 
