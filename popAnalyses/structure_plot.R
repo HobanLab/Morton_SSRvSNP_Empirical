@@ -25,14 +25,12 @@ read.CLUMPP <- function(clumpp.outputFile){
 
 # Plotting function for single K value
 plot_singleK <- function(kList, kColors, title, ...){
-  # Graphing parameters
-  par(mar=c(3,2,6,3)+0.1, mgp = c(3,1,1))
   # Plotting 
   for(i in 1:length(kList)){
     if(i==1){
       # Initial barplot
-      barplot(kList[,i], xlim=c(0,(nrow(kList)+20)), horiz=F, beside=F, col=kColors[i], 
-              axisnames=T, space=0.2, yaxt= "n", main=title)
+      barplot(kList[,i], xlim=c(0,(nrow(kList)+20)), ylim=c(0,1.3), horiz=F, beside=F, 
+              col=kColors[i], axisnames=T, space=0.2, yaxt= "n", main=title)
       off.value <- kList[,i]
     }else{
       # Subsequent barplots with offset
@@ -50,7 +48,7 @@ plot_multipleK <- function(kList, kValues, kColors, ...){
   # Determine the number of individuals by counting rows of the kList object
   nInds <- nrow(kList[[1]])
   # Set graphing parameters to allow for multiple rows (for each K value)
-  par(mfrow = c(length(kList),1), mar = c(3,1,3,1) + 0.1, oma = c(1,0,3,0), mgp = c(2,1,0))
+  par(mfrow = c(length(kList),1), mar = c(4,1,2,0.75) + 0.1, oma = c(1,0,3,0), mgp = c(2,1,0))
   # Loop through list of Q matrices
   for(i in 1:length(kList)){
     # Main plot call, and title call
@@ -62,32 +60,15 @@ plot_multipleK <- function(kList, kValues, kColors, ...){
   }
 }
 
-
 # %%%% QUAC %%%% ----
-# GARDEN & WILD ----
+# Colors for different clusters: combinations of RGB components in hexadecimal
+QUAC.colors <- c('#A8FFFD','#B862D3', '#A39D9D','#FFFF00', 
+                 '#69C261', '#FF59AC', '#26CDCD',  '#C1C6FF') 
+# %%%% GARDEN & WILD ----
 # Variable file path: directory containing all CLUMPPs output to read in
 QUAC.clumppDir <- 
   "/RAID1/IMLS_GCCO/Analysis/structure/denovo_finalAssemblies/QUAC/R80/garden_wild/firstSNP/output/CLUMPAK/QUAC_gardenAndWild_CLUMPAK_1659990425/"
 
-# Single K (QUAC garden and wild, K=6)
-# Read in Q matrix for single K value (QUAC garden and wild, K=6)
-QUAC.K6.clummppFilepath <- paste0(QUAC.clumppDir, "/K6/CLUMPP.files/ClumppIndFile.output")
-QUAC.K6 <- read.CLUMPP(QUAC.K6.clummppFilepath)
-# Plot QUAC K=6 values
-QUAC.K6.Colors <- brewer.pal(6,"Dark2")
-plot_singleK(QUAC.K6, kColors = QUAC.K6.Colors, title = "QUAC K6")
-
-# Designate groups beneath K charts. 1-96 are garden; 97-193 are wild
-lineWidth <- 1.9; lineHeight <- rep(-0.025,2)
-labelPositions <- c(48, 167); labelNames <- c("garden", "wild")
-
-# Plot lines
-lines(x = c(0.3,114.8), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
-lines(x = c(115.5,232), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
-# Add group labels
-text(x=labelPositions, y=-0.035, srt=35, adj=1, xpd=TRUE, labels=labelNames, cex=1.2)
-
-# Multiple Ks (QUAC garden and wild, K=2-7)
 # Read in Q matrices
 K2filepath <- paste0(QUAC.clumppDir, "/K2/CLUMPP.files/ClumppIndFile.output")
 K2clumpp <- read.CLUMPP(K2filepath)
@@ -106,20 +87,15 @@ K6clumpp <- read.CLUMPP(K6filepath)
 
 K7filepath <- paste0(QUAC.clumppDir, "/K7/CLUMPP.files/ClumppIndFile.output")
 K7clumpp <- read.CLUMPP(K7filepath)
-K7clumpp.garden <- K7clumpp[1:96,] ; K7clumpp.wild <- K7clumpp[97:193,]
 
-# K7 values: all, garden, and wild
-QUAC.K7_all <- list(K7clumpp, K7clumpp.garden, K7clumpp.wild)
-plot_multipleK(kList=QUAC.K7_all, kValues = rep(7,3), kColors=testColors)
-
-# Across K values
-QUAC.K2_4 <- list(K2clumpp, K3clumpp, K4clumpp)
-QUAC.K5_7 <- list(K5clumpp, K6clumpp, K7clumpp)
+# All Ks (QUAC garden and wild, K=2-7) ----
+# QUAC.K2_4 <- list(K2clumpp, K3clumpp, K4clumpp)
+# QUAC.K5_7 <- list(K5clumpp, K6clumpp, K7clumpp)
 QUAC.K2_7 <- list(K2clumpp, K3clumpp, K4clumpp, 
              K5clumpp, K6clumpp, K7clumpp)
-plot_multipleK(kList = QUAC.K2_4, kValues=(2:4), kColors = testColors)
-plot_multipleK(kList = QUAC.K5_7, kValues=(5:7), kColors = testColors)
-plot_multipleK(kList = QUAC.K2_7, kValues=(2:7), kColors = testColors)
+# plot_multipleK(kList = QUAC.K2_4, kValues=(2:4), kColors = QUAC.colors)
+# plot_multipleK(kList = QUAC.K5_7, kValues=(5:7), kColors = QUAC.colors)
+plot_multipleK(kList = QUAC.K2_7, kValues=(2:7), kColors = QUAC.colors)
 
 # Designate groups beneath K charts. 1-96 are garden; 97-193 are wild
 lineWidth <- 1.9; lineHeight <- rep(-0.2,2)
@@ -130,13 +106,36 @@ lines(x = c(0.2,100.7), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA
 lines(x = c(101.2,202.5), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
 # Add group labels
 text(x=labelPositions, y=-0.3, srt=35, adj=1, xpd=TRUE, labels=labelNames, cex=1.2)
+# Title
+mtext(text = "QUAC, Garden and Wild", outer=TRUE, cex=1.3)
 
-# WILD ----
+# Best K ----
+# Plot two charts per window (one for each Best K metric)
+par(mfrow=c(2,1), mar = c(3,3,1,3), oma=c(1,0,1,0))
+# Variables for lines beneath K charts. 1-96 are garden; 97-193 are wild
+lineWidth <- 1.9; lineHeight <- rep(-0.035,2)
+labelPositions <- c(48, 167); labelNames <- c("garden", "wild")
+# Plot QUAC K=3 values (Evanno Best K)
+plot_singleK(K3clumpp, kColors = QUAC.colors, title = "QUAC, Garden and Wild: K3 (Evanno)")
+# Plot lines
+lines(x = c(0.3,114.5), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
+lines(x = c(116,232), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
+# Add group labels
+text(x=labelPositions, y=-0.05, srt=35, adj=1, xpd=TRUE, labels=labelNames, cex=1.2)
+
+# Plot QUAC K=6 values (Max Probability Best K)
+plot_singleK(K6clumpp, kColors = QUAC.colors, title = "QUAC, Garden and Wild: K6 (Max Probability)")
+# Plot lines
+lines(x = c(0.3,114.5), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
+lines(x = c(116,232), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
+# Add group labels
+text(x=labelPositions, y=-0.05, srt=35, adj=1, xpd=TRUE, labels=labelNames, cex=1.2)
+
+# %%%% WILD ----
 # Variable file path: directory containing all CLUMPPs output to read in
 QUAC.W.clumppDir <- 
   "/RAID1/IMLS_GCCO/Analysis/structure/denovo_finalAssemblies/QUAC/R80/wild/firstSNP/output/CLUMPAK/QUAC_wild_CLUMPAK_1658778010/"
 
-# Multiple Ks (QUAC wild, K=2-7)
 # Read in Q matrices
 K2filepath <- paste0(QUAC.W.clumppDir, "/K2/CLUMPP.files/ClumppIndFile.output")
 K2clumpp <- read.CLUMPP(K2filepath)
@@ -156,22 +155,35 @@ K6clumpp <- read.CLUMPP(K6filepath)
 K7filepath <- paste0(QUAC.W.clumppDir, "/K7/CLUMPP.files/ClumppIndFile.output")
 K7clumpp <- read.CLUMPP(K7filepath)
 
-# Across K values
-QUAC.W.K2_4 <- list(K2clumpp, K3clumpp, K4clumpp)
-QUAC.W.K5_7 <- list(K5clumpp, K6clumpp, K7clumpp)
+# All Ks (QUAC wild, K=2-7) ----
+# QUAC.W.K2_4 <- list(K2clumpp, K3clumpp, K4clumpp)
+# QUAC.W.K5_7 <- list(K5clumpp, K6clumpp, K7clumpp)
 QUAC.W.K2_7 <- list(K2clumpp, K3clumpp, K4clumpp, 
                   K5clumpp, K6clumpp, K7clumpp)
-plot_multipleK(kList = QUAC.W.K2_4, kValues=(2:4), kColors = testColors)
-plot_multipleK(kList = QUAC.W.K5_7, kValues=(5:7), kColors = testColors)
-plot_multipleK(kList = QUAC.W.K2_7, kValues=(2:7), kColors = testColors)
+# plot_multipleK(kList = QUAC.W.K2_4, kValues=(2:4), kColors = QUAC.colors)
+# plot_multipleK(kList = QUAC.W.K5_7, kValues=(5:7), kColors = QUAC.colors)
+plot_multipleK(kList = QUAC.W.K2_7, kValues=(2:7), kColors = QUAC.colors)
+# Title
+mtext(text = "QUAC, Wild", outer=TRUE, cex=1.3)
+
+# Best K ----
+# Plot two charts per window (one for each Best K metric)
+par(mfrow=c(2,1), mar = c(3,3,1,3), oma=c(1,0,1,0))
+# Plot QUAC K=3 values (Evanno Best K)
+plot_singleK(K3clumpp, kColors = QUAC.colors, title = "QUAC, Wild: K3 (Evanno)")
+# Plot QUAC K=4 values (Max Probability Best K)
+plot_singleK(K4clumpp, kColors = QUAC.colors, title = "QUAC, Wild: K4 (Max Probability)")
 
 # %%%% QUBO %%%% ----
-# GARDEN & WILD ----
+# Colors for different clusters: combinations of RGB components in hexadecimal
+QUBO.colors <- c('#A8FFFD','#B862D3', '#A39D9D','#FFFF00', 
+                 '#69C261', '#FF59AC', '#26CDCD',  '#C1C6FF')
+# %%%% GARDEN & WILD ----
 # Variable file path: directory containing all CLUMPPs output to read in
 QUBO.clumppDir <- 
   "/RAID1/IMLS_GCCO/Analysis/structure/reference_filteredReads/QUBO/R80/garden_wild/firstSNP/output/CLUMPAK/QUBO_gardenAndWild_CLUMPAK_1658769113/"
 
-# Multiple Ks (QUBO garden and wild, K=2-8)
+# Read in Q matrices
 K2filepath <- paste0(QUBO.clumppDir, "/K2/CLUMPP.files/ClumppIndFile.output")
 K2clumpp <- read.CLUMPP(K2filepath)
 
@@ -192,20 +204,15 @@ K7clumpp <- read.CLUMPP(K7filepath)
 
 K8filepath <- paste0(QUBO.clumppDir, "/K8/CLUMPP.files/ClumppIndFile.output")
 K8clumpp <- read.CLUMPP(K8filepath)
-K8clumpp.garden <- K8clumpp[1:85,] ; K8clumpp.wild <- K8clumpp[86:180,]
 
-# K8 values: all, garden, and wild
-QUBO.K8_all <- list(K8clumpp, K8clumpp.garden, K8clumpp.wild)
-plot_multipleK(kList=QUBO.K8_all, kValues = rep(8,3), kColors=testColors)
-
-# Across K values
-QUBO.K2_4 <- list(K2clumpp, K3clumpp, K4clumpp)
-QUBO.K5_8 <- list(K5clumpp, K6clumpp, K7clumpp, K8clumpp)
+# All Ks (QUBO garden and wild, K=2-8) ----
+# QUBO.K2_4 <- list(K2clumpp, K3clumpp, K4clumpp)
+# QUBO.K5_8 <- list(K5clumpp, K6clumpp, K7clumpp, K8clumpp)
 QUBO.K2_8 <- list(K2clumpp, K3clumpp, K4clumpp, 
              K5clumpp, K6clumpp, K7clumpp, K8clumpp)
-plot_multipleK(kList = QUBO.K2_4, kValues=(2:4), kColors = testColors)
-plot_multipleK(kList = QUBO.K5_8, kValues=(5:8), kColors = testColors)
-plot_multipleK(kList = QUBO.K2_8, kValues=(2:8), kColors = testColors)
+# plot_multipleK(kList = QUBO.K2_4, kValues=(2:4), kColors = QUBO.colors)
+# plot_multipleK(kList = QUBO.K5_8, kValues=(5:8), kColors = QUBO.colors)
+plot_multipleK(kList = QUBO.K2_8, kValues=(2:8), kColors = QUBO.colors)
 
 # Designate groups beneath K charts. 1-85 are garden; 86-180 are wild
 lineWidth <- 1.9; lineHeight <- rep(-0.2,2)
@@ -216,13 +223,36 @@ lines(x = c(0.2,89), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
 lines(x = c(90.2,189), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
 # Add group labels
 text(x=labelPositions, y=-0.3, srt=35, adj=1, xpd=TRUE, labels=labelNames, cex=1.2)
+# Title
+mtext(text = "QUBO, Garden and Wild", outer=TRUE, cex=1.3)
 
-# WILD ----
+# Best K ----
+# Plot two charts per window (one for each Best K metric)
+par(mfrow=c(2,1), mar = c(4,1.5,4,2), oma=c(2,0,2,1))
+# Designate groups beneath K charts. 1-85 are garden; 86-180 are wild
+lineWidth <- 1.9; lineHeight <- rep(-0.035,2)
+labelPositions <- c(42.5, 133); labelNames <- c("garden", "wild")
+# Plot QUAC K=5 values (Evanno Best K)
+plot_singleK(K5clumpp, kColors = QUBO.colors, title = "QUBO, Garden and Wild: K5 (Evanno)")
+# Plot lines
+lines(x = c(0.2,89), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
+lines(x = c(90.2,213), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
+# Add group labels
+text(x=labelPositions, y=-0.1, srt=35, adj=1, xpd=TRUE, labels=labelNames, cex=1.2)
+
+# Plot QUAC K=6 values (Max Probability Best K)
+plot_singleK(K6clumpp, kColors = QUBO.colors, title = "QUBO, Garden and Wild: K6 (Max Probability)")
+# Plot lines
+lines(x = c(0.2,89), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
+lines(x = c(90.2,213), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
+# Add group labels
+text(x=labelPositions, y=-0.1, srt=35, adj=1, xpd=TRUE, labels=labelNames, cex=1.2)
+
+# %%%% WILD ----
 # Variable file path: directory containing all CLUMPPs output to read in
-QUAC.W.clumppDir <- 
+QUBO.W.clumppDir <- 
   "/RAID1/IMLS_GCCO/Analysis/structure/reference_filteredReads/QUBO/R80/wild/output/CLUMPAK/QUBO_wild_CLUMPAK_1658771421/"
 
-# Multiple Ks (QUBO wild, K=2-8)
 # Read in Q matrices
 K2filepath <- paste0(QUBO.W.clumppDir, "/K2/CLUMPP.files/ClumppIndFile.output")
 K2clumpp <- read.CLUMPP(K2filepath)
@@ -245,11 +275,19 @@ K7clumpp <- read.CLUMPP(K7filepath)
 K8filepath <- paste0(QUBO.W.clumppDir, "/K8/CLUMPP.files/ClumppIndFile.output")
 K8clumpp <- read.CLUMPP(K8filepath)
 
-# Across K values
-QUBO.W.K2_4 <- list(K2clumpp, K3clumpp, K4clumpp)
-QUBO.W.K5_8 <- list(K5clumpp, K6clumpp, K7clumpp, K8clumpp)
+# All Ks (QUBO wild, K=2-8) ----
+# QUBO.W.K2_4 <- list(K2clumpp, K3clumpp, K4clumpp)
+# QUBO.W.K5_8 <- list(K5clumpp, K6clumpp, K7clumpp, K8clumpp)
 QUBO.W.K2_8 <- list(K2clumpp, K3clumpp, K4clumpp, 
                     K5clumpp, K6clumpp, K7clumpp, K8clumpp)
-plot_multipleK(kList = QUBO.W.K2_4, kValues=(2:4), kColors = testColors)
-plot_multipleK(kList = QUBO.W.K5_8, kValues=(5:8), kColors = testColors)
-plot_multipleK(kList = QUBO.W.K2_8, kValues=(2:8), kColors = testColors)
+# plot_multipleK(kList = QUBO.W.K2_4, kValues=(2:4), kColors = QUBO.colors)
+# plot_multipleK(kList = QUBO.W.K5_8, kValues=(5:8), kColors = QUBO.colors)
+plot_multipleK(kList = QUBO.W.K2_8, kValues=(2:8), kColors = QUBO.colors)
+# Title
+mtext(text = "QUBO, Wild", outer=TRUE, cex=1.3)
+
+# Best K ----
+# Plot two charts per window (one for each Best K metric)
+par(mfrow=c(2,1), mar = c(3,3,1,3), oma=c(1,0,1,0))
+# Plot QUBO K=3 values (Evanno and Max Probability Best K)
+plot_singleK(K3clumpp, kColors = QUAC.colors, title = "QUBO, Wild: K3 (Evanno, Max Probability)")
