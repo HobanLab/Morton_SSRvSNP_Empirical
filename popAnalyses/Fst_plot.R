@@ -1,6 +1,11 @@
-# Fst plotting/heatmap
-# Script for plotting Fst charts generated for de novo, reference, and hybrid Stacks datasets
-# These Fst values are derived for wild populations only, and are pulled from the populations.fst_summary.tsv Stacks file
+# %%%%%%%%%%%%%%%%%%%%%%%%%
+# %%% PLOT FST HEATMAPS %%%
+# %%%%%%%%%%%%%%%%%%%%%%%%%
+
+# This script plots Fst charts generated for de novo, reference, and hybrid Stacks datasets
+# These Fst values are derived for wild populations only, 
+# and are pulled from the populations.fst_summary.tsv Stacks files output from the populations module
+# (generated when the --fstats flag is included)
 
 # Set plotting window to stack 3 Fst charts vertically
 par(mfcol=c(3,1), oma=c(1,1,1,1))
@@ -10,10 +15,10 @@ par(mfcol=c(3,1), oma=c(1,1,1,1))
 # %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 # De novo final assembly (DNFA)----
-setwd("/RAID1/IMLS_GCCO/Analysis/Stacks/denovo_finalAssemblies/QUAC/")
+setwd("/RAID1/IMLS_GCCO/Analysis/Stacks/denovo_finalAssemblies/QUAC/output")
 
-# Stacks exports an Fst table when the populations command is given the --fstats argument. Read this in
-QUAC.fst.mat <- as.matrix(read.table("output/populations_wild/populations.fst_summary.tsv", header=TRUE, row.names=1, sep = "\t"))
+# Stacks exports an Fst table when the populations module is given the --fstats argument. Read this in
+QUAC.fst.mat <- as.matrix(read.table("populations_wild_R0_NOMAF_AllSNPs/populations.fst_summary.tsv", header=TRUE, row.names=1, sep = "\t"))
 # Add a row at the bottom to make matrix symmetrical (nrow=ncol)
 QUAC.fst.mat <- rbind(QUAC.fst.mat, rep(NA,5))
 # Update row and column names
