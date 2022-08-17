@@ -44,14 +44,18 @@ cbind(QUAC.dapc1$grp[97:193], read.table("/RAID1/IMLS_GCCO/Analysis/Stacks/denov
 scatter(QUAC.dapc1, scree.da=F, bg="white", pch=20, cell=0, cstar=0, solid=0.6, clab=0, legend=T,
         posi.leg=locator(n=1), cleg=1.0, cex=2, inset.solid=1,
         col = c("#66A61E","#E7298A","#7570B3","#2171B5"),
-        txt.leg = c("Pryor Mt.","Magazine Mt. 2", "Porter Mt.", "Kessler/Sugarloaf/Magazine Mt. 1"))
-mtext("QUAC R80: Garden and Wild", adj=0.02)
+        txt.leg = c("Magazine Mt. 1","Kessler/Sugarloaf/Pryor/Porter","Magazine Mt. 2"))
+mtext("QUAC R80: Garden and Wild", adj=0.15)
 
 # %%%% QUBO %%%% ----
 # Specify filepath for finalized QUBO dataset, with both garden and wild samples, and the following filters:
 # R0 (no filter for missing data), no minor allele frequency filter, first SNP per locus, 2 populations specified (garden and wild)
 QUBO.genpop.filepath <- 
   "/RAID1/IMLS_GCCO/Analysis/Stacks/reference_filteredReads/QUBO/GSNAP4/output/populations_R80_NOMAF_1SNP_2Pops/"
+
+QUBO.genpop.filepath <- 
+  "/RAID1/IMLS_GCCO/Analysis/Stacks/reference_filteredReads/QUBO/GSNAP4/output/populations_R0_NOMAF_1SNP_2Pops/"
+
 # Read in QUAC genind file
 QUBO.genind <- read.genepop(paste0(QUBO.genpop.filepath,"populations.snps.gen"))
 
@@ -85,6 +89,6 @@ cbind(QUBO.dapc1$grp, c(read.table("/RAID1/IMLS_GCCO/Analysis/Stacks/reference_f
 scatter(QUBO.dapc1, scree.da=F, bg="white", pch=20, cell=0, cstar=0, solid=0.6, clab=0, legend=T,
         posi.leg=locator(n=1), cleg=1.0, cex=2, inset.solid=1,
         col = c("#66A61E","#E7298A","#7570B3","#2171B5"), 
-        txt.leg = c("Moss Rock/Oakbrook","EBSCO/Blue Trail Kings Chair/Peavine/Wattsville",
-                    "Hinds Road/Pop 11/Wattsville"))
-mtext("QUBO R80: Garden and Wild", adj=0.9)
+        txt.leg = c("Hinds Road/Pop 11", "Wattsville","EBSCO/Blue Trail Kings Chair/Peavine/Worldsong",
+                    "Moss Rock"))
+mtext("QUBO R80: Garden and Wild", adj=0.2)
