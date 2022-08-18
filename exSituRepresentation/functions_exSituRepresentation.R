@@ -7,9 +7,9 @@
 
 # ---- FUNCTIONS ----
 # Function for reporting representation rates, using a sample matrix and a vector of allele frequencies
+# This function assumes that the freqVector represents the absolute allele frequencies, for the entire population
 getAlleleCategories <- function(freqVector, sampleMat){
-  # Total alleles
-  # Determine how many alleles in the sample (i.e. greater than 0) are found in the frequency vector 
+  # Determine how many total alleles in the sample (i.e. greater than 0) are found in the frequency vector 
   total <- length(which(names(which(freqVector > 0)) %in% names(which(colSums(sampleMat, na.rm = TRUE) > 0))))/length(which(freqVector > 0))*100
   # Very common alleles (greater than 10%)
   v_com <- length(which(names(which(freqVector > 10)) %in% names(which(colSums(sampleMat, na.rm = TRUE) > 0))))/length(which(freqVector > 10))*100
