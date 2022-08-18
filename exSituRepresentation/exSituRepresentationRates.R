@@ -42,13 +42,11 @@ library(adegenet)
 
 # Function for reporting allelic representation rates, using a single genind object
 reportAllelicRepresentation_Together <- function(gen.obj){
-  # Generate numberical vectors corresponding to garden and wild rows, for later calculations
+  # Generate numerical vectors corresponding to garden and wild rows, for later calculations
   garden.Rows <- seq_len(length(which(pop(gen.obj)=="garden")))
   wild.Rows <- seq(from=length(which(pop(gen.obj)=="garden"))+1, to=nInd(gen.obj))
-  garden.N <- length(garden.Rows)
-  wild.N <- length(wild.Rows)
   # Build the wild allele frequency vector
-  wildFreqs <- colSums(gen.obj@tab[wild.Rows,], na.rm = TRUE)/(wild.N*2)*100
+  wildFreqs <- colSums(gen.obj@tab[wild.Rows,], na.rm = TRUE)/(length(wild.Rows)*2)*100
   # Calculate representation rates
   # Total
   total <- length(which(names(which(wildFreqs > 0)) %in% names(which(colSums(gen.obj@tab[garden.Rows,], na.rm = TRUE) > 0))))/length(which(wildFreqs > 0))*100
@@ -71,7 +69,7 @@ reportAllelicRepresentation_Together <- function(gen.obj){
 # This version of the function strips the characters following the underscore, from the allele names
 # Therefore, only whole RAD loci are being compared across garden and wild individuals
 reportAllelicRepresentation_Together_Partial <- function(gen.obj){
-  # Generate numberical vectors corresponding to garden and wild rows, for later calculations
+  # Generate numerical vectors corresponding to garden and wild rows, for later calculations
   garden.Rows <- seq_len(length(which(pop(gen.obj)=="garden")))
   wild.Rows <- seq(from=length(which(pop(gen.obj)=="garden"))+1, to=nInd(gen.obj))
   garden.N <- length(garden.Rows)
