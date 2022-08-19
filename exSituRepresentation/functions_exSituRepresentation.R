@@ -26,7 +26,7 @@ getAlleleCategories <- function(freqVector, sampleMat){
 }
 
 # Ex situ sample function, which finds the level of ex situ representation of a sample of individuals
-# (using the get.allele.cat function above)
+# (using the getAlleleCategories function above)
 exSitu_Sample <- function(wildMat, numSamples){
   # Calculate a vector of allele frequencies, based on the total sample matrix
   freqVector <- colSums(wildMat, na.rm = TRUE)/(nrow(wildMat)*2)*100
