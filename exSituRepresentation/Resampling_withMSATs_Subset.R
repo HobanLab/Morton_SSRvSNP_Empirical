@@ -50,11 +50,11 @@ QUAC.MSAT.wildMat <- QUAC.MSAT.genind@tab[which(pop(QUAC.MSAT.genind) == "wild")
 QUAC.SNP.genpop.filePath <- 
   "/RAID1/IMLS_GCCO/Analysis/Stacks/denovo_finalAssemblies/QUAC/output/populations_R0_NOMAF_1SNP_2Pops/"
 setwd(QUAC.SNP.genpop.filePath)
-QUAC.R0_NOMAF.genind <- read.genepop(paste0(QUAC.SNP.genpop.filePath,"populations.snps.gen"))
+QUAC.SNP.genind <- read.genepop(paste0(QUAC.SNP.genpop.filePath,"populations.snps.gen"))
 # Correct popNames
-pop(QUAC.R0_NOMAF.genind) <- factor(read.table("QUAC_popmap_GardenWild", header=FALSE)[,2])
+pop(QUAC.SNP.genind) <- factor(read.table("QUAC_popmap_GardenWild", header=FALSE)[,2])
 # Create a matrix of strictly wild samples
-QUAC.SNP.wildMat <- QUAC.R0_NOMAF.genind@tab[which(pop(QUAC.R0_NOMAF.genind) == "wild"),]
+QUAC.SNP.wildMat <- QUAC.SNP.genind@tab[which(pop(QUAC.SNP.genind) == "wild"),]
 # Get QUAC SNP wild sample names, and rename wild SNP matrix
 QUAC.SNP.sampleNames_filepath <- "~/Documents/SSRvSNP/Code/exSituRepresentation/QUAC_TissueDatabaseNames.csv"
 QUAC.SNP.sampleNames <- unlist(read.csv2(QUAC.SNP.sampleNames_filepath, header = TRUE, sep = ",")[3])
