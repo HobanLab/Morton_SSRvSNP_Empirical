@@ -47,6 +47,32 @@ getAlleleCategories(QUAC.MSAT.freqVector, QUAC.MSAT.wildMat[1:86,])
 # 25% of samples
 getAlleleCategories(QUAC.MSAT.freqVector, QUAC.MSAT.wildMat[1:43,])
 
+# Breakdown of getAlleleCategories
+# Total alleles (greater than 0 frequency)
+# Alleles in frequency vector
+which(QUAC.MSAT.freqVector > 0)
+names(which(QUAC.MSAT.freqVector > 0))
+# Alleles in sample matrix
+colSums(QUAC.MSAT.wildMat[1:43,], na.rm = TRUE)
+which(colSums(QUAC.MSAT.wildMat[1:43,], na.rm = TRUE) > 0)
+names(which(colSums(QUAC.MSAT.wildMat[1:43,], na.rm = TRUE) > 0))
+# Which alleles in the frequency vector are seen in the sample matrix?
+which(names(which(QUAC.MSAT.freqVector > 0)) %in% names(which(colSums(QUAC.MSAT.wildMat[1:43,], na.rm = TRUE) > 0)))
+# How many alleles in the frequency vector are seen in the sample matrix? This is the numerator
+length(which(names(which(QUAC.MSAT.freqVector > 0)) %in% names(which(colSums(QUAC.MSAT.wildMat[1:43,], na.rm = TRUE) > 0))))
+# Percentage of the alleles in the frequency vector that are seen in the sample matrix
+# The denominator is the length of the frequency vector
+length(which(names(which(QUAC.MSAT.freqVector > 0)) %in% names(which(colSums(QUAC.MSAT.wildMat[1:43,], na.rm = TRUE) > 0))))/length(which(QUAC.MSAT.freqVector > 0))*100
+
+# Very common alleles (greater than 10%)
+length(which(names(which(QUAC.MSAT.freqVector > 10)) %in% names(which(colSums(QUAC.MSAT.wildMat[1:43,], na.rm = TRUE) > 0))))/length(which(QUAC.MSAT.freqVector > 10))*100
+# Common alleles (greater than 5%)
+length(which(names(which(QUAC.MSAT.freqVector > 5)) %in% names(which(colSums(QUAC.MSAT.wildMat[1:43,], na.rm = TRUE) > 0))))/length(which(QUAC.MSAT.freqVector > 5))*100
+# Low frequency alleles (between 1% and 10%)
+length(which(names(which(QUAC.MSAT.freqVector < 10 & QUAC.MSAT.freqVector > 1)) %in% names(which(colSums(QUAC.MSAT.wildMat[1:43,], na.rm = TRUE) > 0))))/length(which(QUAC.MSAT.freqVector < 10 & QUAC.MSAT.freqVector > 1))*100
+# Rare alleles (less than 1%)
+length(which(names(which(QUAC.MSAT.freqVector < 1 & QUAC.MSAT.freqVector > 0)) %in% names(which(colSums(QUAC.MSAT.wildMat[1:43,], na.rm = TRUE) > 0))))/length(which(QUAC.MSAT.freqVector < 1 & QUAC.MSAT.freqVector > 0))*100
+
 # exSitu_Sample: wrapper for getAlleleCategories. When given the ENTIRE sample matrix, first calculates
 # the allele frequency vector, then samples the matrix based on the num_samples argument
 exSitu_Sample(QUAC.MSAT.wildMat, numSamples = 43)
