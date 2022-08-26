@@ -7,16 +7,14 @@
 # It does this for both QUAC (optimized de novo assembly) and QUBO 
 # (aligned to the Q. robur reference genome) NextRAD datasets
 
-# TO DO: Make this script calculate heterozygostiy, allele counts, and allelic richness in the
-# following scenarios
-# 1. MSAT: all samples
-# 2. MSAT: subsampled down to NextRAD samples (for garden and wild--so, you need to update your current code)
-# 3. SNP: all samples (garden and wild)
-# 4. SNP: wild samples
-# 5. SNP: subsampled down to MSAT samples (for garden and wild--so, you need to update your current code)
+# The script performs these calculations with different sets of samples, as outlined below:
+# 1. Microsatellites: all samples, garden and wild populations
+# 2. SNPs: all samples, garden and wild populations
+# 3. SNPs: all samples, wild populations only
+# 4. Microsatellites: subset samples (only those shared with SNP dataset), garden and wild populations
+# 5. SNPs: subset samples (only those shared with SNP dataset), garden and wild populations
 
-# Metrics are calculated 1) between garden individuals and a collection of all wild individuals ("wild"), 
-# and 2) between all wild individuals. These groupings are achieved using the Stacks populations module
+# Each of these scenarios is explored for both species
 
 library(adegenet)
 library(hierfstat)
@@ -49,7 +47,8 @@ abline(h = 0, lwd=2)
 # Allele counts, allelic richness
 ncol(QUAC.MSAT.genind@tab)
 # Allelic richness: values per population
-apply(allelic.richness(QUAC.MSAT.genind)$Ar, 2, mean, na.rm=TRUE)
+QUAC.MSAT_AR <- apply(allelic.richness(QUAC.MSAT.genind)$Ar, 2, mean, na.rm=TRUE)
+print(QUAC.MSAT_AR)
 
 # ---- SNPS ----
 # GARDEN AND WILD ----
@@ -74,7 +73,8 @@ abline(h = 0, lwd=2)
 # Allele counts: number of variant sites (number of loci, and 1 SNP/locus)
 nLoc(QUAC.SNP.genind)
 # Allelic richness: values per population
-apply(allelic.richness(QUAC.SNP.genind)$Ar, 2, mean, na.rm=TRUE)
+QUAC.SNP_AR <- apply(allelic.richness(QUAC.SNP.genind)$Ar, 2, mean, na.rm=TRUE)
+print(QUAC.SNP_AR)
 
 # WILD ONLY ----
 # Read in genind file: Optimized de novo assembly; R0, NOMAF, first SNP/locus, only wild populations
@@ -99,7 +99,8 @@ abline(h = 0, lwd=2)
 # Allele counts: number of variant sites (number of loci, and 1 SNP/locus)
 nLoc(QUAC.Wild.SNP.genind)
 # Allelic richness: values per population
-apply(allelic.richness(QUAC.Wild.SNP.genind)$Ar, 2, mean, na.rm=TRUE)
+QUAC.SNP.Wild_AR <- apply(allelic.richness(QUAC.Wild.SNP.genind)$Ar, 2, mean, na.rm=TRUE)
+print(QUAC.SNP.Wild_AR)
 
 # ---- SUBSET ----
 # MSAT: read in tissue database names from GCC_QUAC_ZAIN repository, and rename genind object rows
@@ -116,19 +117,12 @@ rownames(QUAC.SNP.genind@tab) <- QUAC.SNP.tissueNames
 # Subset SNP sample names by those that are also seen within the MSAT samples 
 QUAC_sharedSamples <- sort(QUAC.SNP.tissueNames[which(QUAC.SNP.tissueNames %in% QUAC.MSAT.tissueNames)])
 # Subset MSAT and SNP genind matrices to strictly shared samples, dropping now absent alleles
-QUAC.SNP.genind.subset <- QUAC.SNP.genind[QUAC_sharedSamples,, drop=TRUE]
 QUAC.MSAT.genind.subset <- QUAC.MSAT.genind[QUAC_sharedSamples,, drop=TRUE]
+QUAC.SNP.genind.subset <- QUAC.SNP.genind[QUAC_sharedSamples,, drop=TRUE]
 
 # Heterozygosity
-QUAC.SNP.subset_HZ <- Hs(QUAC.SNP.genind.subset); print(QUAC.SNP.subset_HZ)
 QUAC.MSAT.subset_HZ <- Hs(QUAC.MSAT.genind.subset); print(QUAC.MSAT.subset_HZ)
-# Barplot for expected heterozygosity, SNP subset
-barplot(QUAC.SNP.subset_HZ, beside = TRUE, 
-        ylim = c(0,0.), col = c("darkseagreen1", rep("darkgreen", 5)),
-        names = c("Garden", "Wild"), 
-        main = "QUAC Heterozygosity: SNPs (Subset)", 
-        xlab = "Population Type", ylab = "Expected Heterozygosity")
-abline(h = 0, lwd=2)
+QUAC.SNP.subset_HZ <- Hs(QUAC.SNP.genind.subset); print(QUAC.SNP.subset_HZ)
 # Barplot for expected heterozygosity, MSAT subset
 barplot(QUAC.MSAT.subset_HZ, beside = TRUE, 
         ylim = c(0,0.7), col = c("darkseagreen1", rep("darkgreen", 5)),
@@ -136,13 +130,22 @@ barplot(QUAC.MSAT.subset_HZ, beside = TRUE,
         main = "QUAC Heterozygosity: MSATs (Subset)", 
         xlab = "Population Type", ylab = "Expected Heterozygosity")
 abline(h = 0, lwd=2)
+# Barplot for expected heterozygosity, SNP subset
+barplot(QUAC.SNP.subset_HZ, beside = TRUE, 
+        ylim = c(0,0.3), col = c("darkseagreen1", rep("darkgreen", 5)),
+        names = c("Garden", "Wild"), 
+        main = "QUAC Heterozygosity: SNPs (Subset)", 
+        xlab = "Population Type", ylab = "Expected Heterozygosity")
+abline(h = 0, lwd=2)
 
 # Allele counts: number of variant sites (number of loci, and 1 SNP/locus)
-nLoc(QUAC.SNP.genind.subset)
 nLoc(QUAC.MSAT.genind.subset)
+nLoc(QUAC.SNP.genind.subset)
 # Allelic richness: values per population
-apply(allelic.richness(QUAC.SNP.genind.subset)$Ar, 2, mean, na.rm=TRUE)
-apply(allelic.richness(QUAC.MSAT.genind.subset)$Ar, 2, mean, na.rm=TRUE)
+QUAC.MSAT.subset_AR <- apply(allelic.richness(QUAC.MSAT.genind.subset)$Ar, 2, mean, na.rm=TRUE)
+print(QUAC.MSAT.subset_AR)
+QUAC.SNP.subset_AR <- apply(allelic.richness(QUAC.SNP.genind.subset)$Ar, 2, mean, na.rm=TRUE)
+print(QUAC.SNP.subset_AR)
 
 # %%%% QUBO %%%% ----
 # ---- MSATS ----
@@ -151,9 +154,9 @@ apply(allelic.richness(QUAC.MSAT.genind.subset)$Ar, 2, mean, na.rm=TRUE)
 genpop.filePath <- 
   "~/Documents/peripheralProjects/SE_oaks_genetics/genetic_data/"
 setwd(genpop.filePath)
-QUBO.MSAT.genind <- read.genepop(paste0(genpop.filePath,"Qb_total.gen"), quiet = TRUE, ncode=3)
-# Correct popNames: last population (IMLS4_MP1_IMLS336_C05) is Garden; rest are Wild
-pop(QUBO.MSAT.genind) <- gsub("IMLS4_MP1_IMLS336_C05", "garden", pop(QUBO.MSAT.genind))
+QUBO.MSAT.genind <- read.genepop(paste0(genpop.filePath,"Qb_total.gen"), ncode=3)
+# Correct popNames: last population (IMLS4_MP1_IMLS336_C05) is garden; rest (9) are wild
+levels(QUBO.MSAT.genind@pop) <- c(rep("wild",9), "garden") 
 
 # Heterozygosity
 QUBO.MSAT_HZ <- Hs(QUBO.MSAT.genind); print(QUBO.MSAT_HZ)
@@ -168,7 +171,8 @@ abline(h = 0, lwd=2)
 # Allele counts, allelic richness
 ncol(QUBO.MSAT.genind@tab)
 # Allelic richness: values per population
-apply(allelic.richness(QUBO.MSAT.genind)$Ar, 2, mean, na.rm=TRUE)
+QUBO.MSAT_AR <- apply(allelic.richness(QUBO.MSAT.genind)$Ar, 2, mean, na.rm=TRUE)
+print(QUBO.MSAT_AR)
 
 # ---- SNPS ----
 # GARDEN AND WILD ----
@@ -193,7 +197,8 @@ abline(h = 0, lwd=2)
 # Allele counts: number of variant sites (number of loci, and 1 SNP/locus)
 nLoc(QUBO.SNP.genind)
 # Allelic richness: values per population
-apply(allelic.richness(QUBO.SNP.genind)$Ar, 2, mean, na.rm=TRUE)
+QUBO.SNP_AR <- apply(allelic.richness(QUBO.SNP.genind)$Ar, 2, mean, na.rm=TRUE)
+print(QUBO.SNP_AR)
 
 # WILD ONLY ----
 # Read in genind file: GSNAP4 alignment with Quercus robur genome; R0, NOMAF, first SNP/locus, only wild populations
@@ -218,12 +223,13 @@ abline(h = 0, lwd=2)
 # Allele counts: number of variant sites (number of loci, and 1 SNP/locus)
 nLoc(QUBO.Wild.SNP.genind)
 # Allelic richness: values per population
-apply(allelic.richness(QUBO.Wild.SNP.genind)$Ar, 2, mean, na.rm=TRUE)
+QUBO.Wild.SNP_AR <- apply(allelic.richness(QUBO.Wild.SNP.genind)$Ar, 2, mean, na.rm=TRUE)
+print(QUBO.Wild.SNP_AR)
 
 # ---- SUBSET ----
 # MSAT: Split sample names on underscore, and return 3rd element. Rename the sample matrix 
-QUBO.MSAT.sampleNames <- unlist(lapply(rownames(QUBO.MSAT.genind), function(x) strsplit(x, "_")[[1]][3]))
-rownames(QUBO.MSAT.genind) <- QUBO.MSAT.sampleNames
+QUBO.MSAT.sampleNames <- unlist(lapply(rownames(QUBO.MSAT.genind@tab), function(x) strsplit(x, "_")[[1]][3]))
+rownames(QUBO.MSAT.genind@tab) <- QUBO.MSAT.sampleNames
 
 # SNP: Remove QUBO_W_ headers from sample names
 QUBO.SNP.sampleNames <- gsub("QUBO_G_",replacement = "", row.names(QUBO.SNP.genind@tab))
@@ -247,19 +253,12 @@ rownames(QUBO.SNP.genind@tab) <- QUBO.SNP.sampleNames
 # Subset SNP sample names by those that are also seen within the MSAT samples
 QUBO_sharedSamples <- sort(QUBO.SNP.sampleNames[which(QUBO.SNP.sampleNames %in% QUBO.MSAT.sampleNames)])
 # Subset MSAT and SNP wild matrix objects to strictly shared samples
-QUBO.SNP.genind.subset <- QUBO.SNP.genind[QUBO_sharedSamples,, drop=TRUE]
 QUBO.MSAT.genind.subset <- QUBO.MSAT.genind[QUBO_sharedSamples,, drop=TRUE]
+QUBO.SNP.genind.subset <- QUBO.SNP.genind[QUBO_sharedSamples,, drop=TRUE]
 
 # Heterozygosity
-QUBO.SNP.subset_HZ <- Hs(QUBO.SNP.genind.subset); print(QUBO.SNP.subset_HZ)
 QUBO.MSAT.subset_HZ <- Hs(QUBO.MSAT.genind.subset); print(QUBO.MSAT.subset_HZ)
-# Barplot for expected heterozygosity, SNP subset
-barplot(QUBO.SNP.subset_HZ, beside = TRUE, 
-        ylim = c(0,0.), col = c("darkseagreen1", rep("darkgreen", 5)),
-        names = c("Garden", "Wild"), 
-        main = "QUBO Heterozygosity: SNPs (Subset)", 
-        xlab = "Population Type", ylab = "Expected Heterozygosity")
-abline(h = 0, lwd=2)
+QUBO.SNP.subset_HZ <- Hs(QUBO.SNP.genind.subset); print(QUBO.SNP.subset_HZ)
 # Barplot for expected heterozygosity, MSAT subset
 barplot(QUBO.MSAT.subset_HZ, beside = TRUE, 
         ylim = c(0,0.7), col = c("darkseagreen1", rep("darkgreen", 5)),
@@ -267,10 +266,19 @@ barplot(QUBO.MSAT.subset_HZ, beside = TRUE,
         main = "QUBO Heterozygosity: MSATs (Subset)", 
         xlab = "Population Type", ylab = "Expected Heterozygosity")
 abline(h = 0, lwd=2)
+# Barplot for expected heterozygosity, SNP subset
+barplot(QUBO.SNP.subset_HZ, beside = TRUE, 
+        ylim = c(0,0.), col = c("darkseagreen1", rep("darkgreen", 5)),
+        names = c("Garden", "Wild"), 
+        main = "QUBO Heterozygosity: SNPs (Subset)", 
+        xlab = "Population Type", ylab = "Expected Heterozygosity")
+abline(h = 0, lwd=2)
 
 # Allele counts: number of variant sites (number of loci, and 1 SNP/locus)
-nLoc(QUBO.SNP.genind.subset)
 nLoc(QUBO.MSAT.genind.subset)
+nLoc(QUBO.SNP.genind.subset)
 # Allelic richness: values per population
-apply(allelic.richness(QUBO.SNP.genind.subset)$Ar, 2, mean, na.rm=TRUE)
-apply(allelic.richness(QUBO.MSAT.genind.subset)$Ar, 2, mean, na.rm=TRUE)
+QUBO.MSAT.subset_AR <- apply(allelic.richness(QUBO.MSAT.genind.subset)$Ar, 2, mean, na.rm=TRUE)
+print(QUBO.MSAT.subset_AR)
+QUBO.SNP.subset_AR <- apply(allelic.richness(QUBO.SNP.genind.subset)$Ar, 2, mean, na.rm=TRUE)
+print(QUBO.SNP.subset_AR)
