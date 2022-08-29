@@ -58,7 +58,7 @@ QUAC.SNP.genind <- read.genepop(paste0(QUAC.SNP.genpop.filePath,"populations.snp
 pop(QUAC.SNP.genind) <- factor(read.table("QUAC_popmap_GardenWild", header=FALSE)[,2])
 # Get QUAC SNP Tissue sample names, and rename SNP genind matrix
 # File was created (by Austin K.), and can be found on Hoban Lab Drive ("MSATcomparisons_TissueNames")
-QUAC.SNP.tissueNames_filepath <- paste0(SSRvSNP.wd,"exSituRepresentation/QUAC_SNP_TissueNames.csv")
+QUAC.SNP.tissueNames_filepath <- paste0(SSRvSNP.wd,"exSituRepresentation/Resampling/QUAC_SNP_TissueNames.csv")
 QUAC.SNP.tissueNames <- unlist(read.csv2(QUAC.SNP.tissueNames_filepath, header = TRUE, sep = ",")[3])
 rownames(QUAC.SNP.genind@tab) <- QUAC.SNP.tissueNames
 # Create a matrix of strictly wild samples

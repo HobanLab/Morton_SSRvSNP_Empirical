@@ -119,7 +119,7 @@ QUAC.HapSNPs.wildMat <-
 
 # CREATE SAMPLING RESULTS ARRAY ----
 # Specify number of replicates
-num_reps <- 50 
+num_reps <- 10 
 # Export relevant functions and variables
 clusterExport(cl, varlist = c("getAlleleCategories", "exSitu_Sample", "exSitu_Resample", 
                               "num_reps", "QUAC.HapSNPs.wildMat"))
