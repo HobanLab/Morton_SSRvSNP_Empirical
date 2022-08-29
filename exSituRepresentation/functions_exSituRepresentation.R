@@ -47,3 +47,9 @@ exSitu_Resample <- function(wildMat){
   colnames(representationMatrix) <- c("Total","Very common","Common","Low frequency","Rare")
   return(representationMatrix)
 }
+
+# Wrapper for exSitu_Resample: Function version that works from genind object, rather than wild matrix
+ExSituResample <- function(gen.obj){
+  # Checks: argument is a genind object, with only 2 populations, whose names are "garden" and "wild"
+  
+}
