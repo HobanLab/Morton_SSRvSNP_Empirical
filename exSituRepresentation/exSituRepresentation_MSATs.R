@@ -2,7 +2,7 @@
 # %%% EX SITU REPRESENTATION RATES: MSAT %%%
 # %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-# This script uses the functions below to generate ex situ representation values 
+# This script uses the functions declared in the functions_exSituRepresentation.R file to generate ex situ representation values 
 # for Quercus acerifolia (QUAC; optimized Stacks de novo assembly, m 7, M/n 4, gt-alpha 0.01) 
 # and Quercus boyntonii (QUBO; GSNAP4 alignment with Quercus robur reference) samples
 
@@ -78,6 +78,7 @@ levels(QUBO.MSAT.genind@pop) <- c(rep("wild",9), "garden")
 reportAllelicRepresentation_Together(QUBO.MSAT.genind)
 
 # ---- SNPS: COMPLETE ----
+# Read in genind file (QUBO GSNAP4 alignment; R0, min-maf=0; 1 SNP/locus; 2 populations, garden and wild)
 genpop.filePath <- 
   "/RAID1/IMLS_GCCO/Analysis/Stacks/reference_filteredReads/QUBO/GSNAP4/output/populations_R0_NOMAF_1SNP_2Pops/"
 setwd(genpop.filePath)
