@@ -2,9 +2,9 @@
 # %%% EX SITU REPRESENTATION RATES: SNP %%%
 # %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-# This script uses the functions below to generate ex situ representation values 
+# This script uses the functions declared in the functions_exSituRepresentation.R file to generate ex situ representation values 
 # for Quercus acerifolia (QUAC; optimized Stacks de novo assembly, m 7, M/n 4, gt-alpha 0.01) 
-# and Quercus boyntonii (QUBO; GSNAP4 alignment with Quercus robur reference) NextRAD samples
+# and Quercus boyntonii (QUBO; GSNAP4 alignment with Quercus robur reference) samples
 
 # Ex situ representation rates (i.e. how well do gardens individuals contain, or represent, wild alleles)
 # are impacted by methodology ("approach") and by the filters utilized
