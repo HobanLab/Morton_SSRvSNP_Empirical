@@ -218,7 +218,7 @@ points(rare_means, col=plotColors[5], pch=16)
 legend(x=83, y=70.13276, inset = 0.05, legend = c("Total","Very common","Common","Low frequency", "Rare"),
        col=plotColors, pch = c(20,20,20), cex=1, pt.cex = 2, bty="n", y.intersp = 0.15)
 # Lines for 95% threshold
-abline(h=95, col="black", lty=3); abline(v=min95_QUAC.SNP_subset, col="black")
+abline(h=95, col="black", lty=3); abline(v=min_95_QUAC.SNP_subset, col="black")
 
 # %%%% QUBO %%%% ----
 # ---- MSATS (COMPLETE) ----
