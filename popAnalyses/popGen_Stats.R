@@ -228,7 +228,8 @@ print(QUBO.Wild.SNP_AR)
 
 # ---- SUBSET ----
 # MSAT: Split sample names on underscore, and return 3rd element. Rename the sample matrix 
-QUBO.MSAT.sampleNames <- unlist(lapply(rownames(QUBO.MSAT.genind@tab), function(x) strsplit(x, "_")[[1]][3]))
+QUBO.MSAT.sampleNames <- unlist(lapply(rownames(QUBO.MSAT.genind@tab), 
+                                       function(x) strsplit(x, "_")[[1]][3]))
 rownames(QUBO.MSAT.genind@tab) <- QUBO.MSAT.sampleNames
 
 # SNP: Remove QUBO_W_ headers from sample names
