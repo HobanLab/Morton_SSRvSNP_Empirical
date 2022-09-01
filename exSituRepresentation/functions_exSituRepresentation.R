@@ -5,6 +5,9 @@
 # This script declares the functions used for ex situ analyses: garden representation of
 # wild alleles, and iteratively resampling allele matrices to determine minimum sample sizes.
 
+# Load adegenet library, since some functions use the pop() accessor
+library(adegenet)
+
 # ---- FUNCTIONS ----
 # Function for reporting representation rates, using a sample matrix and a vector of allele frequencies
 # This function assumes that the freqVector represents the absolute allele frequencies
@@ -114,7 +117,9 @@ exSitu_Sample <- function(wildMat, numSamples){
 }
 
 # Wrapper for the exSituSample function, iterating that function over the entire sample matrix
-exSitu_Resample <- function(wildMat){
+exSitu_Resample <- function(gen.obj){
+  # Create a matrix of wild individuals (those with population "wild") from genind object
+  wildMat <- gen.obj@tab[which(pop(gen.obj) == "wild"),]
   # Apply the exSituSample function to all rows of the sample matrix
   # (except row 1, because we need at least 2 individuals to sample)
   # Resulting matrix needs to be transposed in order to keep columns as different allele categories
@@ -122,10 +127,4 @@ exSitu_Resample <- function(wildMat){
   # Name columns according to categories of allelic representation, and return matrix
   colnames(representationMatrix) <- c("Total","Very common","Common","Low frequency","Rare")
   return(representationMatrix)
-}
-
-# Wrapper for exSitu_Resample: Function version that works from genind object, rather than wild matrix
-ExSituResample <- function(gen.obj){
-  # Checks: argument is a genind object, with only 2 populations, whose names are "garden" and "wild"
-  
 }
