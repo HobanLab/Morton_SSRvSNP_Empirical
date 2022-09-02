@@ -258,7 +258,8 @@ clusterExport(cl, varlist = c("getAlleleCategories", "exSitu_Sample", "exSitu_Re
                               "num_reps", "QUBO.MSAT.genind"))
 # Run resampling in parallel, to generate an array
 samplingResults_QUBO.MSAT <- 
-  sapply(1:num_reps, function(a) exSitu_Resample(gen.obj = QUBO.MSAT.genind), simplify = "array")
+  parSapply(cl, 1:num_reps, function(a) exSitu_Resample(gen.obj = QUBO.MSAT.genind), simplify = "array")
+
 # Close cores
 # stopCluster(cl)
 
@@ -324,7 +325,7 @@ clusterExport(cl, varlist = c("getAlleleCategories", "exSitu_Sample", "exSitu_Re
                               "num_reps", "QUBO.SNP.genind"))
 # Run resampling in parallel, to generate an array
 samplingResults_QUBO.SNP <- 
-  sapply(1:num_reps, function(a) exSitu_Resample(gen.obj = QUBO.SNP.genind), simplify = "array")
+  parSapply(cl, 1:num_reps, function(a) exSitu_Resample(gen.obj = QUBO.SNP.genind), simplify = "array")
 # Close cores
 # stopCluster(cl)
 
