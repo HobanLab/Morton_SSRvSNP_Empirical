@@ -84,7 +84,7 @@ plotColors[2:5] <- alpha(plotColors[2:5], 0.5)
 # Plots all sets of points onto single graph, as well as 95% threshold line
 plot(total_means, ylim=c(0,110), col=plotColors[1], pch=16, 
      xlab="Number of Individuals", ylab="Percent Diversity Capture",
-     main="QUAC, Microsatellites (Complete): 50 Replicates")
+     main="QUAC, Microsatellites (Complete, 50 Replicates)")
 points(v.com_means, col=plotColors[2], pch=16)
 points(com_means, col=plotColors[3], pch=16)
 points(lowfr_means, col=plotColors[4], pch=16)
@@ -136,7 +136,7 @@ rare_sd <- apply(samplingResults_QUAC.SNP[,5,], 1, sd)
 # Plots all sets of points onto single graph, as well as 95% threshold line
 plot(total_means, ylim=c(0,110), col=plotColors[1], pch=16, 
      xlab="Number of Individuals", ylab="Percent Diversity Capture",
-     main="QUAC, SNPs (Complete): 50 Replicates")
+     main="QUAC, SNPs (Complete, 50 Replicates)")
 points(v.com_means, col=plotColors[2], pch=16)
 points(com_means, col=plotColors[3], pch=16)
 points(lowfr_means, col=plotColors[4], pch=16)
@@ -281,13 +281,13 @@ rare_means <- apply(samplingResults_QUBO.MSAT[,5,], 1, mean)
 # Plots all sets of points onto single graph, as well as 95% threshold line
 plot(total_means, ylim=c(0,110), col=plotColors[1], pch=16, 
      xlab="Number of Individuals", ylab="Percent Diversity Capture",
-     main="QUBO, Microsatellites (Complete): 50 Replicates")
+     main="QUBO, Microsatellites (Complete, 50 Replicates)")
 points(v.com_means, col=plotColors[2], pch=16)
 points(com_means, col=plotColors[3], pch=16)
 points(lowfr_means, col=plotColors[4], pch=16)
 points(rare_means, col=plotColors[5], pch=16)
-legend(x=200, y=70.13276, inset = 0.05, legend = c("Total","Very common","Common","Low frequency", "Rare"),
-       col=plotColors, pch = c(20,20,20), cex=1, pt.cex = 2, bty="n", y.intersp = 0.15)
+legend(x=200, y=86.13276, inset = 0.05, legend = c("Total","Very common","Common","Low frequency", "Rare"),
+       col=plotColors, pch = c(20,20,20), cex=1, pt.cex = 2, bty="n", y.intersp = 0.25)
 # Lines for 95% threshold
 abline(h=95, col="black", lty=3); abline(v=min_95_QUBO.MSAT, col="black")
 
@@ -347,13 +347,13 @@ rare_means <- apply(samplingResults_QUBO.SNP[,5,], 1, mean)
 # Plots all sets of points onto single graph, as well as 95% threshold line
 plot(total_means, ylim=c(0,110), col=plotColors[1], pch=16, 
      xlab="Number of Individuals", ylab="Percent Diversity Capture",
-     main="QUBO, Microsatellites (Complete): 50 Replicates")
+     main="QUBO, SNPs (Complete, 50 Replicates)")
 points(v.com_means, col=plotColors[2], pch=16)
 points(com_means, col=plotColors[3], pch=16)
 points(lowfr_means, col=plotColors[4], pch=16)
 points(rare_means, col=plotColors[5], pch=16)
-legend(x=83, y=70.13276, inset = 0.05, legend = c("Total","Very common","Common","Low frequency", "Rare"),
-       col=plotColors, pch = c(20,20,20), cex=1, pt.cex = 2, bty="n", y.intersp = 0.15)
+legend(x=83, y=86.13276, inset = 0.05, legend = c("Total","Very common","Common","Low frequency", "Rare"),
+       col=plotColors, pch = c(20,20,20), cex=1, pt.cex = 2, bty="n", y.intersp = 0.25)
 # Lines for 95% threshold
 abline(h=95, col="black", lty=3); abline(v=min_95_QUBO.SNP, col="black")
 
