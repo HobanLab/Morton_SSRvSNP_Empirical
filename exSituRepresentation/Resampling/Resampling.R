@@ -180,8 +180,8 @@ min_95.SD_QUAC.SNP_subset <- apply(samplingResults_QUAC.SNP_subset[,1,],1,sd)[mi
 print(min_95_QUAC.SNP_subset); print(min_95.SD_QUAC.SNP_subset)
 
 # PLOTTING ----
-# MSAT_subset
-# Calculate means and standard deviations, for each capture rate category
+# TWO GRAPHS
+# MSAT_subset: calculate means and standard deviations, for each capture rate category
 total_means <- apply(samplingResults_QUAC.MSAT_subset[,1,], 1, mean)
 v.com_means <- apply(samplingResults_QUAC.MSAT_subset[,2,], 1, mean)
 com_means <- apply(samplingResults_QUAC.MSAT_subset[,3,], 1, mean)
@@ -199,9 +199,7 @@ legend(x=80, y=70.13276, inset = 0.05, legend = c("Total","Very common","Common"
        col=plotColors, pch = c(20,20,20), cex=1, pt.cex = 2, bty="n", y.intersp = 0.15)
 # Lines for 95% threshold
 abline(h=95, col="black", lty=3); abline(v=min_95_QUAC.MSAT_subset, col="black")
-
-# SNP_subset
-# Calculate means and standard deviations, for each capture rate category
+# SNP_subset: calculate means and standard deviations, for each capture rate category
 total_means <- apply(samplingResults_QUAC.SNP_subset[,1,], 1, mean)
 v.com_means <- apply(samplingResults_QUAC.SNP_subset[,2,], 1, mean)
 com_means <- apply(samplingResults_QUAC.SNP_subset[,3,], 1, mean)
@@ -219,6 +217,24 @@ legend(x=83, y=70.13276, inset = 0.05, legend = c("Total","Very common","Common"
        col=plotColors, pch = c(20,20,20), cex=1, pt.cex = 2, bty="n", y.intersp = 0.15)
 # Lines for 95% threshold
 abline(h=95, col="black", lty=3); abline(v=min_95_QUAC.SNP_subset, col="black")
+
+# ONE GRAPH (TOTAL VALUES)
+# Relevant values
+QUAC_total_means_MSAT_subset <- apply(samplingResults_QUAC.MSAT_subset[,1,], 1, mean)
+min_95_QUAC.MSAT_subset <- min(which(apply(samplingResults_QUAC.MSAT_subset[,1,],1,mean) > 95))
+QUAC_total_means_SNP_subset <- apply(samplingResults_QUAC.SNP_subset[,1,], 1, mean)
+min_95_QUAC.SNP_subset <- min(which(apply(samplingResults_QUAC.SNP_subset[,1,],1,mean) > 95))
+# Generate plot and add points
+plotColors <- plotColors <- alpha(c("purple","darkgreen"), 0.7)
+plot(QUAC_total_means_MSAT_subset, ylim=c(0,110), col=plotColors[1], pch=16, 
+     xlab="Number of Individuals", ylab="Percent Diversity Capture",
+     main="QUAC, MSATs and SNPs (Subset, 50 Replicates): Total Allelic Representation")
+points(QUAC_total_means_SNP_subset, col=plotColors[2], pch=17)
+# Legend
+legend(x=81, y=70.13276, inset = 0.05, legend = c("Microsatellites","SNPs"),
+       col=plotColors, pch = c(16,17), cex=1, pt.cex = 2, bty="n", y.intersp = 0.7)
+# Lines for 95% threshold
+abline(h=95, col="black", lty=3); abline(v=min_95_QUAC.MSAT_subset, col="black"); abline(v=min_95_QUAC.SNP_subset, col="black")
 
 # %%%% QUBO %%%% ----
 # ---- MSATS (COMPLETE) ----
@@ -373,8 +389,8 @@ min_95.SD_QUBO.SNP_subset <- apply(samplingResults_QUBO.SNP_subset[,1,],1,sd)[mi
 print(min_95_QUBO.SNP_subset); print(min_95.SD_QUBO.SNP_subset)
 
 # PLOTTING ----
-# MSAT_subset
-# Calculate means and standard deviations, for each capture rate category
+# TWO GRAPHS
+# MSAT_subset: calculate means and standard deviations, for each capture rate category
 total_means <- apply(samplingResults_QUBO.MSAT_subset[,1,], 1, mean)
 v.com_means <- apply(samplingResults_QUBO.MSAT_subset[,2,], 1, mean)
 com_means <- apply(samplingResults_QUBO.MSAT_subset[,3,], 1, mean)
@@ -392,9 +408,7 @@ legend(x=80, y=70.13276, inset = 0.05, legend = c("Total","Very common","Common"
        col=plotColors, pch = c(20,20,20), cex=1, pt.cex = 2, bty="n", y.intersp = 0.15)
 # Lines for 95% threshold
 abline(h=95, col="black", lty=3); abline(v=min_95_QUBO.MSAT_subset, col="black")
-
-# SNP_subset
-# Calculate means and standard deviations, for each capture rate category
+# SNP_subset: calculate means and standard deviations, for each capture rate category
 total_means <- apply(samplingResults_QUBO.SNP_subset[,1,], 1, mean)
 v.com_means <- apply(samplingResults_QUBO.SNP_subset[,2,], 1, mean)
 com_means <- apply(samplingResults_QUBO.SNP_subset[,3,], 1, mean)
@@ -415,3 +429,21 @@ legend(x=83, y=70.13276, inset = 0.05, legend = c("Total","Very common","Common"
        col=plotColors, pch = c(20,20,20), cex=1, pt.cex = 2, bty="n", y.intersp = 0.15)
 # Lines for 95% threshold
 abline(h=95, col="black", lty=3); abline(v=min_95_QUBO.SNP_subset, col="black")
+
+# ONE GRAPH (TOTAL VALUES)
+# Relevant values
+QUBO_total_means_MSAT_subset <- apply(samplingResults_QUBO.MSAT_subset[,1,], 1, mean)
+min_95_QUBO.MSAT_subset <- min(which(apply(samplingResults_QUBO.MSAT_subset[,1,],1,mean) > 95))
+QUBO_total_means_SNP_subset <- apply(samplingResults_QUBO.SNP_subset[,1,], 1, mean)
+min_95_QUBO.SNP_subset <- min(which(apply(samplingResults_QUBO.SNP_subset[,1,],1,mean) > 95))
+# Generate plot and add points
+plotColors <- plotColors <- alpha(c("purple","darkgreen"), 0.7)
+plot(QUBO_total_means_MSAT_subset, ylim=c(0,110), col=plotColors[1], pch=16, 
+     xlab="Number of Individuals", ylab="Percent Diversity Capture",
+     main="QUBO, MSATs and SNPs (Subset, 50 Replicates): Total Allelic Representation")
+points(QUBO_total_means_SNP_subset, col=plotColors[2], pch=17)
+# Legend
+legend(x=78, y=70.13276, inset = 0.05, legend = c("Microsatellites","SNPs"),
+       col=plotColors, pch = c(16,17), cex=1, pt.cex = 2, bty="n", y.intersp = 0.7)
+# Lines for 95% threshold
+abline(h=95, col="black", lty=3); abline(v=min_95_QUBO.MSAT_subset, col="black"); abline(v=min_95_QUBO.SNP_subset, col="black")
