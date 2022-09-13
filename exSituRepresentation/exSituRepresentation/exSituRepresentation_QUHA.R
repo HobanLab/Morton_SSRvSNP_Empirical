@@ -58,6 +58,7 @@ QUAC.MSAT.repRates <- vector(length = 5)
 alleles_existing_by_sp <- vector(length = 5)
 # First population is all garden samples ("garden"), population 2 is "wild"
 garden_p <- 1 ; wild_p <- 2
+# Create genpop object, and calculate alleles captured
 n_ind_W <- table(QUAC.MSAT.genind@pop)[wild_p]; n_ind_G <- table(QUAC.MSAT.genind@pop)[garden_p]; 
 QUAC.MSAT.genpop <- genind2genpop(QUAC.MSAT.genind)
 alleles_cap <- colSums(QUAC.MSAT.genpop[garden_p]@tab,na.rm=T)
@@ -87,6 +88,7 @@ QUAC.SNP.repRates <- vector(length = 5)
 alleles_existing_by_sp <- vector(length = 5)
 # First population is all garden samples ("garden"), population 2 is "wild"
 garden_p <- 1 ; wild_p <- 2
+# Create genpop object, and calculate alleles captured
 n_ind_W <- table(QUAC.SNP.genind@pop)[wild_p]; n_ind_G <- table(QUAC.SNP.genind@pop)[garden_p]; 
 QUAC.SNP.genpop <- genind2genpop(QUAC.SNP.genind)
 alleles_cap <- colSums(QUAC.SNP.genpop[garden_p]@tab,na.rm=T)
@@ -127,6 +129,7 @@ QUAC.MSAT_subset.repRates <- vector(length = 5)
 alleles_existing_by_sp <- vector(length = 5)
 # First population is all garden samples ("garden"), population 2 is "wild"
 garden_p <- 1 ; wild_p <- 2
+# Create genpop object, and calculate alleles captured
 n_ind_W <- table(QUAC.MSAT_subset.genind@pop)[wild_p]; n_ind_G <- table(QUAC.MSAT_subset.genind@pop)[garden_p]; 
 QUAC.MSAT_subset.genpop <- genind2genpop(QUAC.MSAT_subset.genind)
 alleles_cap <- colSums(QUAC.MSAT_subset.genpop[garden_p]@tab,na.rm=T)
@@ -148,6 +151,7 @@ QUAC.SNP_subset.repRates <- vector(length = 5)
 alleles_existing_by_sp <- vector(length = 5)
 # First population is all garden samples ("garden"), population 2 is "wild"
 garden_p <- 1 ; wild_p <- 2
+# Create genpop object, and calculate alleles captured
 n_ind_W <- table(QUAC.SNP_subset.genind@pop)[wild_p]; n_ind_G <- table(QUAC.SNP_subset.genind@pop)[garden_p]; 
 QUAC.SNP_subset.genpop <- genind2genpop(QUAC.SNP_subset.genind)
 alleles_cap <- colSums(QUAC.SNP_subset.genpop[garden_p]@tab,na.rm=T)
@@ -164,7 +168,6 @@ print(QUAC.SNP_subset.repRates*100)
 
 # %%%% QUBO %%%% ----
 # ---- MSATS: COMPLETE ----
-# Read in genind file (GCC_QUBO_ZAIN repo; QUBO_wK_garden_wild_clean.gen; includes Kessler population)
 # Read in genind file (Southeast Oaks repo; genetic_data/Qb_total.gen file)
 genpop.filePath <- 
   "~/Documents/peripheralProjects/SE_oaks_genetics/genetic_data/"
@@ -177,8 +180,9 @@ levels(QUBO.MSAT.genind@pop) <- c(rep("wild",9), "garden")
 QUBO.MSAT.repRates <- vector(length = 5)
 # Create vector to capture the number of each allele category (of which there are 5)
 alleles_existing_by_sp <- vector(length = 5)
-# First population is all garden samples ("garden"), population 2 is "wild"
-garden_p <- 1 ; wild_p <- 2
+# First population is wild (9 different groups), population 2 is "garden"
+wild_p <- 1; garden_p <- 2
+# Create genpop object, and calculate alleles captured
 n_ind_W <- table(QUBO.MSAT.genind@pop)[wild_p]; n_ind_G <- table(QUBO.MSAT.genind@pop)[garden_p]; 
 QUBO.MSAT.genpop <- genind2genpop(QUBO.MSAT.genind)
 alleles_cap <- colSums(QUBO.MSAT.genpop[garden_p]@tab,na.rm=T)
@@ -208,6 +212,7 @@ QUBO.SNP.repRates <- vector(length = 5)
 alleles_existing_by_sp <- vector(length = 5)
 # First population is all garden samples ("garden"), population 2 is "wild"
 garden_p <- 1 ; wild_p <- 2
+# Create genpop object, and calculate alleles captured
 n_ind_W <- table(QUBO.SNP.genind@pop)[wild_p]; n_ind_G <- table(QUBO.SNP.genind@pop)[garden_p]; 
 QUBO.SNP.genpop <- genind2genpop(QUBO.SNP.genind)
 alleles_cap <- colSums(QUBO.SNP.genpop[garden_p]@tab,na.rm=T)
@@ -256,8 +261,9 @@ QUBO.SNP_subset.genind <- QUBO.SNP.genind[QUBO_sharedSamples,, drop=TRUE]
 QUBO.MSAT_subset.repRates <- vector(length = 5)
 # Create vector to capture the number of each allele category (of which there are 5)
 alleles_existing_by_sp <- vector(length = 5)
-# First population is all garden samples ("garden"), population 2 is "wild"
-garden_p <- 1 ; wild_p <- 2
+# First population is wild (9 different groups), population 2 is "garden"
+wild_p <- 1; garden_p <- 2
+# Create genpop object, and calculate alleles captured
 n_ind_W <- table(QUBO.MSAT_subset.genind@pop)[wild_p]; n_ind_G <- table(QUBO.MSAT_subset.genind@pop)[garden_p]; 
 QUBO.MSAT_subset.genpop <- genind2genpop(QUBO.MSAT_subset.genind)
 alleles_cap <- colSums(QUBO.MSAT_subset.genpop[garden_p]@tab,na.rm=T)
@@ -279,6 +285,7 @@ QUBO.SNP_subset.repRates <- vector(length = 5)
 alleles_existing_by_sp <- vector(length = 5)
 # First population is all garden samples ("garden"), population 2 is "wild"
 garden_p <- 1 ; wild_p <- 2
+# Create genpop object, and calculate alleles captured
 n_ind_W <- table(QUBO.SNP_subset.genind@pop)[wild_p]; n_ind_G <- table(QUBO.SNP_subset.genind@pop)[garden_p]; 
 QUBO.SNP_subset.genpop <- genind2genpop(QUBO.SNP_subset.genind)
 alleles_cap <- colSums(QUBO.SNP_subset.genpop[garden_p]@tab,na.rm=T)

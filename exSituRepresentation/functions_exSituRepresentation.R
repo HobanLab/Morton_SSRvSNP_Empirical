@@ -56,8 +56,8 @@ getAlleleCategories_Partial <- function(freqVector, sampleMat){
 # This function is a wrapper of getAlleleCategories, using a single genind object
 reportAllelicRepresentation_Together <- function(gen.obj){
   # Generate numerical vectors corresponding to garden and wild rows, for later calculations
-  garden.Rows <- seq_len(length(which(pop(gen.obj)=="garden")))
-  wild.Rows <- seq(from=length(which(pop(gen.obj)=="garden"))+1, to=nInd(gen.obj))
+  garden.Rows <- which(gen.obj@pop == "garden")
+  wild.Rows <- which(gen.obj@pop == "wild")
   # Build the wild allele frequency vector
   wildFreqs <- colSums(gen.obj@tab[wild.Rows,], na.rm = TRUE)/(length(wild.Rows)*2)*100
   # Calculate how many alleles (of each category) the garden samples represent, and return
@@ -69,8 +69,8 @@ reportAllelicRepresentation_Together <- function(gen.obj){
 # Alleles are renamed to drop information on SNP position
 reportAllelicRepresentation_Together_Partial <- function(gen.obj){
   # Generate numerical vectors corresponding to garden and wild rows, for later calculations
-  garden.Rows <- seq_len(length(which(pop(gen.obj)=="garden")))
-  wild.Rows <- seq(from=length(which(pop(gen.obj)=="garden"))+1, to=nInd(gen.obj))
+  garden.Rows <- which(gen.obj@pop == "garden")
+  wild.Rows <- which(gen.obj@pop == "wild")
   # Rename alleles, dropping the portion of allele names following the underscore (SNP information)
   colnames(gen.obj@tab) <- gsub(pattern = "_[0-9]{1,4}.[0-9]{1,2}", replacement = "", colnames(gen.obj@tab))
   # Build the wild allele frequency vector
