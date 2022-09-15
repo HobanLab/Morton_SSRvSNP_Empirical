@@ -11,7 +11,8 @@ library(adegenet)
 # ---- FUNCTIONS ----
 # Function for reporting representation rates, using a sample matrix and a vector of allele frequencies
 # This function assumes that the freqVector represents the absolute allele frequencies
-# for the entire population of interest
+# for the entire population of interest. Allele names between the frequency vector and the sample matrix
+# must correspond in order for values to be comparable.
 getAlleleCategories <- function(freqVector, sampleMat){
   # Determine how many total alleles in the sample (i.e. greater than 0) are found in the frequency vector 
   total <- length(which(names(which(freqVector > 0)) %in% names(which(colSums(sampleMat, na.rm = TRUE) > 0))))/length(which(freqVector > 0))*100
@@ -32,7 +33,7 @@ getAlleleCategories <- function(freqVector, sampleMat){
 
 # This is an altered, outdated version of the getAlleleCategories function 
 # Characters following the underscore of allele names are stripped 
-# Therefore, only whole RAD loci are compared across garden and wild individuals.
+# Therefore, only whole loci are compared across garden and wild individuals (i.e. not SNP positions/values)
 # This is why the unique() function needs to be added to each calculation
 getAlleleCategories_Partial <- function(freqVector, sampleMat){
   # Determine how many total alleles in the sample (i.e. greater than 0) are found in the frequency vector 
@@ -54,6 +55,8 @@ getAlleleCategories_Partial <- function(freqVector, sampleMat){
 
 # REPORT ALLELIC REPRESENTATION FUNCTIONS----
 # This function is a wrapper of getAlleleCategories, using a single genind object
+# The garden and wild rows in the gen.obj@tab matrix are detected, the wild allele frequency vector is built,
+# and the allelic representation of the garden samples is measured
 reportAllelicRepresentation_Together <- function(gen.obj){
   # Generate numerical vectors corresponding to garden and wild rows, for later calculations
   garden.Rows <- which(gen.obj@pop == "garden")
@@ -80,7 +83,9 @@ reportAllelicRepresentation_Together_Partial <- function(gen.obj){
   return(repRates)
 }
 
-# This function is a wrapper of getAlleleCategories, using two genind objects (one garden, one wild)
+# This function is a wrapper of getAlleleCategories, using two separate genind objects (one garden, one wild)
+# This function was motivated by the concern of grouping garden and wild samples together influencing
+# the genotyping (i.e. SNP calling) process
 reportAllelicRepresentation_Separate <- function(gen.obj.garden, gen.obj.wild){
   # Build the wild allele frequency vector
   wildFreqs <- colSums(gen.obj.wild@tab, na.rm = TRUE)/(nInd(gen.obj.wild)*2)*100
@@ -116,7 +121,7 @@ exSitu_Sample <- function(wildMat, numSamples){
   return(repRates)
 }
 
-# Wrapper for the exSituSample function, iterating that function over the entire sample matrix
+# Wrapper for the exSitu_Sample function, iterating that function over the entire sample matrix
 exSitu_Resample <- function(gen.obj){
   # Create a matrix of wild individuals (those with population "wild") from genind object
   wildMat <- gen.obj@tab[which(pop(gen.obj) == "wild"),]
