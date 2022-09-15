@@ -8,7 +8,7 @@
 # Load adegenet library, since some functions use the pop() accessor
 library(adegenet)
 
-# ---- FUNCTIONS ----
+# ---- REPRESENTATION FUNCTIONS ----
 # Function for reporting representation rates, using a sample matrix and a vector of allele frequencies
 # This function assumes that the freqVector represents the absolute allele frequencies
 # for the entire population of interest. Allele names between the frequency vector and the sample matrix
