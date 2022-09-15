@@ -9,10 +9,13 @@
 
 # The script performs these calculations with different sets of samples, as outlined below:
 # 1. Microsatellites: all samples, garden and wild populations
-# 2. SNPs: all samples, garden and wild populations
-# 3. SNPs: all samples, wild populations only
-# 4. Microsatellites: subset samples (only those shared with SNP dataset), garden and wild populations
-# 5. SNPs: subset samples (only those shared with SNP dataset), garden and wild populations
+# 2. SNPs: all samples, garden and wild populations, R0 filter (no filter for missing data)
+# 3. SNPs: all samples, garden and wild populations, R80 filter (loci present in 80% of samples)
+# 4. SNPs: all samples, wild populations only, R0 filter (no filter for missing data)
+# 5. SNPs: all samples, wild populations only, R80 filter (loci present in 80% of samples)
+# 6. Microsatellites: subset samples (only those shared with SNP dataset), garden and wild populations
+# 7. SNPs: subset samples (only those shared with SNP dataset), garden and wild populations, R0 filter
+# 8. SNPs: subset samples (only those shared with SNP dataset), garden and wild populations, R80 filter
 
 # Each of these scenarios is explored for both species
 
@@ -368,7 +371,6 @@ QUBO.SNP.sampleNames <- gsub("SH_Q2186",replacement = "IMLS017", QUBO.SNP.sample
 # Rename sample matrices (both R0 and R80)
 rownames(QUBO.SNP.R0_genind@tab) <- rownames(QUBO.SNP.R80_genind@tab) <- QUBO.SNP.sampleNames
 
-# ---- GENERATE DATASET OF SHARED SAMPLES ----
 # Subset SNP sample names by those that are also seen within the MSAT samples
 QUBO_sharedSamples <- sort(QUBO.SNP.sampleNames[which(QUBO.SNP.sampleNames %in% QUBO.MSAT.sampleNames)])
 # Subset MSAT and SNP wild matrix objects to strictly shared samples
