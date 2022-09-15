@@ -44,8 +44,8 @@ barplot(QUAC.MSAT_HZ, beside = TRUE,
         xlab = "Population Type", ylab = "Expected Heterozygosity")
 abline(h = 0, lwd=2)
 
-# Allele counts, allelic richness
-nLoc(QUAC.MSAT_genind)
+# Loci count, allele count
+nLoc(QUAC.MSAT_genind); ncol(QUAC.MSAT_genind@tab)
 # Allelic richness: values per population
 QUAC.MSAT_AR <- apply(allelic.richness(QUAC.MSAT_genind)$Ar, 2, mean, na.rm=TRUE)
 print(QUAC.MSAT_AR)
@@ -71,8 +71,8 @@ barplot(QUAC.SNP.R0_HZ, beside = TRUE,
         xlab = "Population Type", ylab = "Expected Heterozygosity")
 abline(h = 0, lwd=2)
 
-# Allele counts: number of variant sites (number of loci, and 1 SNP/locus)
-nLoc(QUAC.SNP.R0_genind)
+# Loci count, allele count
+nLoc(QUAC.SNP.R0_genind); ncol(QUAC.SNP.R0_genind@tab)
 # Allelic richness: values per population
 QUAC.SNP.R0_AR <- apply(allelic.richness(QUAC.SNP.R0_genind)$Ar, 2, mean, na.rm=TRUE)
 print(QUAC.SNP.R0_AR)
@@ -96,8 +96,8 @@ barplot(QUAC.SNP.R80_HZ, beside = TRUE,
         xlab = "Population Type", ylab = "Expected Heterozygosity")
 abline(h = 0, lwd=2)
 
-# Allele counts: number of variant sites (number of loci, and 1 SNP/locus)
-nLoc(QUAC.SNP.R80_genind)
+# Loci count, allele count
+nLoc(QUAC.SNP.R80_genind); ncol(QUAC.SNP.R80_genind@tab)
 # Allelic richness: values per population
 QUAC.SNP.R80_AR <- apply(allelic.richness(QUAC.SNP.R80_genind)$Ar, 2, mean, na.rm=TRUE)
 print(QUAC.SNP.R80_AR)
@@ -123,8 +123,8 @@ barplot(QUAC.SNP.Wild.R0_HZ, beside = TRUE,
         xlab = "Wild population", ylab = "Expected Heterozygosity")
 abline(h = 0, lwd=2)
 
-# Allele counts: number of variant sites (number of loci, and 1 SNP/locus)
-nLoc(QUAC.Wild.SNP.R0_genind)
+# Loci count, allele count
+nLoc(QUAC.Wild.SNP.R0_genind); ncol(QUAC.Wild.SNP.R0_genind@tab)
 # Allelic richness: values per population
 QUAC.SNP.Wild.R0_AR <- apply(allelic.richness(QUAC.Wild.SNP.R0_genind)$Ar, 2, mean, na.rm=TRUE)
 print(QUAC.SNP.Wild.R0_AR)
@@ -149,8 +149,8 @@ barplot(QUAC.SNP.Wild.R80_HZ, beside = TRUE,
         xlab = "Wild population", ylab = "Expected Heterozygosity")
 abline(h = 0, lwd=2)
 
-# Allele counts: number of variant sites (number of loci, and 1 SNP/locus)
-nLoc(QUAC.Wild.SNP.R80_genind)
+# Loci count, allele count
+nLoc(QUAC.Wild.SNP.R80_genind); ncol(QUAC.Wild.SNP.R80_genind@tab)
 # Allelic richness: values per population
 QUAC.SNP.Wild.R80_AR <- apply(allelic.richness(QUAC.Wild.SNP.R80_genind)$Ar, 2, mean, na.rm=TRUE)
 print(QUAC.SNP.Wild.R80_AR)
@@ -200,16 +200,16 @@ barplot(QUAC.SNP.R80.subset_HZ, beside = TRUE,
         xlab = "Population Type", ylab = "Expected Heterozygosity")
 abline(h = 0, lwd=2)
 
-# Allele counts: number of variant sites (number of loci, and 1 SNP/locus)
-nLoc(QUAC.MSAT.subset_genind)
-nLoc(QUAC.SNP.R0.subset_genind)
-nLoc(QUAC.SNP.R80.subset_genind)
+# Loci count, allele count
+nLoc(QUAC.MSAT.subset_genind); ncol(QUAC.MSAT.subset_genind@tab)
+nLoc(QUAC.SNP.R0.subset_genind); ncol(QUAC.SNP.R0.subset_genind@tab)
+nLoc(QUAC.SNP.R80.subset_genind); ncol(QUAC.SNP.R80.subset_genind@tab)
 # Allelic richness: values per population
 QUAC.MSAT.subset_AR <- apply(allelic.richness(QUAC.MSAT.subset_genind)$Ar, 2, mean, na.rm=TRUE)
 print(QUAC.MSAT.subset_AR)
-QUAC.SNP.R0.subset_AR <- apply(allelic.richness(QUAC.SNP.R0.subset_HZ)$Ar, 2, mean, na.rm=TRUE)
+QUAC.SNP.R0.subset_AR <- apply(allelic.richness(QUAC.SNP.R0.subset_genind)$Ar, 2, mean, na.rm=TRUE)
 print(QUAC.SNP.R0.subset_AR)
-QUAC.SNP.R80.subset_AR <- apply(allelic.richness(QUAC.SNP.R80.subset_HZ)$Ar, 2, mean, na.rm=TRUE)
+QUAC.SNP.R80.subset_AR <- apply(allelic.richness(QUAC.SNP.R80.subset_genind)$Ar, 2, mean, na.rm=TRUE)
 print(QUAC.SNP.R80.subset_AR)
 
 # %%%% QUBO %%%% ----
@@ -233,8 +233,8 @@ barplot(QUBO.MSAT_HZ, beside = TRUE,
         xlab = "Population Type", ylab = "Expected Heterozygosity")
 abline(h = 0, lwd=2)
 
-# Allele counts, allelic richness
-ncol(QUBO.MSAT_genind@tab)
+# Loci count, allele count
+nLoc(QUBO.MSAT_genind); ncol(QUBO.MSAT_genind@tab)
 # Allelic richness: values per population
 QUBO.MSAT_AR <- apply(allelic.richness(QUBO.MSAT_genind)$Ar, 2, mean, na.rm=TRUE)
 print(QUBO.MSAT_AR)
@@ -260,8 +260,8 @@ barplot(QUBO.SNP.R0_HZ, beside = TRUE,
         xlab = "Population Type", ylab = "Expected Heterozygosity")
 abline(h = 0, lwd=2)
 
-# Allele counts: number of variant sites (number of loci, and 1 SNP/locus)
-nLoc(QUBO.SNP.R0_genind)
+# Loci count, allele count
+nLoc(QUBO.SNP.R0_genind); ncol(QUBO.SNP.R0_genind@tab)
 # Allelic richness: values per population
 QUBO.SNP.R0_AR <- apply(allelic.richness(QUBO.SNP.R0_genind)$Ar, 2, mean, na.rm=TRUE)
 print(QUBO.SNP.R0_AR)
@@ -285,8 +285,8 @@ barplot(QUBO.SNP.R80_HZ, beside = TRUE,
         xlab = "Population Type", ylab = "Expected Heterozygosity")
 abline(h = 0, lwd=2)
 
-# Allele counts: number of variant sites (number of loci, and 1 SNP/locus)
-nLoc(QUBO.SNP.R80_genind)
+# Loci count, allele count
+nLoc(QUBO.SNP.R80_genind); ncol(QUBO.SNP.R80_genind@tab)
 # Allelic richness: values per population
 QUBO.SNP.R80_AR <- apply(allelic.richness(QUBO.SNP.R80_genind)$Ar, 2, mean, na.rm=TRUE)
 print(QUBO.SNP.R80_AR)
@@ -312,8 +312,8 @@ barplot(QUBO.Wild.SNP.R0_HZ, beside = TRUE,
         xlab = "Wild source", ylab = "Expected Heterozygosity")
 abline(h = 0, lwd=2)
 
-# Allele counts: number of variant sites (number of loci, and 1 SNP/locus)
-nLoc(QUBO.Wild.SNP.R0_genind)
+# Loci count, allele count
+nLoc(QUBO.Wild.SNP.R0_genind); ncol(QUBO.Wild.SNP.R0_genind@tab)
 # Allelic richness: values per population
 QUBO.Wild.SNP.R0_AR <- apply(allelic.richness(QUBO.Wild.SNP.R0_genind)$Ar, 2, mean, na.rm=TRUE)
 print(QUBO.Wild.SNP.R0_AR)
@@ -338,8 +338,8 @@ barplot(QUBO.Wild.SNP.R80_HZ, beside = TRUE,
         xlab = "Wild source", ylab = "Expected Heterozygosity")
 abline(h = 0, lwd=2)
 
-# Allele counts: number of variant sites (number of loci, and 1 SNP/locus)
-nLoc(QUBO.Wild.SNP.R80_genind)
+# Loci count, allele count
+nLoc(QUBO.Wild.SNP.R80_genind); ncol(QUBO.Wild.SNP.R80_genind@tab)
 # Allelic richness: values per population
 QUBO.Wild.SNP.R80_AR <- apply(allelic.richness(QUBO.Wild.SNP.R80_genind)$Ar, 2, mean, na.rm=TRUE)
 print(QUBO.Wild.SNP.R80_AR)
@@ -402,10 +402,10 @@ barplot(QUBO.SNP.R80.subset_HZ, beside = TRUE,
         xlab = "Population Type", ylab = "Expected Heterozygosity")
 abline(h = 0, lwd=2)
 
-# Allele counts: number of variant sites (number of loci, and 1 SNP/locus)
-nLoc(QUBO.MSAT.subset_genind)
-nLoc(QUBO.SNP.R0.subset_genind)
-nLoc(QUBO.SNP.R80.subset_genind)
+# Loci count, allele count
+nLoc(QUBO.MSAT.subset_genind); ncol(QUBO.MSAT.subset_genind@tab)
+nLoc(QUBO.SNP.R0.subset_genind); ncol(QUBO.SNP.R0.subset_genind@tab)
+nLoc(QUBO.SNP.R80.subset_genind); ncol(QUBO.SNP.R80.subset_genind@tab)
 # Allelic richness: values per population
 QUBO.MSAT.subset_AR <- apply(allelic.richness(QUBO.MSAT.subset_genind)$Ar, 2, mean, na.rm=TRUE)
 print(QUBO.MSAT.subset_AR)
