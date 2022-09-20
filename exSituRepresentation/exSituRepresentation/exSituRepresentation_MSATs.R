@@ -31,7 +31,7 @@ pop(QUAC.MSAT.genind) <- gsub("pop2", "wild", pop(QUAC.MSAT.genind))
 reportAllelicRepresentation_Together(QUAC.MSAT.genind)
 
 # ---- SNPS: COMPLETE ----
-# Read in genind file: Optimized de novo assembly; R0, NOMAF, first SNP/locus, 2 populations
+# Read in genind file: Optimized de novo assembly; R0, min-maf=0, first SNP/locus, 2 populations (garden and wild)
 genpop.filePath <- 
   "/RAID1/IMLS_GCCO/Analysis/Stacks/denovo_finalAssemblies/QUAC/output/populations_R0_NOMAF_1SNP_2Pops/"
 setwd(genpop.filePath)
@@ -78,7 +78,7 @@ levels(QUBO.MSAT.genind@pop) <- c(rep("wild",9), "garden")
 reportAllelicRepresentation_Together(QUBO.MSAT.genind)
 
 # ---- SNPS: COMPLETE ----
-# Read in genind file (QUBO GSNAP4 alignment; R0, min-maf=0; 1 SNP/locus; 2 populations, garden and wild)
+# Read in genind file: QUBO GSNAP4 alignment; R0, min-maf=0, first SNP/locus, 2 populations (garden and wild)
 genpop.filePath <- 
   "/RAID1/IMLS_GCCO/Analysis/Stacks/reference_filteredReads/QUBO/GSNAP4/output/populations_R0_NOMAF_1SNP_2Pops/"
 setwd(genpop.filePath)
