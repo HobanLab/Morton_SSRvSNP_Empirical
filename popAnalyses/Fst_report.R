@@ -127,9 +127,9 @@ Fst_Stacks_report(QUAC.SNP.R80.filePath, title = "QUAC Fst (Stacks) Values: De n
 # Read in genind file: QUBO GSNAP4 alignment; R0, min-maf=0, first SNP/locus, wild samples only
 QUBO.SNP.R0.filePath <- "/RAID1/IMLS_GCCO/Analysis/Stacks/reference_filteredReads/QUBO/GSNAP4/output/populations_wild_R0_NOMAF_1SNP/"
 setwd(QUBO.SNP.R0.filePath)
-QUBO.SNP.R0.genind <- read.genepop(paste0(QUBO.SNP.R0.filepath,"populations.snps.gen"))
+QUBO.SNP.R0.genind <- read.genepop(paste0(QUBO.SNP.R0.filePath,"populations.snps.gen"))
 # Correct popNames
-pop(QUBO.SNP.R0.genind) <- factor(read.table("QUBO_popmap_GardenWild", header=FALSE)[,2])
+pop(QUBO.SNP.R0.genind) <- factor(read.table("QUBO_popmap_wild", header=FALSE)[,2])
 
 # Generate matrix and plot hierfstat (Nei) Fst values--COMMENTED OUT BECAUSE OF VERY LONG PROCESSING TIME
 # Fst_Nei_report(QUBO.SNP.R0.genind, title = "QUBO Fst (Nei) Values: De novo, R0, NOMAF (61,800 loci)")
@@ -144,7 +144,7 @@ QUBO.SNP.R80.filePath <- "/RAID1/IMLS_GCCO/Analysis/Stacks/reference_filteredRea
 setwd(QUBO.SNP.R80.filePath)
 QUBO.SNP.R80.genind <- read.genepop(paste0(QUBO.SNP.R80.filePath,"populations.snps.gen"))
 # Correct popNames
-pop(QUBO.SNP.R80.genind) <- factor(read.table("QUBO_popmap_GardenWild", header=FALSE)[,2])
+pop(QUBO.SNP.R80.genind) <- factor(read.table("QUBO_popmap_wild", header=FALSE)[,2])
 
 # Generate matrix and plot hierfstat (Nei) Fst values
 Fst_Nei_report(QUBO.SNP.R80.genind, title = "QUBO Fst (Nei) Values: De novo, R80, NOMAF (6,174 loci)")
