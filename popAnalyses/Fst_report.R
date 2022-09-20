@@ -2,8 +2,8 @@
 # %%% REPORT FST VALUES %%%
 # %%%%%%%%%%%%%%%%%%%%%%%%%
 
-# This script generates Fst matrices from genind files, and plots these matrices using the heatmap command
-# These Fst values are derived for wild populations only.
+# This script generates Fst matrices from genind files and other Stacks outputs, 
+# and plots these as heatmaps using the image command. Values are derived for wild populations only.
 
 # Different methods are used to generate Fst values, as outlined below
 # 1. Fst_Nei_report: uses a genind file, from which a pairwise Fst is calculated using Nei's 1987 method
