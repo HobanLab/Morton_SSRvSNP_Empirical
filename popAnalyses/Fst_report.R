@@ -37,11 +37,11 @@ Fst_plot <- function(fst_mat, title="Fst Values"){
   }
 }
 
-# Function for calculating and plotting Fst values, from genind object (using hierfstat package)
+# Function for calculating and plotting Fst values (Nei, 1987), from genind object (using hierfstat package)
 Fst_Nei_report <- function(gen.obj, title){
   # Convert genind object to hierfstat format
   hierfstat.obj <- genind2hierfstat(gen.obj)
-  # Calculate pairwise Fst 
+  # Calculate pairwise Fst (Nei, 1987)
   fst_mat <- pairwise.neifst(hierfstat.obj)
   # pairwise.neifst returns a full matrix, whereas we need only the upper half
   # The line below gets the matrix into the format needed for plotting (lower triangle values removed)
@@ -53,11 +53,11 @@ Fst_Nei_report <- function(gen.obj, title){
   return(fst_mat)
 }
 
-# Function for calculating and plotting Fst values, from genind object (using hierfstat package)
+# Function for calculating and plotting Fst values (Weir & Cockham, 1984), from genind object (using hierfstat package)
 Fst_WC_report <- function(gen.obj, title){
   # Convert genind object to hierfstat format
   hierfstat.obj <- genind2hierfstat(gen.obj)
-  # Calculate pairwise Fst 
+  # Calculate pairwise Fst (Weir & Cockham, 1984)
   fst_mat <- pairwise.WCfst(hierfstat.obj)
   # pairwise.neifst returns a full matrix, whereas we need only the upper half
   # The line below gets the matrix into the format needed for plotting (lower triangle values removed)
@@ -116,11 +116,11 @@ QUAC.SNP.R80.genind <- read.genepop(paste0(QUAC.SNP.R80.filePath,"populations.sn
 pop(QUAC.SNP.R80.genind) <- factor(read.table("QUAC_popmap_wild", header=FALSE)[,2])
 
 # Generate matrix and plot hierfstat (Nei) Fst values
-Fst_Nei_report(QUAC.SNP.R80.genind, title = "QUAC Fst (Nei) Values: De novo, R80, NOMAF (??? loci)")
+Fst_Nei_report(QUAC.SNP.R80.genind, title = "QUAC Fst (Nei) Values: De novo, R80, NOMAF (6,548 loci)")
 # Generate matrix and plot hierfstat (Weir and Cockham) Fst values
-Fst_WC_report(QUAC.SNP.R80.genind, title = "QUAC Fst (Weir and Cockham) Values: De novo, R80, NOMAF (??? loci)")
+Fst_WC_report(QUAC.SNP.R80.genind, title = "QUAC Fst (Weir and Cockham) Values: De novo, R80, NOMAF (6,548 loci)")
 # Generate matrix and plot Stacks Fst values
-Fst_Stacks_report(QUAC.SNP.R80.filePath, title = "QUAC Fst (Stacks) Values: De novo, R80, NOMAF (??? loci)")
+Fst_Stacks_report(QUAC.SNP.R80.filePath, title = "QUAC Fst (Stacks) Values: De novo, R80, NOMAF (6,548 loci)")
 
 # %%%% QUBO %%%% ----
 # R0 ----
@@ -142,13 +142,13 @@ Fst_Stacks_report(QUBO.SNP.R0.filePath, title = "QUBO Fst (Stacks) Values: Q. ro
 # Read in genind file: QUBO GSNAP4 alignment; R80, min-maf=0, first SNP/locus, wild samples only
 QUBO.SNP.R80.filePath <- "/RAID1/IMLS_GCCO/Analysis/Stacks/reference_filteredReads/QUBO/GSNAP4/output/populations_wild_R80_NOMAF_1SNP/"
 setwd(QUBO.SNP.R80.filePath)
-QUBO.SNP.R80.genind <- read.genepop(paste0(QUBO.SNP.R80.filepath,"populations.snps.gen"))
+QUBO.SNP.R80.genind <- read.genepop(paste0(QUBO.SNP.R80.filePath,"populations.snps.gen"))
 # Correct popNames
 pop(QUBO.SNP.R80.genind) <- factor(read.table("QUBO_popmap_GardenWild", header=FALSE)[,2])
 
 # Generate matrix and plot hierfstat (Nei) Fst values
-Fst_Nei_report(QUBO.SNP.R80.genind, title = "QUBO Fst (Nei) Values: De novo, R80, NOMAF (??? loci)")
+Fst_Nei_report(QUBO.SNP.R80.genind, title = "QUBO Fst (Nei) Values: De novo, R80, NOMAF (6,174 loci)")
 # Generate matrix and plot hierfstat (Weir and Cockham) Fst values
-Fst_WC_report(QUBO.SNP.R80.genind, title = "QUBO Fst (Weir and Cockham) Values: De novo, R80, NOMAF (??? loci)")
+Fst_WC_report(QUBO.SNP.R80.genind, title = "QUBO Fst (Weir and Cockham) Values: De novo, R80, NOMAF (6,174 loci)")
 # Generate matrix and plot Fst values
-Fst_Stacks_report(QUBO.SNP.R80.filePath, title = "QUBO Fst (Stacks) Values: Q. robur reference alignment, R80, NOMAF (??? loci)")
+Fst_Stacks_report(QUBO.SNP.R80.filePath, title = "QUBO Fst (Stacks) Values: Q. robur reference alignment, R80, NOMAF (6,174 loci)")
