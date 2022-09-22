@@ -174,7 +174,7 @@ reportAllelicRepresentation_Together(QUAC.R0_NOMAF.genind)
 reportAllelicRepresentation_Together_Partial(QUAC.R0_NOMAF.genind)
 nLoc(QUAC.R0_NOMAF.genind); ncol(QUAC.R0_NOMAF.genind@tab)
 
-# R0, ALL SNPS----
+# R0, ALL SNPS, MULTIPLE WILD POPULATIONS----
 # Read in genind file
 genpop.filePath <- 
   "/RAID1/IMLS_GCCO/Analysis/Stacks/denovo_finalAssemblies/QUAC/output/populations_R0_NOMAF_AllSNPs/"
@@ -186,7 +186,7 @@ pop(QUAC.R0_NOMAF_AllSNPs.genind) <- factor(read.table("QUAC_popmap2", header=FA
 reportAllelicRepresentation_Together(QUAC.R0_NOMAF_AllSNPs.genind)
 reportAllelicRepresentation_Together_Partial(QUAC.R0_NOMAF_AllSNPs.genind)
 
-# R0, FIRST SNP----
+# R0, FIRST SNP, MULTIPLE WILD POPULATIONS ----
 genpop.filePath <- 
   "/RAID1/IMLS_GCCO/Analysis/Stacks/denovo_finalAssemblies/QUAC/output/populations_R0_NOMAF_1SNP/"
 setwd(genpop.filePath)
@@ -220,6 +220,10 @@ pop(QUAC.R0_NOMAF_1SNP.TwoPops.genind) <- factor(read.table("QUAC_popmap_GardenW
 # Representation rates
 reportAllelicRepresentation_Together(QUAC.R0_NOMAF_1SNP.TwoPops.genind)
 nLoc(QUAC.R0_NOMAF_1SNP.TwoPops.genind)
+# Exploration of total and wild allele frequency proportions
+# Functions come from Simulated repository (https://github.com/akoontz11/Morton_SSRvSNP_Simulations/blob/main/RScripts/functions_SSRvSNP_Sim.R)
+getWildAlleleFreqProportions(QUAC.R0_NOMAF_1SNP.TwoPops.genind)
+getTotalAlleleFreqProportions(QUAC.R0_NOMAF_1SNP.TwoPops.genind)
 
 # R0, TWO POPULATIONS, ALL SNPS ----
 genpop.filePath <- 
@@ -599,6 +603,11 @@ pop(QUBO.R0_NOMAF_1SNP.TwoPops.genind) <- factor(read.table("QUBO_popmap_GardenW
 # R0_NOMAF Representation rates
 reportAllelicRepresentation_Together(QUBO.R0_NOMAF_1SNP.TwoPops.genind)
 nLoc(QUBO.R0_NOMAF_1SNP.TwoPops.genind)
+
+# Exploration of total and wild allele frequency proportions
+# Functions come from Simulated repository (https://github.com/akoontz11/Morton_SSRvSNP_Simulations/blob/main/RScripts/functions_SSRvSNP_Sim.R)
+getWildAlleleFreqProportions(QUBO.R0_NOMAF_1SNP.TwoPops.genind)
+getTotalAlleleFreqProportions(QUBO.R0_NOMAF_1SNP.TwoPops.genind)
 
 # R0, TWO POPULATIONS, ALL SNPS ----
 # Read in genind file
