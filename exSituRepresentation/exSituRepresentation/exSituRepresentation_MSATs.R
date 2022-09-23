@@ -29,6 +29,11 @@ pop(QUAC.MSAT.genind) <- gsub("pop1", "garden", pop(QUAC.MSAT.genind))
 pop(QUAC.MSAT.genind) <- gsub("pop2", "wild", pop(QUAC.MSAT.genind))
 # Report representation of wild alleles in gardens
 reportAllelicRepresentation_Together(QUAC.MSAT.genind)
+# Exploration of total and wild allele frequency proportions
+# Functions come from Simulated repository 
+# (https://github.com/akoontz11/Morton_SSRvSNP_Simulations/blob/main/RScripts/functions_SSRvSNP_Sim.R)
+getWildAlleleFreqProportions(QUAC.MSAT.genind)
+getTotalAlleleFreqProportions(QUAC.MSAT.genind)
 
 # ---- SNPS: COMPLETE ----
 # Read in genind file: Optimized de novo assembly; R0, min-maf=0, first SNP/locus, 2 populations (garden and wild)
@@ -76,6 +81,11 @@ QUBO.MSAT.genind <- read.genepop(paste0(genpop.filePath,"Qb_total.gen"), ncode=3
 levels(QUBO.MSAT.genind@pop) <- c(rep("wild",9), "garden") 
 # Report representation of wild alleles in gardens
 reportAllelicRepresentation_Together(QUBO.MSAT.genind)
+# Exploration of total and wild allele frequency proportions
+# Functions come from Simulated repository 
+# (https://github.com/akoontz11/Morton_SSRvSNP_Simulations/blob/main/RScripts/functions_SSRvSNP_Sim.R)
+getWildAlleleFreqProportions(QUBO.MSAT.genind)
+getTotalAlleleFreqProportions(QUBO.MSAT.genind)
 
 # ---- SNPS: COMPLETE ----
 # Read in genind file: QUBO GSNAP4 alignment; R0, min-maf=0, first SNP/locus, 2 populations (garden and wild)
