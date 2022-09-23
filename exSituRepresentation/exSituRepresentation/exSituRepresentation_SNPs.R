@@ -19,11 +19,10 @@
 # gardens representing rare Wild alleles. Therefore, we turned of minor allele frequencies for the analyses we report.
 # FIRST SNP PER LOCUS (1SNP): in order to maintain consistency across separate Stacks runs, we avoided writing a random SNP
 # to each locus. Writing all SNPs to each locus led to computationally intensive datasets, and did not greatly impact 
-# ex situ conservation.
+# ex situ conservation (although some _AllSNPs scenarios are included here).
 
 # Additional filters are described below, and code sections are broken out according to the filters used.
 # %%% FILTERS %%%
-
 # -R: corresponds the percentage of individuals a locus needs to be present in, 
 # to be included in the analysis (0 or 80%)
 # -AllSNPs: means every SNP is written for every locus.
