@@ -126,6 +126,11 @@ QUAC.R80_NOMAF_1SNP.TwoPops.genind <- read.genepop(paste0(genpop.filePath,"popul
 pop(QUAC.R80_NOMAF_1SNP.TwoPops.genind) <- factor(read.table("QUAC_popmap_GardenWild", header=FALSE)[,2])
 # R80_NOMAF Representation rates
 reportAllelicRepresentation_Together(QUAC.R80_NOMAF_1SNP.TwoPops.genind)
+# Exploration of total and wild allele frequency proportions
+# Functions come from Simulated repository 
+# (https://github.com/akoontz11/Morton_SSRvSNP_Simulations/blob/main/RScripts/functions_SSRvSNP_Sim.R)
+getWildAlleleFreqProportions(QUAC.R80_NOMAF_1SNP.TwoPops.genind)
+getTotalAlleleFreqProportions(QUAC.R80_NOMAF_1SNP.TwoPops.genind)
 
 # HAPLOTYPE-WISE SNP FILTER, TWO POPULATIONS ----
 # Read in genind file
@@ -238,6 +243,11 @@ QUBO.R80_NOMAF_1SNP.TwoPops.genind <- read.genepop(paste0(genpop.filePath,"popul
 pop(QUBO.R80_NOMAF_1SNP.TwoPops.genind) <- factor(read.table("QUBO_popmap_GardenWild", header=FALSE)[,2])
 # R80_NOMAF Representation rates
 reportAllelicRepresentation_Together(QUBO.R80_NOMAF_1SNP.TwoPops.genind)
+# Exploration of total and wild allele frequency proportions
+# Functions come from Simulated repository 
+# (https://github.com/akoontz11/Morton_SSRvSNP_Simulations/blob/main/RScripts/functions_SSRvSNP_Sim.R)
+getWildAlleleFreqProportions(QUBO.R80_NOMAF_1SNP.TwoPops.genind)
+getTotalAlleleFreqProportions(QUBO.R80_NOMAF_1SNP.TwoPops.genind)
 
 # ---- HAPLOTYPE-WISE SNP FILTER ----
 # TWO POPULATIONS
