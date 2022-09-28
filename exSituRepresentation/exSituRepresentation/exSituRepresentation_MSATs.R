@@ -2,9 +2,11 @@
 # %%% EX SITU REPRESENTATION RATES: MSAT %%%
 # %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-# This script uses the functions declared in the functions_exSituRepresentation.R file to generate ex situ representation values 
-# for Quercus acerifolia (QUAC; optimized Stacks de novo assembly, m 7, M/n 4, gt-alpha 0.01) 
-# and Quercus boyntonii (QUBO; GSNAP4 alignment with Quercus robur reference) samples
+# This script uses the functions declared in the functions_exSituRepresentation.R file to generate 
+# ex situ representation values for Quercus acerifolia (QUAC; optimized Stacks de novo assembly, 
+# m 7, M/n 4, gt-alpha 0.01) and Quercus boyntonii (QUBO; a reference dataset 
+# (GSNAP4 alignment with Quercus robur reference), and a de novo assembly 
+# (optimized Stacks de novo assembly, m 7, M/n 5, gt-alpha 0.01))
 
 # It does this for both the SNP (NextRAD) and MSAT datasets, using both complete datasets
 # and partial datasets (samples subset to only those included within both studies)
@@ -87,16 +89,27 @@ reportAllelicRepresentation_Together(QUBO.MSAT.genind)
 getWildAlleleFreqProportions(QUBO.MSAT.genind)
 getTotalAlleleFreqProportions(QUBO.MSAT.genind)
 
-# ---- SNPS: COMPLETE ----
+# ---- SNPS: REFERENCE: COMPLETE ----
 # Read in genind file: QUBO GSNAP4 alignment; R0, min-maf=0, first SNP/locus, 2 populations (garden and wild)
 genpop.filePath <- 
   "/RAID1/IMLS_GCCO/Analysis/Stacks/reference_filteredReads/QUBO/GSNAP4/output/populations_R0_NOMAF_1SNP_2Pops/"
 setwd(genpop.filePath)
-QUBO.SNP.genind <- read.genepop(paste0(genpop.filePath,"populations.snps.gen"))
+QUBO.SNP.REF.genind <- read.genepop(paste0(genpop.filePath,"populations.snps.gen"))
 # Correct popNames
-pop(QUBO.SNP.genind) <- factor(read.table("QUBO_popmap_GardenWild", header=FALSE)[,2])
+pop(QUBO.SNP.REF.genind) <- factor(read.table("QUBO_popmap_GardenWild", header=FALSE)[,2])
 # Report representation of wild alleles in gardens
-reportAllelicRepresentation_Together(QUBO.SNP.genind)
+reportAllelicRepresentation_Together(QUBO.SNP.REF.genind)
+
+# ---- SNPS: DE NOVO ASSEMBLY: COMPLETE ----
+# Read in genind file: Optimized de novo assembly; R0, min-maf=0, first SNP/locus, 2 populations (garden and wild)
+genpop.filePath <- 
+  "/RAID1/IMLS_GCCO/Analysis/Stacks/denovo_finalAssemblies/QUBO/output/populations_R0_NOMAF_1SNP_2Pops/"
+setwd(genpop.filePath)
+QUBO.SNP.DNFA.genind <- read.genepop(paste0(genpop.filePath,"populations.snps.gen"))
+# Correct popNames
+pop(QUBO.SNP.DNFA.genind) <- factor(read.table("QUBO_popmap_GardenWild", header=FALSE)[,2])
+# Report representation of wild alleles in gardens
+reportAllelicRepresentation_Together(QUBO.SNP.DNFA.genind)
 
 # ---- MSATS AND SNPS: SUBSET ----
 # MSAT: Split sample names on underscore, and return 3rd element. Rename the sample matrix 
@@ -104,7 +117,7 @@ QUBO.MSAT.sampleNames <- unlist(lapply(rownames(QUBO.MSAT.genind@tab), function(
 rownames(QUBO.MSAT.genind@tab) <- QUBO.MSAT.sampleNames
 
 # SNP: Remove QUBO_W_ headers from sample names
-QUBO.SNP.sampleNames <- gsub("QUBO_G_",replacement = "", row.names(QUBO.SNP.genind@tab))
+QUBO.SNP.sampleNames <- gsub("QUBO_G_",replacement = "", row.names(QUBO.SNP.REF.genind@tab))
 QUBO.SNP.sampleNames <- gsub("QUBO_W_",replacement = "", QUBO.SNP.sampleNames)
 # Replace SH-Q names in SNP list with IMLS names
 # These were determined by Austin K., and are outlined on the Hoban Lab Drive ("MSATcomparisons_TissueNames")
@@ -118,16 +131,18 @@ QUBO.SNP.sampleNames <- gsub("SH_Q2182",replacement = "IMLS144", QUBO.SNP.sample
 QUBO.SNP.sampleNames <- gsub("SH_Q2183",replacement = "IMLS170", QUBO.SNP.sampleNames)
 QUBO.SNP.sampleNames <- gsub("SH_Q2184",replacement = "IMLS005", QUBO.SNP.sampleNames)
 QUBO.SNP.sampleNames <- gsub("SH_Q2186",replacement = "IMLS017", QUBO.SNP.sampleNames)
-# Rename sample matrix
-rownames(QUBO.SNP.genind@tab) <- QUBO.SNP.sampleNames
+# Rename sample matrices
+rownames(QUBO.SNP.REF.genind@tab) <- rownames(QUBO.SNP.DNFA.genind@tab) <- QUBO.SNP.sampleNames
 
 # Subset SNP sample names by those that are also seen within the MSAT samples
 QUBO_sharedSamples <- sort(QUBO.SNP.sampleNames[which(QUBO.SNP.sampleNames %in% QUBO.MSAT.sampleNames)])
 # Subset MSAT and SNP wild matrix objects to strictly shared samples
 QUBO.MSAT_subset.genind <- QUBO.MSAT.genind[QUBO_sharedSamples,, drop=TRUE]
-QUBO.SNP_subset.genind <- QUBO.SNP.genind[QUBO_sharedSamples,, drop=TRUE]
+QUBO.SNP.REF_subset.genind <- QUBO.SNP.REF.genind[QUBO_sharedSamples,, drop=TRUE]
+QUBO.SNP.DNFA_subset.genind <- QUBO.SNP.DNFA.genind[QUBO_sharedSamples,, drop=TRUE]
 
 # Subset MSAT wild allelic representation in gardens
 reportAllelicRepresentation_Together(QUBO.MSAT_subset.genind)
-# Subset SNP wild allelic representation in gardens
-reportAllelicRepresentation_Together(QUBO.SNP_subset.genind)
+# Subset SNP wild allelic representation in gardens, for both reference and de novo assemblies
+reportAllelicRepresentation_Together(QUBO.SNP.REF_subset.genind)
+reportAllelicRepresentation_Together(QUBO.SNP.DNFA_subset.genind)
