@@ -3,7 +3,8 @@
 # %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 # This script uses the functions declared in the functions_exSituRepresentation.R file to generate ex situ representation values 
-# for Quercus acerifolia (QUAC; optimized Stacks de novo assembly, m 7, M/n 4, gt-alpha 0.01) 
+# for Quercus acerifolia (QUAC, two datasets: optimized Stacks de novo assembly, 
+# m 7, M/n 4, gt-alpha 0.01, and GSNAP4 alignment with Quercus rubra reference) 
 # and Quercus boyntonii (QUBO; GSNAP4 alignment with Quercus robur reference) samples
 
 # Many scenarios/methodologies/filters were explored when conducting ex situ representation analyses; to see 
@@ -40,6 +41,7 @@ setwd(SSRvSNP.wd)
 source("exSituRepresentation/functions_exSituRepresentation.R")
 
 # %%%% QUAC %%%% ----
+# %%%% DE NOVO %%%% ----
 # %%%% R0 ----
 # ---- ALL SNPS ----
 # MULTIPLE WILD POPULATIONS ----
@@ -47,22 +49,22 @@ source("exSituRepresentation/functions_exSituRepresentation.R")
 genpop.filePath <- 
   "/RAID1/IMLS_GCCO/Analysis/Stacks/denovo_finalAssemblies/QUAC/output/populations_R0_NOMAF_AllSNPs/"
 setwd(genpop.filePath)
-QUAC.R0_NOMAF_AllSNPs.genind <- read.genepop(paste0(genpop.filePath,"populations.snps.gen"), quiet = TRUE)
+QUAC.DN.R0_NOMAF_AllSNPs.genind <- read.genepop(paste0(genpop.filePath,"populations.snps.gen"), quiet = TRUE)
 # Correct popNames
-pop(QUAC.R0_NOMAF_AllSNPs.genind) <- factor(read.table("QUAC_popmap2", header=FALSE)[,2])
+pop(QUAC.DN.R0_NOMAF_AllSNPs.genind) <- factor(read.table("QUAC_popmap2", header=FALSE)[,2])
 # Representation rates
-reportAllelicRepresentation_Together(QUAC.R0_NOMAF_AllSNPs.genind)
+reportAllelicRepresentation_Together(QUAC.DN.R0_NOMAF_AllSNPs.genind)
 
 # TWO POPULATIONS ----
 # Read in genind file
 genpop.filePath <- 
   "/RAID1/IMLS_GCCO/Analysis/Stacks/denovo_finalAssemblies/QUAC/output/populations_R0_NOMAF_AllSNPs_2Pops/"
 setwd(genpop.filePath)
-QUAC.R0_NOMAF_AllSNPs.TwoPops.genind <- read.genepop(paste0(genpop.filePath,"populations.snps.gen"))
+QUAC.DN.R0_NOMAF_AllSNPs.TwoPops.genind <- read.genepop(paste0(genpop.filePath,"populations.snps.gen"))
 # Correct popNames
-pop(QUAC.R0_NOMAF_AllSNPs.TwoPops.genind) <- factor(read.table("QUAC_popmap_GardenWild", header=FALSE)[,2])
+pop(QUAC.DN.R0_NOMAF_AllSNPs.TwoPops.genind) <- factor(read.table("QUAC_popmap_GardenWild", header=FALSE)[,2])
 # Representation rates
-reportAllelicRepresentation_Together(QUAC.R0_NOMAF_AllSNPs.TwoPops.genind)
+reportAllelicRepresentation_Together(QUAC.DN.R0_NOMAF_AllSNPs.TwoPops.genind)
 
 # ---- FIRST SNP ----
 # MULTIPLE WILD POPULATIONS ----
@@ -70,27 +72,27 @@ reportAllelicRepresentation_Together(QUAC.R0_NOMAF_AllSNPs.TwoPops.genind)
 genpop.filePath <- 
   "/RAID1/IMLS_GCCO/Analysis/Stacks/denovo_finalAssemblies/QUAC/output/populations_R0_NOMAF_1SNP/"
 setwd(genpop.filePath)
-QUAC.R0_NOMAF_1SNP.genind <- read.genepop(paste0(genpop.filePath,"populations.snps.gen"), quiet = TRUE)
+QUAC.DN.R0_NOMAF_1SNP.genind <- read.genepop(paste0(genpop.filePath,"populations.snps.gen"), quiet = TRUE)
 # Correct popNames
-pop(QUAC.R0_NOMAF_1SNP.genind) <- factor(read.table("QUAC_popmap2", header=FALSE)[,2])
+pop(QUAC.DN.R0_NOMAF_1SNP.genind) <- factor(read.table("QUAC_popmap2", header=FALSE)[,2])
 # Representation rates
-reportAllelicRepresentation_Together(QUAC.R0_NOMAF_1SNP.genind)
+reportAllelicRepresentation_Together(QUAC.DN.R0_NOMAF_1SNP.genind)
 
 # TWO POPULATIONS ----
 # Read in genind file
 genpop.filePath <- 
   "/RAID1/IMLS_GCCO/Analysis/Stacks/denovo_finalAssemblies/QUAC/output/populations_R0_NOMAF_1SNP_2Pops/"
 setwd(genpop.filePath)
-QUAC.R0_NOMAF_1SNP.TwoPops.genind <- read.genepop(paste0(genpop.filePath,"populations.snps.gen"))
+QUAC.DN.R0_NOMAF_1SNP.TwoPops.genind <- read.genepop(paste0(genpop.filePath,"populations.snps.gen"))
 # Correct popNames
-pop(QUAC.R0_NOMAF_1SNP.TwoPops.genind) <- factor(read.table("QUAC_popmap_GardenWild", header=FALSE)[,2])
+pop(QUAC.DN.R0_NOMAF_1SNP.TwoPops.genind) <- factor(read.table("QUAC_popmap_GardenWild", header=FALSE)[,2])
 # Representation rates
-reportAllelicRepresentation_Together(QUAC.R0_NOMAF_1SNP.TwoPops.genind)
+reportAllelicRepresentation_Together(QUAC.DN.R0_NOMAF_1SNP.TwoPops.genind)
 # Exploration of total and wild allele frequency proportions
 # Functions come from Simulated repository 
 # (https://github.com/akoontz11/Morton_SSRvSNP_Simulations/blob/main/RScripts/functions_SSRvSNP_Sim.R)
-getWildAlleleFreqProportions(QUAC.R0_NOMAF_1SNP.TwoPops.genind)
-getTotalAlleleFreqProportions(QUAC.R0_NOMAF_1SNP.TwoPops.genind)
+getWildAlleleFreqProportions(QUAC.DN.R0_NOMAF_1SNP.TwoPops.genind)
+getTotalAlleleFreqProportions(QUAC.DN.R0_NOMAF_1SNP.TwoPops.genind)
 
 # ---- HAPLOTYPE-WISE SNP FILTER ----
 # TWO POPULATIONS ----
@@ -98,11 +100,11 @@ getTotalAlleleFreqProportions(QUAC.R0_NOMAF_1SNP.TwoPops.genind)
 genpop.filePath <- 
   "/RAID1/IMLS_GCCO/Analysis/Stacks/denovo_finalAssemblies/QUAC/output/populations_R0_NOMAF_HapSNPs_2Pops/"
 setwd(genpop.filePath)
-QUAC.R0_NOMAF_H.TwoPops.genind <- read.genepop(paste0(genpop.filePath,"populations.snps.gen"))
+QUAC.DN.R0_NOMAF_H.TwoPops.genind <- read.genepop(paste0(genpop.filePath,"populations.snps.gen"))
 # Correct popNames
-pop(QUAC.R0_NOMAF_H.TwoPops.genind) <- factor(read.table("QUAC_popmap_GardenWild", header=FALSE)[,2])
+pop(QUAC.DN.R0_NOMAF_H.TwoPops.genind) <- factor(read.table("QUAC_popmap_GardenWild", header=FALSE)[,2])
 # Representation rates
-reportAllelicRepresentation_Together(QUAC.R0_NOMAF_H.TwoPops.genind)
+reportAllelicRepresentation_Together(QUAC.DN.R0_NOMAF_H.TwoPops.genind)
 
 # %%%% R80 ----
 # ALL SNPS, TWO POPULATIONS ----
@@ -110,38 +112,67 @@ reportAllelicRepresentation_Together(QUAC.R0_NOMAF_H.TwoPops.genind)
 genpop.filePath <- 
   "/RAID1/IMLS_GCCO/Analysis/Stacks/denovo_finalAssemblies/QUAC/output/populations_R80_NOMAF_AllSNPs_2Pops/"
 setwd(genpop.filePath)
-QUAC.R80_NOMAF_AllSNPs.TwoPops.genind <- read.genepop(paste0(genpop.filePath,"populations.snps.gen"))
+QUAC.DN.R80_NOMAF_AllSNPs.TwoPops.genind <- read.genepop(paste0(genpop.filePath,"populations.snps.gen"))
 # Correct popNames
-pop(QUAC.R80_NOMAF_AllSNPs.TwoPops.genind) <- factor(read.table("QUAC_popmap_GardenWild", header=FALSE)[,2])
+pop(QUAC.DN.R80_NOMAF_AllSNPs.TwoPops.genind) <- factor(read.table("QUAC_popmap_GardenWild", header=FALSE)[,2])
 # R80_NOMAF Representation rates
-reportAllelicRepresentation_Together(QUAC.R80_NOMAF_AllSNPs.TwoPops.genind)
+reportAllelicRepresentation_Together(QUAC.DN.R80_NOMAF_AllSNPs.TwoPops.genind)
 
 # FIRST SNP, TWO POPULATIONS ----
 # Read in genind file
 genpop.filePath <- 
   "/RAID1/IMLS_GCCO/Analysis/Stacks/denovo_finalAssemblies/QUAC/output/populations_R80_NOMAF_1SNP_2Pops/"
 setwd(genpop.filePath)
-QUAC.R80_NOMAF_1SNP.TwoPops.genind <- read.genepop(paste0(genpop.filePath,"populations.snps.gen"))
+QUAC.DN.R80_NOMAF_1SNP.TwoPops.genind <- read.genepop(paste0(genpop.filePath,"populations.snps.gen"))
 # Correct popNames
-pop(QUAC.R80_NOMAF_1SNP.TwoPops.genind) <- factor(read.table("QUAC_popmap_GardenWild", header=FALSE)[,2])
+pop(QUAC.DN.R80_NOMAF_1SNP.TwoPops.genind) <- factor(read.table("QUAC_popmap_GardenWild", header=FALSE)[,2])
 # R80_NOMAF Representation rates
-reportAllelicRepresentation_Together(QUAC.R80_NOMAF_1SNP.TwoPops.genind)
+reportAllelicRepresentation_Together(QUAC.DN.R80_NOMAF_1SNP.TwoPops.genind)
 # Exploration of total and wild allele frequency proportions
 # Functions come from Simulated repository 
 # (https://github.com/akoontz11/Morton_SSRvSNP_Simulations/blob/main/RScripts/functions_SSRvSNP_Sim.R)
-getWildAlleleFreqProportions(QUAC.R80_NOMAF_1SNP.TwoPops.genind)
-getTotalAlleleFreqProportions(QUAC.R80_NOMAF_1SNP.TwoPops.genind)
+getWildAlleleFreqProportions(QUAC.DN.R80_NOMAF_1SNP.TwoPops.genind)
+getTotalAlleleFreqProportions(QUAC.DN.R80_NOMAF_1SNP.TwoPops.genind)
 
 # HAPLOTYPE-WISE SNP FILTER, TWO POPULATIONS ----
 # Read in genind file
 genpop.filePath <- 
   "/RAID1/IMLS_GCCO/Analysis/Stacks/denovo_finalAssemblies/QUAC/output/populations_R80_NOMAF_HapSNPs_2Pops/"
 setwd(genpop.filePath)
-QUAC.R80_NOMAF_H.TwoPops.genind <- read.genepop(paste0(genpop.filePath,"populations.snps.gen"))
+QUAC.DN.R80_NOMAF_H.TwoPops.genind <- read.genepop(paste0(genpop.filePath,"populations.snps.gen"))
 # Correct popNames
-pop(QUAC.R80_NOMAF_H.TwoPops.genind) <- factor(read.table("QUAC_popmap_GardenWild", header=FALSE)[,2])
+pop(QUAC.DN.R80_NOMAF_H.TwoPops.genind) <- factor(read.table("QUAC_popmap_GardenWild", header=FALSE)[,2])
 # R80_NOMAF Representation rates
-reportAllelicRepresentation_Together(QUAC.R80_NOMAF_H.TwoPops.genind)
+reportAllelicRepresentation_Together(QUAC.DN.R80_NOMAF_H.TwoPops.genind)
+# %%%% REFERENCE ALIGNMENT %%%% ----
+# %%%% R0 ----
+# FIRST SNP, TWO POPULATIONS ----
+# Read in genind file
+genpop.filePath <- 
+  "/RAID1/IMLS_GCCO/Analysis/Stacks/reference_filteredReads/QUAC/Q_rubra/output/populations_R0_NOMAF_1SNP_2Pops/"
+setwd(genpop.filePath)
+QUAC.R.R0_NOMAF_AllSNPs.TwoPops.genind <- read.genepop(paste0(genpop.filePath,"populations.snps.gen"))
+# Correct popNames
+pop(QUAC.R.R0_NOMAF_AllSNPs.TwoPops.genind) <- factor(read.table("QUAC_popmap", header=FALSE)[,2])
+# Representation rates
+reportAllelicRepresentation_Together(QUAC.R.R0_NOMAF_AllSNPs.TwoPops.genind)
+
+# %%%% R80 ----
+# FIRST SNP, TWO POPULATIONS ----
+# Read in genind file
+genpop.filePath <- 
+  "/RAID1/IMLS_GCCO/Analysis/Stacks/reference_filteredReads/QUAC/Q_rubra/output/populations_R80_NOMAF_1SNP_2Pops/"
+setwd(genpop.filePath)
+QUAC.R.R80_NOMAF_1SNP.TwoPops.genind <- read.genepop(paste0(genpop.filePath,"populations.snps.gen"))
+# Correct popNames
+pop(QUAC.R.R80_NOMAF_1SNP.TwoPops.genind) <- factor(read.table("QUAC_popmap_GardenWild", header=FALSE)[,2])
+# R80_NOMAF Representation rates
+reportAllelicRepresentation_Together(QUAC.R.R80_NOMAF_1SNP.TwoPops.genind)
+# Exploration of total and wild allele frequency proportions
+# Functions come from Simulated repository 
+# (https://github.com/akoontz11/Morton_SSRvSNP_Simulations/blob/main/RScripts/functions_SSRvSNP_Sim.R)
+getWildAlleleFreqProportions(QUAC.R.R80_NOMAF_1SNP.TwoPops.genind)
+getTotalAlleleFreqProportions(QUAC.R.R80_NOMAF_1SNP.TwoPops.genind)
 
 # %%%% QUBO %%%% ----
 # %%%% R0 ----
