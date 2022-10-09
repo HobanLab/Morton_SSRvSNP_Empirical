@@ -37,16 +37,27 @@ reportAllelicRepresentation_Together(QUAC.MSAT.genind)
 getWildAlleleFreqProportions(QUAC.MSAT.genind)
 getTotalAlleleFreqProportions(QUAC.MSAT.genind)
 
-# ---- SNPS: COMPLETE ----
+# ---- SNPS, DE NOVO: COMPLETE ----
 # Read in genind file: Optimized de novo assembly; R0, min-maf=0, first SNP/locus, 2 populations (garden and wild)
 genpop.filePath <- 
   "/RAID1/IMLS_GCCO/Analysis/Stacks/denovo_finalAssemblies/QUAC/output/populations_R0_NOMAF_1SNP_2Pops/"
 setwd(genpop.filePath)
-QUAC.SNP.genind <- read.genepop(paste0(genpop.filePath,"populations.snps.gen"))
+QUAC.SNP.DN.genind <- read.genepop(paste0(genpop.filePath,"populations.snps.gen"))
 # Correct popNames
-pop(QUAC.SNP.genind) <- factor(read.table("QUAC_popmap_GardenWild", header=FALSE)[,2])
+pop(QUAC.SNP.DN.genind) <- factor(read.table("QUAC_popmap_GardenWild", header=FALSE)[,2])
 # Report representation of wild alleles in gardens
-reportAllelicRepresentation_Together(QUAC.SNP.genind)
+reportAllelicRepresentation_Together(QUAC.SNP.DN.genind)
+
+# ---- SNPS, REFERENCE: COMPLETE ----
+# Read in genind file: QUAC GSNAP4 alignment; R0, min-maf=0, first SNP/locus, 2 populations (garden and wild)
+genpop.filePath <- 
+  "/RAID1/IMLS_GCCO/Analysis/Stacks/reference_filteredReads/QUAC/Q_rubra/output/populations_R0_NOMAF_1SNP_2Pops/"
+setwd(genpop.filePath)
+QUAC.SNP.R.genind <- read.genepop(paste0(genpop.filePath,"populations.snps.gen"))
+# Correct popNames
+pop(QUAC.SNP.R.genind) <- factor(read.table("QUAC_popmap", header=FALSE)[,2])
+# Representation rates
+reportAllelicRepresentation_Together(QUAC.SNP.R.genind)
 
 # ---- MSATS AND SNPS: SUBSET ----
 # MSAT: read in Tissue database names from GCC_QUAC_ZAIN repository, and rename MSAT genind matrix
@@ -59,18 +70,21 @@ rownames(QUAC.MSAT.genind@tab) <- QUAC.MSAT.tissueNames
 # This file was created (by Austin K.), and can be found on the Hoban Lab Drive ("MSATcomparisons_TissueNames")
 QUAC.SNP.tissueNames_filepath <- paste0(SSRvSNP.wd,"exSituRepresentation/Resampling/QUAC_SNP_TissueNames.csv")
 QUAC.SNP.tissueNames <- unlist(read.csv2(QUAC.SNP.tissueNames_filepath, header = TRUE, sep = ",")[3])
-rownames(QUAC.SNP.genind@tab) <- QUAC.SNP.tissueNames
+rownames(QUAC.SNP.DN.genind@tab) <- QUAC.SNP.tissueNames
+rownames(QUAC.SNP.R.genind@tab) <- QUAC.SNP.tissueNames
 
 # Subset SNP sample names by those that are also seen within the MSAT samples 
 QUAC_sharedSamples <- sort(QUAC.SNP.tissueNames[which(QUAC.SNP.tissueNames %in% QUAC.MSAT.tissueNames)])
 # Subset MSAT and SNP genind matrices to strictly shared samples, dropping now absent alleles
 QUAC.MSAT_subset.genind <- QUAC.MSAT.genind[QUAC_sharedSamples,, drop=TRUE]
-QUAC.SNP_subset.genind <- QUAC.SNP.genind[QUAC_sharedSamples,, drop=TRUE]
+QUAC.SNP.DN_subset.genind <- QUAC.SNP.DN.genind[QUAC_sharedSamples,, drop=TRUE]
+QUAC.SNP.R_subset.genind <- QUAC.SNP.R.genind[QUAC_sharedSamples,, drop=TRUE]
 
 # Subset MSAT wild allelic representation in gardens
 reportAllelicRepresentation_Together(QUAC.MSAT_subset.genind)
 # Subset SNP wild allelic representation in gardens
-reportAllelicRepresentation_Together(QUAC.SNP_subset.genind)
+reportAllelicRepresentation_Together(QUAC.SNP.DN_subset.genind)
+reportAllelicRepresentation_Together(QUAC.SNP.R_subset.genind)
 
 # %%%% QUBO %%%% ----
 # ---- MSATS: COMPLETE ----
