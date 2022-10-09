@@ -165,7 +165,7 @@ genpop.filePath <-
 setwd(genpop.filePath)
 QUAC.R.R80_NOMAF_1SNP.TwoPops.genind <- read.genepop(paste0(genpop.filePath,"populations.snps.gen"))
 # Correct popNames
-pop(QUAC.R.R80_NOMAF_1SNP.TwoPops.genind) <- factor(read.table("QUAC_popmap_GardenWild", header=FALSE)[,2])
+pop(QUAC.R.R80_NOMAF_1SNP.TwoPops.genind) <- factor(read.table("QUAC_popmap", header=FALSE)[,2])
 # R80_NOMAF Representation rates
 reportAllelicRepresentation_Together(QUAC.R.R80_NOMAF_1SNP.TwoPops.genind)
 # Exploration of total and wild allele frequency proportions
