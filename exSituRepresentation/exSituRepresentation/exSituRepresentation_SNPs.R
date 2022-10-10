@@ -89,8 +89,6 @@ pop(QUAC.DN.R0_NOMAF_1SNP.TwoPops.genind) <- factor(read.table("QUAC_popmap_Gard
 # Representation rates
 reportAllelicRepresentation_Together(QUAC.DN.R0_NOMAF_1SNP.TwoPops.genind)
 # Exploration of total and wild allele frequency proportions
-# Functions come from Simulated repository 
-# (https://github.com/akoontz11/Morton_SSRvSNP_Simulations/blob/main/RScripts/functions_SSRvSNP_Sim.R)
 getWildAlleleFreqProportions(QUAC.DN.R0_NOMAF_1SNP.TwoPops.genind)
 getTotalAlleleFreqProportions(QUAC.DN.R0_NOMAF_1SNP.TwoPops.genind)
 
@@ -129,8 +127,6 @@ pop(QUAC.DN.R80_NOMAF_1SNP.TwoPops.genind) <- factor(read.table("QUAC_popmap_Gar
 # R80_NOMAF Representation rates
 reportAllelicRepresentation_Together(QUAC.DN.R80_NOMAF_1SNP.TwoPops.genind)
 # Exploration of total and wild allele frequency proportions
-# Functions come from Simulated repository 
-# (https://github.com/akoontz11/Morton_SSRvSNP_Simulations/blob/main/RScripts/functions_SSRvSNP_Sim.R)
 getWildAlleleFreqProportions(QUAC.DN.R80_NOMAF_1SNP.TwoPops.genind)
 getTotalAlleleFreqProportions(QUAC.DN.R80_NOMAF_1SNP.TwoPops.genind)
 
@@ -222,8 +218,6 @@ pop(QUBO.R0_NOMAF_1SNP.TwoPops.genind) <- factor(read.table("QUBO_popmap_GardenW
 # R0_NOMAF Representation rates
 reportAllelicRepresentation_Together(QUBO.R0_NOMAF_1SNP.TwoPops.genind)
 # Exploration of total and wild allele frequency proportions
-# Functions come from Simulated repository 
-# (https://github.com/akoontz11/Morton_SSRvSNP_Simulations/blob/main/RScripts/functions_SSRvSNP_Sim.R)
 getWildAlleleFreqProportions(QUBO.R0_NOMAF_1SNP.TwoPops.genind)
 getTotalAlleleFreqProportions(QUBO.R0_NOMAF_1SNP.TwoPops.genind)
 
@@ -275,8 +269,6 @@ pop(QUBO.R80_NOMAF_1SNP.TwoPops.genind) <- factor(read.table("QUBO_popmap_Garden
 # R80_NOMAF Representation rates
 reportAllelicRepresentation_Together(QUBO.R80_NOMAF_1SNP.TwoPops.genind)
 # Exploration of total and wild allele frequency proportions
-# Functions come from Simulated repository 
-# (https://github.com/akoontz11/Morton_SSRvSNP_Simulations/blob/main/RScripts/functions_SSRvSNP_Sim.R)
 getWildAlleleFreqProportions(QUBO.R80_NOMAF_1SNP.TwoPops.genind)
 getTotalAlleleFreqProportions(QUBO.R80_NOMAF_1SNP.TwoPops.genind)
 
