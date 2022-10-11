@@ -164,7 +164,7 @@ QUAC.R.R80_NOMAF_1SNP.TwoPops.genind <- read.genepop(paste0(genpop.filePath,"pop
 pop(QUAC.R.R80_NOMAF_1SNP.TwoPops.genind) <- factor(read.table("QUAC_popmap", header=FALSE)[,2])
 # R80_NOMAF Representation rates
 reportAllelicRepresentation_Together(QUAC.R.R80_NOMAF_1SNP.TwoPops.genind)
-1# Exploration of total and wild allele frequency proportions
+# Exploration of total and wild allele frequency proportions
 # Functions come from Simulated repository 
 # (https://github.com/akoontz11/Morton_SSRvSNP_Simulations/blob/main/RScripts/functions_SSRvSNP_Sim.R)
 getWildAlleleFreqProportions(QUAC.R.R80_NOMAF_1SNP.TwoPops.genind)
