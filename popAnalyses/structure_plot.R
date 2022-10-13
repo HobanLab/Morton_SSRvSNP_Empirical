@@ -5,7 +5,7 @@
 # This script declares a function for taking the the summarized Q matrix values 
 # from a CLUMPP run and building a corresponding STRUCTURE plot.Specifically, 
 # in terms of the outputs from CLUMPAK, for a given K value, it reads
-# in the CLUMPP output file ("CLUMPP.files/ClumppIndFile,output") 
+# in the CLUMPP output file ("CLUMPP.files/ClumppIndFile.output") 
 # and will plot those values.
 
 # It then uses that function to plot the STRUCTURE outputs for QUAC and QUBO datasets,
@@ -48,7 +48,7 @@ plot_multipleK <- function(kList, kValues, kColors, ...){
   # Determine the number of individuals by counting rows of the kList object
   nInds <- nrow(kList[[1]])
   # Set graphing parameters to allow for multiple rows (for each K value)
-  par(mfrow = c(length(kList),1), mar = c(4,1,2,0.75) + 0.1, oma = c(1,0,3,0), mgp = c(2,1,0))
+  par(mfrow = c(length(kList),1), mar = c(2,1,2,0.75) + 0.1, oma = c(1,0,3,0), mgp = c(2,1,0))
   # Loop through list of Q matrices
   for(i in 1:length(kList)){
     # Main plot call, and title call
