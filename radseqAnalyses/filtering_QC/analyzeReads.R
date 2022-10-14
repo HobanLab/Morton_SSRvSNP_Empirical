@@ -1,8 +1,10 @@
 # %%%%%%%%%%%%%%%%%%%%%%%%%%%
 # %%% ANALYZE READ COUNTS %%%
 # %%%%%%%%%%%%%%%%%%%%%%%%%%%
-# Extract total and per sample read values from file
-# This file was generated using stacks-dist-extract process_radtags.log per_barcode_raw_read_counts
+
+# This script extracts the total and per sample read values from metric files, which were built
+# using the stacks-dist-extract process_radtags.log module (per_barcode_raw_read_counts). It also 
+# calculates means, standard deviaitons, and the samples with the minimum/maximum number of reads
 
 # Extract 2nd column: total number of reads per sample
 totalReads <- (read.table("metric-retainedReads_allsamples", header=TRUE)[,2])
