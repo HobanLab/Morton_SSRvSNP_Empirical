@@ -71,7 +71,7 @@ Fst_WC_report <- function(gen.obj, title){
   return(fst_mat)
 }
 
-# Function for calculating and plotting Fst values, using hierfstat package
+# Function for calculating and plotting Fst values, generated from Stacks populations module
 Fst_Stacks_report <- function(filepath.fst_tab, title){
   # Read the populations.fst_summary.tsv file in the specified directory
   fst_mat <- as.matrix(read.table(paste0(filepath.fst_tab,"populations.fst_summary.tsv"), 
