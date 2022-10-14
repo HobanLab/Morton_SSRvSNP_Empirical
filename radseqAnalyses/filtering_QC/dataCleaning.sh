@@ -62,6 +62,7 @@ ulimit -Sn
 # --paired indicates paired end reads;
 # --index-index indicates that barcodes are in the headers of the FASTQ files (for forward and reverse reads)
 
+# --- NOTE ON ADAPTER TRIMMING! ---
 # Preliminary runs showed the presence of Nextera transposase I7 (in R1 reads) and I5 (in R2 reads) sequences in NextRAD data.
 # By looking at catalog of Nextera sequences from bbmap (bbmap/resources/nextera.fa.gz), the sequences for these adaptors were determined.
 # These were passed to Stacks, for trimming.
