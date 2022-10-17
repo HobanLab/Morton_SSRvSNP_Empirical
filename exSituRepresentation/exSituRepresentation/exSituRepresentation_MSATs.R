@@ -56,7 +56,7 @@ genpop.filePath <-
 setwd(genpop.filePath)
 QUAC.SNP.R.genind <- read.genepop(paste0(genpop.filePath,"populations.snps.gen"))
 # Correct popNames
-pop(QUAC.SNP.R.genind) <- factor(read.table("QUAC_popmap", header=FALSE)[,2])
+pop(QUAC.SNP.R.genind) <- factor(read.table("QUAC_popmap_GardenWild", header=FALSE)[,2])
 # Representation rates
 reportAllelicRepresentation_Together(QUAC.SNP.R.genind)
 # Exploration of total and wild allele frequency proportions
