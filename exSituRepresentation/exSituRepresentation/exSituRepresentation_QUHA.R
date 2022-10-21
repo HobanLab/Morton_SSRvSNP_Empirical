@@ -3,8 +3,9 @@
 # %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 # This script uses the approach from the Qharvardii_ex_situ analysis to generate ex situ representation values 
-# for Quercus acerifolia (QUAC; optimized Stacks de novo assembly, m 7, M/n 4, gt-alpha 0.01) 
-# and Quercus boyntonii (QUBO; GSNAP4 alignment with Quercus robur reference) samples
+# for Quercus acerifolia (QUAC) and Quercus boyntonii (QUBO) NextRAD samples.
+# It does this for both optimized de novo assemblies and reference-aligned datasets, and
+# for two different filters for missing data: R0 (no missing data) and R80 (loci shared with at least 80% of samples)
 
 # In addition to analyzing the SNP (NextRAD) datasets, this script generates ex situ representation values for 
 # corresponding QUAC/QUBO microsatellite (MSAT) datasets as well. It also subsets SNP and MSAT datasets to only include
@@ -75,64 +76,126 @@ print(QUAC.MSAT.repRates*100)
 
 # ---- SNPS: COMPLETE ----
 # %%%% DE NOVO ----
+# R0 ----
 # Read in genind file: Optimized de novo assembly; R0, NOMAF, first SNP/locus, 2 populations
 genpop.filePath <- 
   "/RAID1/IMLS_GCCO/Analysis/Stacks/denovo_finalAssemblies/QUAC/output/populations_R0_NOMAF_1SNP_2Pops/"
 setwd(genpop.filePath)
-QUAC.SNP.DN.genind <- read.genepop(paste0(genpop.filePath,"populations.snps.gen"))
+QUAC.SNP.DN.R0.genind <- read.genepop(paste0(genpop.filePath,"populations.snps.gen"))
 # Correct popNames
-pop(QUAC.SNP.DN.genind) <- factor(read.table("QUAC_popmap_GardenWild", header=FALSE)[,2])
+pop(QUAC.SNP.DN.R0.genind) <- factor(read.table("QUAC_popmap_GardenWild", header=FALSE)[,2])
 
 # Declare vector of results
-QUAC.SNP.DN.repRates <- vector(length = 5)
+QUAC.SNP.DN.R0.repRates <- vector(length = 5)
 # Create vector to capture the number of each allele category (of which there are 5)
 alleles_existing_by_sp <- vector(length = 5)
 # First population is all garden samples ("garden"), population 2 is "wild"
 garden_p <- 1 ; wild_p <- 2
 # Create genpop object, and calculate alleles captured
-n_ind_W <- table(QUAC.SNP.DN.genind@pop)[wild_p]; n_ind_G <- table(QUAC.SNP.DN.genind@pop)[garden_p]; 
-QUAC.SNP.DN.genpop <- genind2genpop(QUAC.SNP.DN.genind)
-alleles_cap <- colSums(QUAC.SNP.DN.genpop[garden_p]@tab,na.rm=T)
+n_ind_W <- table(QUAC.SNP.DN.R0.genind@pop)[wild_p]; n_ind_G <- table(QUAC.SNP.DN.R0.genind@pop)[garden_p]; 
+QUAC.SNP.DN.R0.genpop <- genind2genpop(QUAC.SNP.DN.R0.genind)
+alleles_cap <- colSums(QUAC.SNP.DN.R0.genpop[garden_p]@tab,na.rm=T)
 # The below calls returns each alleles for each category specified
-allele_cat_tot <- get.allele.cat(QUAC.SNP.DN.genpop[wild_p], n_ind_W)
+allele_cat_tot <- get.allele.cat(QUAC.SNP.DN.R0.genpop[wild_p], n_ind_W)
 # For each allele category, find out how many alleles there are
 for (i in 1:5) alleles_existing_by_sp[i] <- (sum((allele_cat_tot[[i]])>0,na.rm=T))
 # For each allele category, calculate the captured allele percentages 
 # by dividing by total number of alleles in that category
-for (l in 1:length(allele_cat_tot)) QUAC.SNP.DN.repRates[l] <- round(sum(alleles_cap[allele_cat_tot[[l]]]>0)/length(allele_cat_tot[[l]]),4)
+for (l in 1:length(allele_cat_tot)) QUAC.SNP.DN.R0.repRates[l] <- round(sum(alleles_cap[allele_cat_tot[[l]]]>0)/length(allele_cat_tot[[l]]),4)
 # Assign names to values, and print
-names(QUAC.SNP.DN.repRates)<-c("Total","Very common (>10%)","Common (>5%)","Low frequency (1% -- 10%","Rare (<1%)")
-print(QUAC.SNP.DN.repRates*100)
+names(QUAC.SNP.DN.R0.repRates)<-c("Total","Very common (>10%)","Common (>5%)","Low frequency (1% -- 10%","Rare (<1%)")
+print(QUAC.SNP.DN.R0.repRates*100)
+
+# R80 ----
+# Read in genind file: Optimized de novo assembly; R80, NOMAF, first SNP/locus, 2 populations
+genpop.filePath <- 
+  "/RAID1/IMLS_GCCO/Analysis/Stacks/denovo_finalAssemblies/QUAC/output/populations_R80_NOMAF_1SNP_2Pops/"
+setwd(genpop.filePath)
+QUAC.SNP.DN.R80.genind <- read.genepop(paste0(genpop.filePath,"populations.snps.gen"))
+# Correct popNames
+pop(QUAC.SNP.DN.R80.genind) <- factor(read.table("QUAC_popmap_GardenWild", header=FALSE)[,2])
+
+# Declare vector of results
+QUAC.SNP.DN.R80.repRates <- vector(length = 5)
+# Create vector to capture the number of each allele category (of which there are 5)
+alleles_existing_by_sp <- vector(length = 5)
+# First population is all garden samples ("garden"), population 2 is "wild"
+garden_p <- 1 ; wild_p <- 2
+# Create genpop object, and calculate alleles captured
+n_ind_W <- table(QUAC.SNP.DN.R80.genind@pop)[wild_p]; n_ind_G <- table(QUAC.SNP.DN.R80.genind@pop)[garden_p]; 
+QUAC.SNP.DN.R80.genpop <- genind2genpop(QUAC.SNP.DN.R80.genind)
+alleles_cap <- colSums(QUAC.SNP.DN.R80.genpop[garden_p]@tab,na.rm=T)
+# The below calls returns each alleles for each category specified
+allele_cat_tot <- get.allele.cat(QUAC.SNP.DN.R80.genpop[wild_p], n_ind_W)
+# For each allele category, find out how many alleles there are
+for (i in 1:5) alleles_existing_by_sp[i] <- (sum((allele_cat_tot[[i]])>0,na.rm=T))
+# For each allele category, calculate the captured allele percentages 
+# by dividing by total number of alleles in that category
+for (l in 1:length(allele_cat_tot)) QUAC.SNP.DN.R80.repRates[l] <- round(sum(alleles_cap[allele_cat_tot[[l]]]>0)/length(allele_cat_tot[[l]]),4)
+# Assign names to values, and print
+names(QUAC.SNP.DN.R80.repRates)<-c("Total","Very common (>10%)","Common (>5%)","Low frequency (1% -- 10%","Rare (<1%)")
+print(QUAC.SNP.DN.R80.repRates*100)
 
 # %%%% REFERENCE ----
+# R0 ----
 # Read in genind file: QUAC GSNAP4 alignment; R0, min-maf=0, first SNP/locus, 2 populations (garden and wild)
 genpop.filePath <- 
   "/RAID1/IMLS_GCCO/Analysis/Stacks/reference_filteredReads/QUAC/Q_rubra/output/populations_R0_NOMAF_1SNP_2Pops/"
 setwd(genpop.filePath)
-QUAC.SNP.R.genind <- read.genepop(paste0(genpop.filePath,"populations.snps.gen"))
+QUAC.SNP.REF.R0.genind <- read.genepop(paste0(genpop.filePath,"populations.snps.gen"))
 # Correct popNames
-pop(QUAC.SNP.R.genind) <- factor(read.table("QUAC_popmap", header=FALSE)[,2])
+pop(QUAC.SNP.REF.R0.genind) <- factor(read.table("QUAC_popmap_GardenWild", header=FALSE)[,2])
 
 # Declare vector of results
-QUAC.SNP.R.repRates <- vector(length = 5)
+QUAC.SNP.REF.R0.repRates <- vector(length = 5)
 # Create vector to capture the number of each allele category (of which there are 5)
 alleles_existing_by_sp <- vector(length = 5)
 # First population is all garden samples ("garden"), population 2 is "wild"
 garden_p <- 1 ; wild_p <- 2
 # Create genpop object, and calculate alleles captured
-n_ind_W <- table(QUAC.SNP.R.genind@pop)[wild_p]; n_ind_G <- table(QUAC.SNP.R.genind@pop)[garden_p]; 
-QUAC.SNP.R.genpop <- genind2genpop(QUAC.SNP.R.genind)
-alleles_cap <- colSums(QUAC.SNP.R.genpop[garden_p]@tab,na.rm=T)
+n_ind_W <- table(QUAC.SNP.REF.R0.genind@pop)[wild_p]; n_ind_G <- table(QUAC.SNP.REF.R0.genind@pop)[garden_p]; 
+QUAC.SNP.REF.R0.genpop <- genind2genpop(QUAC.SNP.REF.R0.genind)
+alleles_cap <- colSums(QUAC.SNP.REF.R0.genpop[garden_p]@tab,na.rm=T)
 # The below calls returns each alleles for each category specified
-allele_cat_tot <- get.allele.cat(QUAC.SNP.R.genpop[wild_p], n_ind_W)
+allele_cat_tot <- get.allele.cat(QUAC.SNP.REF.R0.genpop[wild_p], n_ind_W)
 # For each allele category, find out how many alleles there are
 for (i in 1:5) alleles_existing_by_sp[i] <- (sum((allele_cat_tot[[i]])>0,na.rm=T))
 # For each allele category, calculate the captured allele percentages 
 # by dividing by total number of alleles in that category
-for (l in 1:length(allele_cat_tot)) QUAC.SNP.R.repRates[l] <- round(sum(alleles_cap[allele_cat_tot[[l]]]>0)/length(allele_cat_tot[[l]]),4)
+for (l in 1:length(allele_cat_tot)) QUAC.SNP.REF.R0.repRates[l] <- round(sum(alleles_cap[allele_cat_tot[[l]]]>0)/length(allele_cat_tot[[l]]),4)
 # Assign names to values, and print
-names(QUAC.SNP.R.repRates)<-c("Total","Very common (>10%)","Common (>5%)","Low frequency (1% -- 10%","Rare (<1%)")
-print(QUAC.SNP.R.repRates*100)
+names(QUAC.SNP.REF.R0.repRates)<-c("Total","Very common (>10%)","Common (>5%)","Low frequency (1% -- 10%","Rare (<1%)")
+print(QUAC.SNP.REF.R0.repRates*100)
+
+# R80 ----
+# Read in genind file: QUAC GSNAP4 alignment; R80, min-maf=0, first SNP/locus, 2 populations (garden and wild)
+genpop.filePath <- 
+  "/RAID1/IMLS_GCCO/Analysis/Stacks/reference_filteredReads/QUAC/Q_rubra/output/populations_R80_NOMAF_1SNP_2Pops/"
+setwd(genpop.filePath)
+QUAC.SNP.REF.R80.genind <- read.genepop(paste0(genpop.filePath,"populations.snps.gen"))
+# Correct popNames
+pop(QUAC.SNP.REF.R80.genind) <- factor(read.table("QUAC_popmap_GardenWild", header=FALSE)[,2])
+
+# Declare vector of results
+QUAC.SNP.REF.R80.repRates <- vector(length = 5)
+# Create vector to capture the number of each allele category (of which there are 5)
+alleles_existing_by_sp <- vector(length = 5)
+# First population is all garden samples ("garden"), population 2 is "wild"
+garden_p <- 1 ; wild_p <- 2
+# Create genpop object, and calculate alleles captured
+n_ind_W <- table(QUAC.SNP.REF.R80.genind@pop)[wild_p]; n_ind_G <- table(QUAC.SNP.REF.R80.genind@pop)[garden_p]; 
+QUAC.SNP.REF.R80.genpop <- genind2genpop(QUAC.SNP.REF.R80.genind)
+alleles_cap <- colSums(QUAC.SNP.REF.R80.genpop[garden_p]@tab,na.rm=T)
+# The below calls returns each alleles for each category specified
+allele_cat_tot <- get.allele.cat(QUAC.SNP.REF.R80.genpop[wild_p], n_ind_W)
+# For each allele category, find out how many alleles there are
+for (i in 1:5) alleles_existing_by_sp[i] <- (sum((allele_cat_tot[[i]])>0,na.rm=T))
+# For each allele category, calculate the captured allele percentages 
+# by dividing by total number of alleles in that category
+for (l in 1:length(allele_cat_tot)) QUAC.SNP.REF.R80.repRates[l] <- round(sum(alleles_cap[allele_cat_tot[[l]]]>0)/length(allele_cat_tot[[l]]),4)
+# Assign names to values, and print
+names(QUAC.SNP.REF.R80.repRates)<-c("Total","Very common (>10%)","Common (>5%)","Low frequency (1% -- 10%","Rare (<1%)")
+print(QUAC.SNP.REF.R80.repRates*100)
 
 # ---- MSATS AND SNPS: SUBSET ----
 # MSAT: read in Tissue database names from GCC_QUAC_ZAIN repository, and rename MSAT genind matrix
@@ -145,15 +208,23 @@ rownames(QUAC.MSAT.genind@tab) <- QUAC.MSAT.tissueNames
 # This file was created (by Austin K.), and can be found on the Hoban Lab Drive ("MSATcomparisons_TissueNames")
 QUAC.SNP.tissueNames_filepath <- paste0(SSRvSNP.wd,"exSituRepresentation/Resampling/QUAC_SNP_TissueNames.csv")
 QUAC.SNP.tissueNames <- unlist(read.csv2(QUAC.SNP.tissueNames_filepath, header = TRUE, sep = ",")[3])
-rownames(QUAC.SNP.DN.genind@tab) <- QUAC.SNP.tissueNames
-rownames(QUAC.SNP.R.genind@tab) <- QUAC.SNP.tissueNames
+# De novo
+rownames(QUAC.SNP.DN.R0.genind@tab) <- QUAC.SNP.tissueNames
+rownames(QUAC.SNP.DN.R80.genind@tab) <- QUAC.SNP.tissueNames
+# Reference
+rownames(QUAC.SNP.REF.R0.genind@tab) <- QUAC.SNP.tissueNames
+rownames(QUAC.SNP.REF.R80.genind@tab) <- QUAC.SNP.tissueNames
 
 # Subset SNP sample names by those that are also seen within the MSAT samples 
 QUAC_sharedSamples <- sort(QUAC.SNP.tissueNames[which(QUAC.SNP.tissueNames %in% QUAC.MSAT.tissueNames)])
 # Subset MSAT and SNP genind matrices to strictly shared samples, dropping now absent alleles
 QUAC.MSAT_subset.genind <- QUAC.MSAT.genind[QUAC_sharedSamples,, drop=TRUE]
-QUAC.SNP.DN_subset.genind <- QUAC.SNP.DN.genind[QUAC_sharedSamples,, drop=TRUE]
-QUAC.SNP.R_subset.genind <- QUAC.SNP.R.genind[QUAC_sharedSamples,, drop=TRUE]
+# De novo
+QUAC.SNP.DN.R0_subset.genind <- QUAC.SNP.DN.R0.genind[QUAC_sharedSamples,, drop=TRUE]
+QUAC.SNP.DN.R80_subset.genind <- QUAC.SNP.DN.R80.genind[QUAC_sharedSamples,, drop=TRUE]
+# Reference
+QUAC.SNP.REF.R0_subset.genind <- QUAC.SNP.REF.R0.genind[QUAC_sharedSamples,, drop=TRUE]
+QUAC.SNP.REF.R80_subset.genind <- QUAC.SNP.REF.R80.genind[QUAC_sharedSamples,, drop=TRUE]
 
 # Allelic capture of subset MSATs ----
 # Declare vector of results
@@ -179,48 +250,94 @@ print(QUAC.MSAT_subset.repRates*100)
 
 # Allelic capture of subset SNPs ----
 # %%%% DE NOVO ----
+# R0 ----
 # Declare vector of results
-QUAC.SNP.DN_subset.repRates <- vector(length = 5)
+QUAC.SNP.DN.R0_subset.repRates <- vector(length = 5)
 # Create vector to capture the number of each allele category (of which there are 5)
 alleles_existing_by_sp <- vector(length = 5)
 # First population is all garden samples ("garden"), population 2 is "wild"
 garden_p <- 1 ; wild_p <- 2
 # Create genpop object, and calculate alleles captured
-n_ind_W <- table(QUAC.SNP.DN_subset.genind@pop)[wild_p]; n_ind_G <- table(QUAC.SNP.DN_subset.genind@pop)[garden_p]; 
-QUAC.SNP.DN_subset.genpop <- genind2genpop(QUAC.SNP.DN_subset.genind)
-alleles_cap <- colSums(QUAC.SNP.DN_subset.genpop[garden_p]@tab,na.rm=T)
+n_ind_W <- table(QUAC.SNP.DN.R0_subset.genind@pop)[wild_p]; n_ind_G <- table(QUAC.SNP.DN.R0_subset.genind@pop)[garden_p]; 
+QUAC.SNP.DN.R0_subset.genpop <- genind2genpop(QUAC.SNP.DN.R0_subset.genind)
+alleles_cap <- colSums(QUAC.SNP.DN.R0_subset.genpop[garden_p]@tab,na.rm=T)
 # The below calls returns each alleles for each category specified
-allele_cat_tot <- get.allele.cat(QUAC.SNP.DN_subset.genpop[wild_p], n_ind_W)
+allele_cat_tot <- get.allele.cat(QUAC.SNP.DN.R0_subset.genpop[wild_p], n_ind_W)
 # For each allele category, find out how many alleles there are
 for (i in 1:5) alleles_existing_by_sp[i] <- (sum((allele_cat_tot[[i]])>0,na.rm=T))
 # For each allele category, calculate the captured allele percentages 
 # by dividing by total number of alleles in that category
-for (l in 1:length(allele_cat_tot)) QUAC.SNP.DN_subset.repRates[l] <- round(sum(alleles_cap[allele_cat_tot[[l]]]>0)/length(allele_cat_tot[[l]]),4)
+for (l in 1:length(allele_cat_tot)) QUAC.SNP.DN.R0_subset.repRates[l] <- round(sum(alleles_cap[allele_cat_tot[[l]]]>0)/length(allele_cat_tot[[l]]),4)
 # Assign names to values, and print
-names(QUAC.SNP.DN_subset.repRates)<-c("Total","Very common (>10%)","Common (>5%)","Low frequency (1% -- 10%","Rare (<1%)")
-print(QUAC.SNP.DN_subset.repRates*100)
+names(QUAC.SNP.DN.R0_subset.repRates)<-c("Total","Very common (>10%)","Common (>5%)","Low frequency (1% -- 10%","Rare (<1%)")
+print(QUAC.SNP.DN.R0_subset.repRates*100)
+
+# R80 ----
+# Declare vector of results
+QUAC.SNP.DN.R80_subset.repRates <- vector(length = 5)
+# Create vector to capture the number of each allele category (of which there are 5)
+alleles_existing_by_sp <- vector(length = 5)
+# First population is all garden samples ("garden"), population 2 is "wild"
+garden_p <- 1 ; wild_p <- 2
+# Create genpop object, and calculate alleles captured
+n_ind_W <- table(QUAC.SNP.DN.R80_subset.genind@pop)[wild_p]; n_ind_G <- table(QUAC.SNP.DN.R80_subset.genind@pop)[garden_p]; 
+QUAC.SNP.DN.R80_subset.genpop <- genind2genpop(QUAC.SNP.DN.R80_subset.genind)
+alleles_cap <- colSums(QUAC.SNP.DN.R80_subset.genpop[garden_p]@tab,na.rm=T)
+# The below calls returns each alleles for each category specified
+allele_cat_tot <- get.allele.cat(QUAC.SNP.DN.R80_subset.genpop[wild_p], n_ind_W)
+# For each allele category, find out how many alleles there are
+for (i in 1:5) alleles_existing_by_sp[i] <- (sum((allele_cat_tot[[i]])>0,na.rm=T))
+# For each allele category, calculate the captured allele percentages 
+# by dividing by total number of alleles in that category
+for (l in 1:length(allele_cat_tot)) QUAC.SNP.DN.R80_subset.repRates[l] <- round(sum(alleles_cap[allele_cat_tot[[l]]]>0)/length(allele_cat_tot[[l]]),4)
+# Assign names to values, and print
+names(QUAC.SNP.DN.R80_subset.repRates)<-c("Total","Very common (>10%)","Common (>5%)","Low frequency (1% -- 10%","Rare (<1%)")
+print(QUAC.SNP.DN.R80_subset.repRates*100)
 
 # %%%% REFERENCE ----
+# R0 ----
 # Declare vector of results
-QUAC.SNP.R_subset.repRates <- vector(length = 5)
+QUAC.SNP.REF.R0_subset.repRates <- vector(length = 5)
 # Create vector to capture the number of each allele category (of which there are 5)
 alleles_existing_by_sp <- vector(length = 5)
 # First population is all garden samples ("garden"), population 2 is "wild"
 garden_p <- 1 ; wild_p <- 2
 # Create genpop object, and calculate alleles captured
-n_ind_W <- table(QUAC.SNP.R_subset.genind@pop)[wild_p]; n_ind_G <- table(QUAC.SNP.R_subset.genind@pop)[garden_p]; 
-QUAC.SNP.R_subset.genpop <- genind2genpop(QUAC.SNP.R_subset.genind)
-alleles_cap <- colSums(QUAC.SNP.R_subset.genpop[garden_p]@tab,na.rm=T)
+n_ind_W <- table(QUAC.SNP.REF.R0_subset.genind@pop)[wild_p]; n_ind_G <- table(QUAC.SNP.REF.R0_subset.genind@pop)[garden_p]; 
+QUAC.SNP.REF.R0_subset.genpop <- genind2genpop(QUAC.SNP.REF.R0_subset.genind)
+alleles_cap <- colSums(QUAC.SNP.REF.R0_subset.genpop[garden_p]@tab,na.rm=T)
 # The below calls returns each alleles for each category specified
-allele_cat_tot <- get.allele.cat(QUAC.SNP.R_subset.genpop[wild_p], n_ind_W)
+allele_cat_tot <- get.allele.cat(QUAC.SNP.REF.R0_subset.genpop[wild_p], n_ind_W)
 # For each allele category, find out how many alleles there are
 for (i in 1:5) alleles_existing_by_sp[i] <- (sum((allele_cat_tot[[i]])>0,na.rm=T))
 # For each allele category, calculate the captured allele percentages 
 # by dividing by total number of alleles in that category
-for (l in 1:length(allele_cat_tot)) QUAC.SNP.R_subset.repRates[l] <- round(sum(alleles_cap[allele_cat_tot[[l]]]>0)/length(allele_cat_tot[[l]]),4)
+for (l in 1:length(allele_cat_tot)) QUAC.SNP.REF.R0_subset.repRates[l] <- round(sum(alleles_cap[allele_cat_tot[[l]]]>0)/length(allele_cat_tot[[l]]),4)
 # Assign names to values, and print
-names(QUAC.SNP.R_subset.repRates)<-c("Total","Very common (>10%)","Common (>5%)","Low frequency (1% -- 10%","Rare (<1%)")
-print(QUAC.SNP.R_subset.repRates*100)
+names(QUAC.SNP.REF.R0_subset.repRates)<-c("Total","Very common (>10%)","Common (>5%)","Low frequency (1% -- 10%","Rare (<1%)")
+print(QUAC.SNP.REF.R0_subset.repRates*100)
+
+# R80 ----
+# Declare vector of results
+QUAC.SNP.REF.R80_subset.repRates <- vector(length = 5)
+# Create vector to capture the number of each allele category (of which there are 5)
+alleles_existing_by_sp <- vector(length = 5)
+# First population is all garden samples ("garden"), population 2 is "wild"
+garden_p <- 1 ; wild_p <- 2
+# Create genpop object, and calculate alleles captured
+n_ind_W <- table(QUAC.SNP.REF.R80_subset.genind@pop)[wild_p]; n_ind_G <- table(QUAC.SNP.REF.R80_subset.genind@pop)[garden_p]; 
+QUAC.SNP.REF.R80_subset.genpop <- genind2genpop(QUAC.SNP.REF.R80_subset.genind)
+alleles_cap <- colSums(QUAC.SNP.REF.R80_subset.genpop[garden_p]@tab,na.rm=T)
+# The below calls returns each alleles for each category specified
+allele_cat_tot <- get.allele.cat(QUAC.SNP.REF.R80_subset.genpop[wild_p], n_ind_W)
+# For each allele category, find out how many alleles there are
+for (i in 1:5) alleles_existing_by_sp[i] <- (sum((allele_cat_tot[[i]])>0,na.rm=T))
+# For each allele category, calculate the captured allele percentages 
+# by dividing by total number of alleles in that category
+for (l in 1:length(allele_cat_tot)) QUAC.SNP.REF.R80_subset.repRates[l] <- round(sum(alleles_cap[allele_cat_tot[[l]]]>0)/length(allele_cat_tot[[l]]),4)
+# Assign names to values, and print
+names(QUAC.SNP.REF.R80_subset.repRates)<-c("Total","Very common (>10%)","Common (>5%)","Low frequency (1% -- 10%","Rare (<1%)")
+print(QUAC.SNP.REF.R80_subset.repRates*100)
 
 # %%%% QUBO %%%% ----
 # ---- MSATS: COMPLETE ----
@@ -255,64 +372,126 @@ print(QUBO.MSAT.repRates*100)
 
 # ---- SNPS: COMPLETE ----
 # %%%% DE NOVO ----
+# R0 ----
 # Read in genind file: Optimized de novo assembly; R0, min-maf=0, first SNP/locus, 2 populations (garden and wild)
 genpop.filePath <- 
   "/RAID1/IMLS_GCCO/Analysis/Stacks/denovo_finalAssemblies/QUBO/output/populations_R0_NOMAF_1SNP_2Pops/"
 setwd(genpop.filePath)
-QUBO.SNP.DN.genind <- read.genepop(paste0(genpop.filePath,"populations.snps.gen"))
+QUBO.SNP.DN.R0.genind <- read.genepop(paste0(genpop.filePath,"populations.snps.gen"))
 # Correct popNames
-pop(QUBO.SNP.DN.genind) <- factor(read.table("QUBO_popmap_GardenWild", header=FALSE)[,2])
+pop(QUBO.SNP.DN.R0.genind) <- factor(read.table("QUBO_popmap_GardenWild", header=FALSE)[,2])
 
 # Declare vector of results
-QUBO.SNP.DN.repRates <- vector(length = 5)
+QUBO.SNP.DN.R0.repRates <- vector(length = 5)
 # Create vector to capture the number of each allele category (of which there are 5)
 alleles_existing_by_sp <- vector(length = 5)
 # First population is all garden samples ("garden"), population 2 is "wild"
 garden_p <- 1 ; wild_p <- 2
 # Create genpop object, and calculate alleles captured
-n_ind_W <- table(QUBO.SNP.DN.genind@pop)[wild_p]; n_ind_G <- table(QUBO.SNP.DN.genind@pop)[garden_p]; 
-QUBO.SNP.DN.genpop <- genind2genpop(QUBO.SNP.DN.genind)
-alleles_cap <- colSums(QUBO.SNP.DN.genpop[garden_p]@tab,na.rm=T)
+n_ind_W <- table(QUBO.SNP.DN.R0.genind@pop)[wild_p]; n_ind_G <- table(QUBO.SNP.DN.R0.genind@pop)[garden_p]; 
+QUBO.SNP.DN.R0.genpop <- genind2genpop(QUBO.SNP.DN.R0.genind)
+alleles_cap <- colSums(QUBO.SNP.DN.R0.genpop[garden_p]@tab,na.rm=T)
 # The below calls returns each alleles for each category specified
-allele_cat_tot <- get.allele.cat(QUBO.SNP.DN.genpop[wild_p], n_ind_W)
+allele_cat_tot <- get.allele.cat(QUBO.SNP.DN.R0.genpop[wild_p], n_ind_W)
 # For each allele category, find out how many alleles there are
 for (i in 1:5) alleles_existing_by_sp[i] <- (sum((allele_cat_tot[[i]])>0,na.rm=T))
 # For each allele category, calculate the captured allele percentages 
 # by dividing by total number of alleles in that category
-for (l in 1:length(allele_cat_tot)) QUBO.SNP.DN.repRates[l] <- round(sum(alleles_cap[allele_cat_tot[[l]]]>0)/length(allele_cat_tot[[l]]),4)
+for (l in 1:length(allele_cat_tot)) QUBO.SNP.DN.R0.repRates[l] <- round(sum(alleles_cap[allele_cat_tot[[l]]]>0)/length(allele_cat_tot[[l]]),4)
 # Assign names to values, and print
-names(QUBO.SNP.DN.repRates)<-c("Total","Very common (>10%)","Common (>5%)","Low frequency (1% -- 10%","Rare (<1%)")
-print(QUBO.SNP.DN.repRates*100)
+names(QUBO.SNP.DN.R0.repRates)<-c("Total","Very common (>10%)","Common (>5%)","Low frequency (1% -- 10%","Rare (<1%)")
+print(QUBO.SNP.DN.R0.repRates*100)
+
+# R80 ----
+# Read in genind file: Optimized de novo assembly; R80, min-maf=0, first SNP/locus, 2 populations (garden and wild)
+genpop.filePath <- 
+  "/RAID1/IMLS_GCCO/Analysis/Stacks/denovo_finalAssemblies/QUBO/output/populations_R80_NOMAF_1SNP_2Pops/"
+setwd(genpop.filePath)
+QUBO.SNP.DN.R80.genind <- read.genepop(paste0(genpop.filePath,"populations.snps.gen"))
+# Correct popNames
+pop(QUBO.SNP.DN.R80.genind) <- factor(read.table("QUBO_popmap_GardenWild", header=FALSE)[,2])
+
+# Declare vector of results
+QUBO.SNP.DN.R80.repRates <- vector(length = 5)
+# Create vector to capture the number of each allele category (of which there are 5)
+alleles_existing_by_sp <- vector(length = 5)
+# First population is all garden samples ("garden"), population 2 is "wild"
+garden_p <- 1 ; wild_p <- 2
+# Create genpop object, and calculate alleles captured
+n_ind_W <- table(QUBO.SNP.DN.R80.genind@pop)[wild_p]; n_ind_G <- table(QUBO.SNP.DN.R80.genind@pop)[garden_p]; 
+QUBO.SNP.DN.R80.genpop <- genind2genpop(QUBO.SNP.DN.R80.genind)
+alleles_cap <- colSums(QUBO.SNP.DN.R80.genpop[garden_p]@tab,na.rm=T)
+# The below calls returns each alleles for each category specified
+allele_cat_tot <- get.allele.cat(QUBO.SNP.DN.R80.genpop[wild_p], n_ind_W)
+# For each allele category, find out how many alleles there are
+for (i in 1:5) alleles_existing_by_sp[i] <- (sum((allele_cat_tot[[i]])>0,na.rm=T))
+# For each allele category, calculate the captured allele percentages 
+# by dividing by total number of alleles in that category
+for (l in 1:length(allele_cat_tot)) QUBO.SNP.DN.R80.repRates[l] <- round(sum(alleles_cap[allele_cat_tot[[l]]]>0)/length(allele_cat_tot[[l]]),4)
+# Assign names to values, and print
+names(QUBO.SNP.DN.R80.repRates)<-c("Total","Very common (>10%)","Common (>5%)","Low frequency (1% -- 10%","Rare (<1%)")
+print(QUBO.SNP.DN.R80.repRates*100)
 
 # %%%% REFERENCE ----
+# R0 ----
 # Read in genind file: QUBO GSNAP4 alignment; R0, min-maf=0, first SNP/locus, 2 populations (garden and wild)
 genpop.filePath <- 
   "/RAID1/IMLS_GCCO/Analysis/Stacks/reference_filteredReads/QUBO/GSNAP4/output/populations_R0_NOMAF_1SNP_2Pops/"
 setwd(genpop.filePath)
-QUBO.SNP.R.genind <- read.genepop(paste0(genpop.filePath,"populations.snps.gen"))
+QUBO.SNP.REF.R0.genind <- read.genepop(paste0(genpop.filePath,"populations.snps.gen"))
 # Correct popNames
-pop(QUBO.SNP.R.genind) <- factor(read.table("QUBO_popmap_GardenWild", header=FALSE)[,2])
+pop(QUBO.SNP.REF.R0.genind) <- factor(read.table("QUBO_popmap_GardenWild", header=FALSE)[,2])
 
 # Declare vector of results
-QUBO.SNP.R.repRates <- vector(length = 5)
+QUBO.SNP.REF.R0.repRates <- vector(length = 5)
 # Create vector to capture the number of each allele category (of which there are 5)
 alleles_existing_by_sp <- vector(length = 5)
 # First population is all garden samples ("garden"), population 2 is "wild"
 garden_p <- 1 ; wild_p <- 2
 # Create genpop object, and calculate alleles captured
-n_ind_W <- table(QUBO.SNP.R.genind@pop)[wild_p]; n_ind_G <- table(QUBO.SNP.R.genind@pop)[garden_p]; 
-QUBO.SNP.R.genpop <- genind2genpop(QUBO.SNP.R.genind)
-alleles_cap <- colSums(QUBO.SNP.R.genpop[garden_p]@tab,na.rm=T)
+n_ind_W <- table(QUBO.SNP.REF.R0.genind@pop)[wild_p]; n_ind_G <- table(QUBO.SNP.REF.R0.genind@pop)[garden_p]; 
+QUBO.SNP.REF.R0.genpop <- genind2genpop(QUBO.SNP.REF.R0.genind)
+alleles_cap <- colSums(QUBO.SNP.REF.R0.genpop[garden_p]@tab,na.rm=T)
 # The below calls returns each alleles for each category specified
-allele_cat_tot <- get.allele.cat(QUBO.SNP.R.genpop[wild_p], n_ind_W)
+allele_cat_tot <- get.allele.cat(QUBO.SNP.REF.R0.genpop[wild_p], n_ind_W)
 # For each allele category, find out how many alleles there are
 for (i in 1:5) alleles_existing_by_sp[i] <- (sum((allele_cat_tot[[i]])>0,na.rm=T))
 # For each allele category, calculate the captured allele percentages 
 # by dividing by total number of alleles in that category
-for (l in 1:length(allele_cat_tot)) QUBO.SNP.R.repRates[l] <- round(sum(alleles_cap[allele_cat_tot[[l]]]>0)/length(allele_cat_tot[[l]]),4)
+for (l in 1:length(allele_cat_tot)) QUBO.SNP.REF.R0.repRates[l] <- round(sum(alleles_cap[allele_cat_tot[[l]]]>0)/length(allele_cat_tot[[l]]),4)
 # Assign names to values, and print
-names(QUBO.SNP.R.repRates)<-c("Total","Very common (>10%)","Common (>5%)","Low frequency (1% -- 10%","Rare (<1%)")
-print(QUBO.SNP.R.repRates*100)
+names(QUBO.SNP.REF.R0.repRates)<-c("Total","Very common (>10%)","Common (>5%)","Low frequency (1% -- 10%","Rare (<1%)")
+print(QUBO.SNP.REF.R0.repRates*100)
+
+# R80 ----
+# Read in genind file: QUBO GSNAP4 alignment; R80, min-maf=0, first SNP/locus, 2 populations (garden and wild)
+genpop.filePath <- 
+  "/RAID1/IMLS_GCCO/Analysis/Stacks/reference_filteredReads/QUBO/GSNAP4/output/populations_R80_NOMAF_1SNP_2Pops/"
+setwd(genpop.filePath)
+QUBO.SNP.REF.R80.genind <- read.genepop(paste0(genpop.filePath,"populations.snps.gen"))
+# Correct popNames
+pop(QUBO.SNP.REF.R80.genind) <- factor(read.table("QUBO_popmap_GardenWild", header=FALSE)[,2])
+
+# Declare vector of results
+QUBO.SNP.REF.R80.repRates <- vector(length = 5)
+# Create vector to capture the number of each allele category (of which there are 5)
+alleles_existing_by_sp <- vector(length = 5)
+# First population is all garden samples ("garden"), population 2 is "wild"
+garden_p <- 1 ; wild_p <- 2
+# Create genpop object, and calculate alleles captured
+n_ind_W <- table(QUBO.SNP.REF.R80.genind@pop)[wild_p]; n_ind_G <- table(QUBO.SNP.REF.R80.genind@pop)[garden_p]; 
+QUBO.SNP.REF.R80.genpop <- genind2genpop(QUBO.SNP.REF.R80.genind)
+alleles_cap <- colSums(QUBO.SNP.REF.R80.genpop[garden_p]@tab,na.rm=T)
+# The below calls returns each alleles for each category specified
+allele_cat_tot <- get.allele.cat(QUBO.SNP.REF.R80.genpop[wild_p], n_ind_W)
+# For each allele category, find out how many alleles there are
+for (i in 1:5) alleles_existing_by_sp[i] <- (sum((allele_cat_tot[[i]])>0,na.rm=T))
+# For each allele category, calculate the captured allele percentages 
+# by dividing by total number of alleles in that category
+for (l in 1:length(allele_cat_tot)) QUBO.SNP.REF.R80.repRates[l] <- round(sum(alleles_cap[allele_cat_tot[[l]]]>0)/length(allele_cat_tot[[l]]),4)
+# Assign names to values, and print
+names(QUBO.SNP.REF.R80.repRates)<-c("Total","Very common (>10%)","Common (>5%)","Low frequency (1% -- 10%","Rare (<1%)")
+print(QUBO.SNP.REF.R80.repRates*100)
 
 # ---- MSATS AND SNPS: SUBSET ----
 # MSAT: Split sample names on underscore, and return 3rd element. Rename the sample matrix 
@@ -320,7 +499,7 @@ QUBO.MSAT.sampleNames <- unlist(lapply(rownames(QUBO.MSAT.genind@tab), function(
 rownames(QUBO.MSAT.genind@tab) <- QUBO.MSAT.sampleNames
 
 # SNP: Remove QUBO_W_ headers from sample names
-QUBO.SNP.sampleNames <- gsub("QUBO_G_",replacement = "", row.names(QUBO.SNP.DN.genind@tab))
+QUBO.SNP.sampleNames <- gsub("QUBO_G_",replacement = "", row.names(QUBO.SNP.DN.R0.genind@tab))
 QUBO.SNP.sampleNames <- gsub("QUBO_W_",replacement = "", QUBO.SNP.sampleNames)
 # Replace SH-Q names in SNP list with IMLS names
 # These were determined by Austin K., and are outlined on the Hoban Lab Drive ("MSATcomparisons_TissueNames")
@@ -335,15 +514,23 @@ QUBO.SNP.sampleNames <- gsub("SH_Q2183",replacement = "IMLS170", QUBO.SNP.sample
 QUBO.SNP.sampleNames <- gsub("SH_Q2184",replacement = "IMLS005", QUBO.SNP.sampleNames)
 QUBO.SNP.sampleNames <- gsub("SH_Q2186",replacement = "IMLS017", QUBO.SNP.sampleNames)
 # Rename sample matrices
-rownames(QUBO.SNP.DN.genind@tab) <- QUBO.SNP.sampleNames
-rownames(QUBO.SNP.R.genind@tab) <- QUBO.SNP.sampleNames
+# De novo
+rownames(QUBO.SNP.DN.R0.genind@tab) <- QUBO.SNP.sampleNames
+rownames(QUBO.SNP.DN.R80.genind@tab) <- QUBO.SNP.sampleNames
+# Reference
+rownames(QUBO.SNP.REF.R0.genind@tab) <- QUBO.SNP.sampleNames
+rownames(QUBO.SNP.REF.R80.genind@tab) <- QUBO.SNP.sampleNames
 
 # Subset SNP sample names by those that are also seen within the MSAT samples
 QUBO_sharedSamples <- sort(QUBO.SNP.sampleNames[which(QUBO.SNP.sampleNames %in% QUBO.MSAT.sampleNames)])
 # Subset MSAT and SNP wild matrix objects to strictly shared samples
 QUBO.MSAT_subset.genind <- QUBO.MSAT.genind[QUBO_sharedSamples,, drop=TRUE]
-QUBO.SNP.DN_subset.genind <- QUBO.SNP.DN.genind[QUBO_sharedSamples,, drop=TRUE]
-QUBO.SNP.R_subset.genind <- QUBO.SNP.R.genind[QUBO_sharedSamples,, drop=TRUE]
+# De novo
+QUBO.SNP.DN.R0_subset.genind <- QUBO.SNP.DN.R0.genind[QUBO_sharedSamples,, drop=TRUE]
+QUBO.SNP.DN.R80_subset.genind <- QUBO.SNP.DN.R80.genind[QUBO_sharedSamples,, drop=TRUE]
+# Reference
+QUBO.SNP.REF.R0_subset.genind <- QUBO.SNP.REF.R0.genind[QUBO_sharedSamples,, drop=TRUE]
+QUBO.SNP.REF.R80_subset.genind <- QUBO.SNP.REF.R80.genind[QUBO_sharedSamples,, drop=TRUE]
 
 # Allelic capture of subset MSATs ----
 # Declare vector of results
@@ -369,45 +556,91 @@ print(QUBO.MSAT_subset.repRates*100)
 
 # Allelic capture of subset SNPs ----
 # %%%% DE NOVO ----
+# R0 ----
 # Declare vector of results
-QUBO.SNP.DN_subset.repRates <- vector(length = 5)
+QUBO.SNP.DN.R0_subset.repRates <- vector(length = 5)
 # Create vector to capture the number of each allele category (of which there are 5)
 alleles_existing_by_sp <- vector(length = 5)
 # First population is all garden samples ("garden"), population 2 is "wild"
 garden_p <- 1 ; wild_p <- 2
 # Create genpop object, and calculate alleles captured
-n_ind_W <- table(QUBO.SNP.DN_subset.genind@pop)[wild_p]; n_ind_G <- table(QUBO.SNP.DN_subset.genind@pop)[garden_p]; 
-QUBO.SNP.DN_subset.genpop <- genind2genpop(QUBO.SNP.DN_subset.genind)
-alleles_cap <- colSums(QUBO.SNP.DN_subset.genpop[garden_p]@tab,na.rm=T)
+n_ind_W <- table(QUBO.SNP.DN.R0_subset.genind@pop)[wild_p]; n_ind_G <- table(QUBO.SNP.DN.R0_subset.genind@pop)[garden_p]; 
+QUBO.SNP.DN.R0_subset.genpop <- genind2genpop(QUBO.SNP.DN.R0_subset.genind)
+alleles_cap <- colSums(QUBO.SNP.DN.R0_subset.genpop[garden_p]@tab,na.rm=T)
 # The below calls returns each alleles for each category specified
-allele_cat_tot <- get.allele.cat(QUBO.SNP.DN_subset.genpop[wild_p], n_ind_W)
+allele_cat_tot <- get.allele.cat(QUBO.SNP.DN.R0_subset.genpop[wild_p], n_ind_W)
 # For each allele category, find out how many alleles there are
 for (i in 1:5) alleles_existing_by_sp[i] <- (sum((allele_cat_tot[[i]])>0,na.rm=T))
 # For each allele category, calculate the captured allele percentages 
 # by dividing by total number of alleles in that category
-for (l in 1:length(allele_cat_tot)) QUBO.SNP.DN_subset.repRates[l] <- round(sum(alleles_cap[allele_cat_tot[[l]]]>0)/length(allele_cat_tot[[l]]),4)
+for (l in 1:length(allele_cat_tot)) QUBO.SNP.DN.R0_subset.repRates[l] <- round(sum(alleles_cap[allele_cat_tot[[l]]]>0)/length(allele_cat_tot[[l]]),4)
 # Assign names to values, and print
-names(QUBO.SNP.DN_subset.repRates)<-c("Total","Very common (>10%)","Common (>5%)","Low frequency (1% -- 10%","Rare (<1%)")
-print(QUBO.SNP.DN_subset.repRates*100)
+names(QUBO.SNP.DN.R0_subset.repRates)<-c("Total","Very common (>10%)","Common (>5%)","Low frequency (1% -- 10%","Rare (<1%)")
+print(QUBO.SNP.DN.R0_subset.repRates*100)
+
+# R80 ----
+# Declare vector of results
+QUBO.SNP.DN.R80_subset.repRates <- vector(length = 5)
+# Create vector to capture the number of each allele category (of which there are 5)
+alleles_existing_by_sp <- vector(length = 5)
+# First population is all garden samples ("garden"), population 2 is "wild"
+garden_p <- 1 ; wild_p <- 2
+# Create genpop object, and calculate alleles captured
+n_ind_W <- table(QUBO.SNP.DN.R80_subset.genind@pop)[wild_p]; n_ind_G <- table(QUBO.SNP.DN.R80_subset.genind@pop)[garden_p]; 
+QUBO.SNP.DN.R80_subset.genpop <- genind2genpop(QUBO.SNP.DN.R80_subset.genind)
+alleles_cap <- colSums(QUBO.SNP.DN.R80_subset.genpop[garden_p]@tab,na.rm=T)
+# The below calls returns each alleles for each category specified
+allele_cat_tot <- get.allele.cat(QUBO.SNP.DN.R80_subset.genpop[wild_p], n_ind_W)
+# For each allele category, find out how many alleles there are
+for (i in 1:5) alleles_existing_by_sp[i] <- (sum((allele_cat_tot[[i]])>0,na.rm=T))
+# For each allele category, calculate the captured allele percentages 
+# by dividing by total number of alleles in that category
+for (l in 1:length(allele_cat_tot)) QUBO.SNP.DN.R80_subset.repRates[l] <- round(sum(alleles_cap[allele_cat_tot[[l]]]>0)/length(allele_cat_tot[[l]]),4)
+# Assign names to values, and print
+names(QUBO.SNP.DN.R80_subset.repRates)<-c("Total","Very common (>10%)","Common (>5%)","Low frequency (1% -- 10%","Rare (<1%)")
+print(QUBO.SNP.DN.R80_subset.repRates*100)
 
 # %%%% REFERENCE ----
+# R0 ----
 # Declare vector of results
-QUBO.SNP.R_subset.repRates <- vector(length = 5)
+QUBO.SNP.REF.R0_subset.repRates <- vector(length = 5)
 # Create vector to capture the number of each allele category (of which there are 5)
 alleles_existing_by_sp <- vector(length = 5)
 # First population is all garden samples ("garden"), population 2 is "wild"
 garden_p <- 1 ; wild_p <- 2
 # Create genpop object, and calculate alleles captured
-n_ind_W <- table(QUBO.SNP.R_subset.genind@pop)[wild_p]; n_ind_G <- table(QUBO.SNP.R_subset.genind@pop)[garden_p]; 
-QUBO.SNP.R_subset.genpop <- genind2genpop(QUBO.SNP.R_subset.genind)
-alleles_cap <- colSums(QUBO.SNP.R_subset.genpop[garden_p]@tab,na.rm=T)
+n_ind_W <- table(QUBO.SNP.REF.R0_subset.genind@pop)[wild_p]; n_ind_G <- table(QUBO.SNP.REF.R0_subset.genind@pop)[garden_p]; 
+QUBO.SNP.REF.R0_subset.genpop <- genind2genpop(QUBO.SNP.REF.R0_subset.genind)
+alleles_cap <- colSums(QUBO.SNP.REF.R0_subset.genpop[garden_p]@tab,na.rm=T)
 # The below calls returns each alleles for each category specified
-allele_cat_tot <- get.allele.cat(QUBO.SNP.R_subset.genpop[wild_p], n_ind_W)
+allele_cat_tot <- get.allele.cat(QUBO.SNP.REF.R0_subset.genpop[wild_p], n_ind_W)
 # For each allele category, find out how many alleles there are
 for (i in 1:5) alleles_existing_by_sp[i] <- (sum((allele_cat_tot[[i]])>0,na.rm=T))
 # For each allele category, calculate the captured allele percentages 
 # by dividing by total number of alleles in that category
-for (l in 1:length(allele_cat_tot)) QUBO.SNP.R_subset.repRates[l] <- round(sum(alleles_cap[allele_cat_tot[[l]]]>0)/length(allele_cat_tot[[l]]),4)
+for (l in 1:length(allele_cat_tot)) QUBO.SNP.REF.R0_subset.repRates[l] <- round(sum(alleles_cap[allele_cat_tot[[l]]]>0)/length(allele_cat_tot[[l]]),4)
 # Assign names to values, and print
-names(QUBO.SNP.R_subset.repRates)<-c("Total","Very common (>10%)","Common (>5%)","Low frequency (1% -- 10%","Rare (<1%)")
-print(QUBO.SNP.R_subset.repRates*100)
+names(QUBO.SNP.REF.R0_subset.repRates)<-c("Total","Very common (>10%)","Common (>5%)","Low frequency (1% -- 10%","Rare (<1%)")
+print(QUBO.SNP.REF.R0_subset.repRates*100)
+
+# R80 ----
+# Declare vector of results
+QUBO.SNP.REF.R80_subset.repRates <- vector(length = 5)
+# Create vector to capture the number of each allele category (of which there are 5)
+alleles_existing_by_sp <- vector(length = 5)
+# First population is all garden samples ("garden"), population 2 is "wild"
+garden_p <- 1 ; wild_p <- 2
+# Create genpop object, and calculate alleles captured
+n_ind_W <- table(QUBO.SNP.REF.R80_subset.genind@pop)[wild_p]; n_ind_G <- table(QUBO.SNP.REF.R80_subset.genind@pop)[garden_p]; 
+QUBO.SNP.REF.R80_subset.genpop <- genind2genpop(QUBO.SNP.REF.R80_subset.genind)
+alleles_cap <- colSums(QUBO.SNP.REF.R80_subset.genpop[garden_p]@tab,na.rm=T)
+# The below calls returns each alleles for each category specified
+allele_cat_tot <- get.allele.cat(QUBO.SNP.REF.R80_subset.genpop[wild_p], n_ind_W)
+# For each allele category, find out how many alleles there are
+for (i in 1:5) alleles_existing_by_sp[i] <- (sum((allele_cat_tot[[i]])>0,na.rm=T))
+# For each allele category, calculate the captured allele percentages 
+# by dividing by total number of alleles in that category
+for (l in 1:length(allele_cat_tot)) QUBO.SNP.REF.R80_subset.repRates[l] <- round(sum(alleles_cap[allele_cat_tot[[l]]]>0)/length(allele_cat_tot[[l]]),4)
+# Assign names to values, and print
+names(QUBO.SNP.REF.R80_subset.repRates)<-c("Total","Very common (>10%)","Common (>5%)","Low frequency (1% -- 10%","Rare (<1%)")
+print(QUBO.SNP.REF.R80_subset.repRates*100)
