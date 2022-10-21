@@ -3,8 +3,9 @@
 # %%%%%%%%%%%%%%%%%%
 
 # This script generates Resampling arrays, and plots their results, 
-# for Quercus acerifolia (QUAC; optimized Stacks de novo assembly, m 7, M/n 4, gt-alpha 0.01) 
-# and Quercus boyntonii (QUBO; GSNAP4 alignment with Quercus robur reference) NextRAD samples.
+# for Quercus acerifolia (QUAC) and Quercus boyntonii (QUBO).
+# For both species, both the optimized de novo assemblies (DNFA) and the reference analyses (REF)
+# are analyzed, at both the R0 and the R80 levels of missing data. 
 
 # Resampling arrays are collections of values indicating the percentage of total wild alleles
 # that are represented by a (random) subset of wild samples. Each column of these arrays corresponds
@@ -36,10 +37,12 @@ source("exSituRepresentation/functions_exSituRepresentation.R")
 # Set up relevant cores, and make sure adegenet library is present on cluster
 num_cores <- detectCores() - 1 ; cl <- makeCluster(num_cores)
 clusterEvalQ(cl, library("adegenet"))
+# Specify number of replicates. This value is used uniformly, for ALL datasets (QUAC and QUBO)
+num_reps <- 50
 
 # %%%% QUAC %%%% ----
 # ---- MSATS (COMPLETE) ----
-# READ IN GENIND FILE (GCC_QUAC_ZAIN repo; QUAC_wK_garden_wild_clean.gen) ----
+# READ IN GENIND FILE (GCC_QUAC_ZAIN repo; QUAC_wK_garden_wild_clean.gen)
 genpop.filePath <- 
   "~/Documents/peripheralProjects/GCC_QUAC_ZAIN/Data_Files/Adegenet_Files/Garden_Wild/"
 setwd(genpop.filePath)
@@ -52,9 +55,7 @@ QUAC.MSAT.tissueNames_filepath <- "~/Documents/peripheralProjects/GCC_QUAC_ZAIN/
 QUAC.MSAT.tissueNames <- unlist(read.csv2(QUAC.MSAT.tissueNames_filepath, header = TRUE, sep=",")[1])
 rownames(QUAC.MSAT.genind@tab) <- QUAC.MSAT.tissueNames
 
-# CREATE SAMPLING RESULTS ARRAY ----
-# Specify number of replicates
-num_reps <- 50
+# CREATE SAMPLING RESULTS ARRAY
 # Export relevant functions and variables
 clusterExport(cl, varlist = c("getAlleleCategories", "exSitu_Sample", "exSitu_Resample", 
                               "num_reps", "QUAC.MSAT.genind"))
@@ -73,108 +74,284 @@ min_95_QUAC.MSAT <- min(which(apply(samplingResults_QUAC.MSAT[,1,],1,mean) > 95)
 min_95.SD_QUAC.MSAT <- apply(samplingResults_QUAC.MSAT[,1,],1,sd)[min_95_QUAC.MSAT]
 print(min_95_QUAC.MSAT); print(min_95.SD_QUAC.MSAT)
 
-# PLOTTING ----
-# Set plotting window to stack 2 graphs vertically
-par(mfcol=c(2,1), oma=rep(0.2,4))
-# Calculate means and standard deviations, for each capture rate category
-total_means <- apply(samplingResults_QUAC.MSAT[,1,], 1, mean)
-v.com_means <- apply(samplingResults_QUAC.MSAT[,2,], 1, mean)
-com_means <- apply(samplingResults_QUAC.MSAT[,3,], 1, mean)
-lowfr_means <- apply(samplingResults_QUAC.MSAT[,4,], 1, mean)
-rare_means <- apply(samplingResults_QUAC.MSAT[,5,], 1, mean)
-# Pick plot colors (for all plots!), with transparency for values other than Total
-plotColors <- c("red","red4","darkorange3","coral","purple")
-plotColors[2:5] <- alpha(plotColors[2:5], 0.5)
-# Plots all sets of points onto single graph, as well as 95% threshold line
-plot(total_means, ylim=c(0,110), col=plotColors[1], pch=16, 
-     xlab="Number of Individuals", ylab="Percent Diversity Capture",
-     main="QUAC, Microsatellites (Complete: 172 samples; 50 Replicates)")
-points(v.com_means, col=plotColors[2], pch=16)
-points(com_means, col=plotColors[3], pch=16)
-points(lowfr_means, col=plotColors[4], pch=16)
-points(rare_means, col=plotColors[5], pch=16)
-legend(x=140, y=70.13276, inset = 0.05, legend = c("Total","Very common","Common","Low frequency", "Rare"),
-       col=plotColors, pch = c(20,20,20), cex=1, pt.cex = 2, bty="n", y.intersp = 0.27)
-# Lines for 95% threshold
-abline(h=95, col="black", lty=3); abline(v=min_95_QUAC.MSAT, col="black")
-# Text for number of individuals to capture 95% threshold
-mtext(text=paste0("Minimum sampling size (95%) = ", min_95_QUAC.MSAT), side=1, line=-1.5, at=70)
+# *** PLOTTING ----
+# # Set plotting window to stack 2 graphs vertically
+# par(mfcol=c(2,1), oma=rep(0.2,4))
+# # Calculate means and standard deviations, for each capture rate category
+# total_means <- apply(samplingResults_QUAC.MSAT[,1,], 1, mean)
+# v.com_means <- apply(samplingResults_QUAC.MSAT[,2,], 1, mean)
+# com_means <- apply(samplingResults_QUAC.MSAT[,3,], 1, mean)
+# lowfr_means <- apply(samplingResults_QUAC.MSAT[,4,], 1, mean)
+# rare_means <- apply(samplingResults_QUAC.MSAT[,5,], 1, mean)
+# # Pick plot colors (for all plots!), with transparency for values other than Total
+# plotColors <- c("red","red4","darkorange3","coral","purple")
+# plotColors[2:5] <- alpha(plotColors[2:5], 0.5)
+# # Plots all sets of points onto single graph, as well as 95% threshold line
+# plot(total_means, ylim=c(0,110), col=plotColors[1], pch=16, 
+#      xlab="Number of Individuals", ylab="Percent Diversity Capture",
+#      main="QUAC, Microsatellites (Complete: 172 samples; 50 Replicates)")
+# points(v.com_means, col=plotColors[2], pch=16)
+# points(com_means, col=plotColors[3], pch=16)
+# points(lowfr_means, col=plotColors[4], pch=16)
+# points(rare_means, col=plotColors[5], pch=16)
+# legend(x=140, y=70.13276, inset = 0.05, legend = c("Total","Very common","Common","Low frequency", "Rare"),
+#        col=plotColors, pch = c(20,20,20), cex=1, pt.cex = 2, bty="n", y.intersp = 0.27)
+# # Lines for 95% threshold
+# abline(h=95, col="black", lty=3); abline(v=min_95_QUAC.MSAT, col="black")
+# # Text for number of individuals to capture 95% threshold
+# mtext(text=paste0("Minimum sampling size (95%) = ", min_95_QUAC.MSAT), side=1, line=-1.5, at=70)
 
 # ---- SNPS (COMPLETE) ----
-# READ IN GENIND FILE (QUAC DNFA; R0, min-maf=0; first SNP per locus; 2 populations, garden and wild) ----
+# %%% DE NOVO ----
+# R0 ----
+# READ IN GENIND FILE (QUAC DNFA; R0, min-maf=0; first SNP per locus; 2 populations, garden and wild)
 genpop.filePath <- 
   "/RAID1/IMLS_GCCO/Analysis/Stacks/denovo_finalAssemblies/QUAC/output/populations_R0_NOMAF_1SNP_2Pops/"
 setwd(genpop.filePath)
-QUAC.SNP.genind <- read.genepop(paste0(genpop.filePath,"populations.snps.gen"))
+QUAC.SNP.DN.R0.genind <- read.genepop(paste0(genpop.filePath,"populations.snps.gen"))
 # Correct popNames
-pop(QUAC.SNP.genind) <- factor(read.table("QUAC_popmap_GardenWild", header=FALSE)[,2])
+pop(QUAC.SNP.DN.R0.genind) <- factor(read.table("QUAC_popmap_GardenWild", header=FALSE)[,2])
 # Get QUAC SNP Tissue sample names, and rename SNP genind matrix
 # File was created (by Austin K.), and can be found on Hoban Lab Drive ("MSATcomparisons_TissueNames")
-QUAC.SNP.tissueNames_filepath <- paste0(SSRvSNP.wd,"exSituRepresentation/Resampling/QUAC_SNP_TissueNames.csv")
-QUAC.SNP.tissueNames <- unlist(read.csv2(QUAC.SNP.tissueNames_filepath, header = TRUE, sep = ",")[3])
-rownames(QUAC.SNP.genind@tab) <- QUAC.SNP.tissueNames
+QUAC.SNP.DN.R0.tissueNames_filepath <- paste0(SSRvSNP.wd,"exSituRepresentation/Resampling/QUAC_SNP_TissueNames.csv")
+QUAC.SNP.DN.R0.tissueNames <- unlist(read.csv2(QUAC.SNP.DN.R0.tissueNames_filepath, header = TRUE, sep = ",")[3])
+rownames(QUAC.SNP.DN.R0.genind@tab) <- QUAC.SNP.DN.R0.tissueNames
 
-# CREATE SAMPLING RESULTS ARRAY ----
+# CREATE SAMPLING RESULTS ARRAY 
 # Specify number of replicates
 num_reps <- 50
 # Export relevant functions and variables
 clusterExport(cl, varlist = c("getAlleleCategories", "exSitu_Sample", "exSitu_Resample", 
-                              "num_reps", "QUAC.SNP.genind"))
+                              "num_reps", "QUAC.SNP.DN.R0.genind"))
 # Run resampling in parallel, to generate an array
-samplingResults_QUAC.SNP <- 
+samplingResults_QUAC.SNP.DN.R0 <- 
   parSapply(cl, 1:num_reps, 
-            function(a) exSitu_Resample(gen.obj = QUAC.SNP.genind), simplify = "array")
+            function(a) exSitu_Resample(gen.obj = QUAC.SNP.DN.R0.genind), simplify = "array")
 # Close cores
 # stopCluster(cl)
 
 # Average 95% minimum sampling size across replicates, as well as standard deviation
-min_95_QUAC.SNP <- min(which(apply(samplingResults_QUAC.SNP[,1,],1,mean) > 95))
-min_95.SD_QUAC.SNP <- apply(samplingResults_QUAC.SNP[,1,],1,sd)[min_95_QUAC.SNP]
-print(min_95_QUAC.SNP); print(min_95.SD_QUAC.SNP)
+min_95_QUAC.SNP.DN.R0 <- min(which(apply(samplingResults_QUAC.SNP.DN.R0[,1,],1,mean) > 95))
+min_95.SD_QUAC.SNP.DN.R0 <- apply(samplingResults_QUAC.SNP.DN.R0[,1,],1,sd)[min_95_QUAC.SNP.DN.R0]
+print(min_95_QUAC.SNP.DN.R0); print(min_95.SD_QUAC.SNP.DN.R0)
 
-# PLOTTING ----
-# Calculate means and standard deviations, for each capture rate category
-total_means <- apply(samplingResults_QUAC.SNP[,1,], 1, mean)
-v.com_means <- apply(samplingResults_QUAC.SNP[,2,], 1, mean)
-com_means <- apply(samplingResults_QUAC.SNP[,3,], 1, mean)
-lowfr_means <- apply(samplingResults_QUAC.SNP[,4,], 1, mean)
-rare_means <- apply(samplingResults_QUAC.SNP[,5,], 1, mean)
-# Plots all sets of points onto single graph, as well as 95% threshold line
-plot(total_means, ylim=c(0,110), col=plotColors[1], pch=16, 
-     xlab="Number of Individuals", ylab="Percent Diversity Capture",
-     main="QUAC, SNPs (Complete: 97 samples; 50 Replicates)")
-points(v.com_means, col=plotColors[2], pch=16)
-points(com_means, col=plotColors[3], pch=16)
-points(lowfr_means, col=plotColors[4], pch=16)
-points(rare_means, col=plotColors[5], pch=16)
-legend(x=83, y=70.13276, inset = 0.05, legend = c("Total","Very common","Common","Low frequency", "Rare"),
-       col=plotColors, pch = c(20,20,20), cex=1, pt.cex = 2, bty="n", y.intersp = 0.27)
-# Lines for 95% threshold
-abline(h=95, col="black", lty=3); abline(v=min_95_QUAC.SNP, col="black")
-# Text for number of individuals to capture 95% threshold
-mtext(text=paste0("Minimum sampling size (95%) = ", min_95_QUAC.SNP), side=1, line=-1.5, at=67)
+# *** PLOTTING ----
+# # Calculate means and standard deviations, for each capture rate category
+# total_means <- apply(samplingResults_QUAC.SNP.DN.R0[,1,], 1, mean)
+# v.com_means <- apply(samplingResults_QUAC.SNP.DN.R0[,2,], 1, mean)
+# com_means <- apply(samplingResults_QUAC.SNP.DN.R0[,3,], 1, mean)
+# lowfr_means <- apply(samplingResults_QUAC.SNP.DN.R0[,4,], 1, mean)
+# rare_means <- apply(samplingResults_QUAC.SNP.DN.R0[,5,], 1, mean)
+# # Plots all sets of points onto single graph, as well as 95% threshold line
+# plot(total_means, ylim=c(0,110), col=plotColors[1], pch=16, 
+#      xlab="Number of Individuals", ylab="Percent Diversity Capture",
+#      main="QUAC, SNPs: De novo, R0 (Complete: 97 samples; 50 Replicates)")
+# points(v.com_means, col=plotColors[2], pch=16)
+# points(com_means, col=plotColors[3], pch=16)
+# points(lowfr_means, col=plotColors[4], pch=16)
+# points(rare_means, col=plotColors[5], pch=16)
+# legend(x=83, y=70.13276, inset = 0.05, legend = c("Total","Very common","Common","Low frequency", "Rare"),
+#        col=plotColors, pch = c(20,20,20), cex=1, pt.cex = 2, bty="n", y.intersp = 0.27)
+# # Lines for 95% threshold
+# abline(h=95, col="black", lty=3); abline(v=min_95_QUAC.SNP.DN.R0, col="black")
+# # Text for number of individuals to capture 95% threshold
+# mtext(text=paste0("Minimum sampling size (95%) = ", min_95_QUAC.SNP.DN.R0), side=1, line=-1.5, at=67)
+
+# R80 ----
+# READ IN GENIND FILE (QUAC DNFA; R80, min-maf=0; first SNP per locus; 2 populations, garden and wild)
+genpop.filePath <- 
+  "/RAID1/IMLS_GCCO/Analysis/Stacks/denovo_finalAssemblies/QUAC/output/populations_R80_NOMAF_1SNP_2Pops/"
+setwd(genpop.filePath)
+QUAC.SNP.DN.R80.genind <- read.genepop(paste0(genpop.filePath,"populations.snps.gen"))
+# Correct popNames
+pop(QUAC.SNP.DN.R80.genind) <- factor(read.table("QUAC_popmap_GardenWild", header=FALSE)[,2])
+# Get QUAC SNP Tissue sample names, and rename SNP genind matrix
+# File was created (by Austin K.), and can be found on Hoban Lab Drive ("MSATcomparisons_TissueNames")
+QUAC.SNP.DN.R80.tissueNames_filepath <- paste0(SSRvSNP.wd,"exSituRepresentation/Resampling/QUAC_SNP_TissueNames.csv")
+QUAC.SNP.DN.R80.tissueNames <- unlist(read.csv2(QUAC.SNP.DN.R80.tissueNames_filepath, header = TRUE, sep = ",")[3])
+rownames(QUAC.SNP.DN.R80.genind@tab) <- QUAC.SNP.DN.R80.tissueNames
+
+# CREATE SAMPLING RESULTS ARRAY
+# Export relevant functions and variables
+clusterExport(cl, varlist = c("getAlleleCategories", "exSitu_Sample", "exSitu_Resample", 
+                              "num_reps", "QUAC.SNP.DN.R80.genind"))
+# Run resampling in parallel, to generate an array
+samplingResults_QUAC.SNP.DN.R80 <- 
+  parSapply(cl, 1:num_reps, 
+            function(a) exSitu_Resample(gen.obj = QUAC.SNP.DN.R80.genind), simplify = "array")
+# Close cores
+# stopCluster(cl)
+
+# Average 95% minimum sampling size across replicates, as well as standard deviation
+min_95_QUAC.SNP.DN.R80 <- min(which(apply(samplingResults_QUAC.SNP.DN.R80[,1,],1,mean) > 95))
+min_95.SD_QUAC.SNP.DN.R80 <- apply(samplingResults_QUAC.SNP.DN.R80[,1,],1,sd)[min_95_QUAC.SNP.DN.R80]
+print(min_95_QUAC.SNP.DN.R80); print(min_95.SD_QUAC.SNP.DN.R80)
+
+# *** PLOTTING ----
+# # Calculate means and standard deviations, for each capture rate category
+# total_means <- apply(samplingResults_QUAC.SNP.DN.R80[,1,], 1, mean)
+# v.com_means <- apply(samplingResults_QUAC.SNP.DN.R80[,2,], 1, mean)
+# com_means <- apply(samplingResults_QUAC.SNP.DN.R80[,3,], 1, mean)
+# lowfr_means <- apply(samplingResults_QUAC.SNP.DN.R80[,4,], 1, mean)
+# rare_means <- apply(samplingResults_QUAC.SNP.DN.R80[,5,], 1, mean)
+# # Plots all sets of points onto single graph, as well as 95% threshold line
+# plot(total_means, ylim=c(0,110), col=plotColors[1], pch=16, 
+#      xlab="Number of Individuals", ylab="Percent Diversity Capture",
+#      main="QUAC, SNPs: De novo, R80 (Complete: 97 samples; 50 Replicates)")
+# points(v.com_means, col=plotColors[2], pch=16)
+# points(com_means, col=plotColors[3], pch=16)
+# points(lowfr_means, col=plotColors[4], pch=16)
+# points(rare_means, col=plotColors[5], pch=16)
+# legend(x=83, y=70.13276, inset = 0.05, legend = c("Total","Very common","Common","Low frequency", "Rare"),
+#        col=plotColors, pch = c(20,20,20), cex=1, pt.cex = 2, bty="n", y.intersp = 0.27)
+# # Lines for 95% threshold
+# abline(h=95, col="black", lty=3); abline(v=min_95_QUAC.SNP.DN.R80, col="black")
+# # Text for number of individuals to capture 95% threshold
+# mtext(text=paste0("Minimum sampling size (95%) = ", min_95_QUAC.SNP.DN.R0), side=1, line=-1.5, at=67)
+
+# %%% REFERENCE ----
+# R0 ----
+# READ IN GENIND FILE: QUAC GSNAP4 alignment; R0, min-maf=0, first SNP/locus, 2 populations (garden and wild)
+genpop.filePath <- 
+  "/RAID1/IMLS_GCCO/Analysis/Stacks/reference_filteredReads/QUAC/Q_rubra/output/populations_R0_NOMAF_1SNP_2Pops/"
+setwd(genpop.filePath)
+QUAC.SNP.REF.R0.genind <- read.genepop(paste0(genpop.filePath,"populations.snps.gen"))
+# Correct popNames
+pop(QUAC.SNP.REF.R0.genind) <- factor(read.table("QUAC_popmap_GardenWild", header=FALSE)[,2])
+# Get QUAC SNP Tissue sample names, and rename SNP genind matrix
+# File was created (by Austin K.), and can be found on Hoban Lab Drive ("MSATcomparisons_TissueNames")
+QUAC.SNP.REF.R0.tissueNames_filepath <- paste0(SSRvSNP.wd,"exSituRepresentation/Resampling/QUAC_SNP_TissueNames.csv")
+QUAC.SNP.REF.R0.tissueNames <- unlist(read.csv2(QUAC.SNP.REF.R0.tissueNames_filepath, header = TRUE, sep = ",")[3])
+rownames(QUAC.SNP.REF.R0.genind@tab) <- QUAC.SNP.REF.R0.tissueNames
+
+# CREATE SAMPLING RESULTS ARRAY
+# Export relevant functions and variables
+clusterExport(cl, varlist = c("getAlleleCategories", "exSitu_Sample", "exSitu_Resample", 
+                              "num_reps", "QUAC.SNP.REF.R0.genind"))
+# Run resampling in parallel, to generate an array
+samplingResults_QUAC.SNP.REF.R0 <- 
+  parSapply(cl, 1:num_reps, 
+            function(a) exSitu_Resample(gen.obj = QUAC.SNP.REF.R0.genind), simplify = "array")
+# Close cores
+# stopCluster(cl)
+
+# Average 95% minimum sampling size across replicates, as well as standard deviation
+min_95_QUAC.SNP.REF.R0 <- min(which(apply(samplingResults_QUAC.SNP.REF.R0[,1,],1,mean) > 95))
+min_95.SD_QUAC.SNP.REF.R0 <- apply(samplingResults_QUAC.SNP.REF.R0[,1,],1,sd)[min_95_QUAC.SNP.REF.R0]
+print(min_95_QUAC.SNP.REF.R0); print(min_95.SD_QUAC.SNP.REF.R0)
+
+# *** PLOTTING ----
+# # Calculate means and standard deviations, for each capture rate category
+# total_means <- apply(samplingResults_QUAC.SNP.REF.R0[,1,], 1, mean)
+# v.com_means <- apply(samplingResults_QUAC.SNP.REF.R0[,2,], 1, mean)
+# com_means <- apply(samplingResults_QUAC.SNP.REF.R0[,3,], 1, mean)
+# lowfr_means <- apply(samplingResults_QUAC.SNP.REF.R0[,4,], 1, mean)
+# rare_means <- apply(samplingResults_QUAC.SNP.REF.R0[,5,], 1, mean)
+# # Plots all sets of points onto single graph, as well as 95% threshold line
+# plot(total_means, ylim=c(0,110), col=plotColors[1], pch=16, 
+#      xlab="Number of Individuals", ylab="Percent Diversity Capture",
+#      main="QUAC, SNPs: Reference, R0 (Complete: 97 samples; 50 Replicates)")
+# points(v.com_means, col=plotColors[2], pch=16)
+# points(com_means, col=plotColors[3], pch=16)
+# points(lowfr_means, col=plotColors[4], pch=16)
+# points(rare_means, col=plotColors[5], pch=16)
+# legend(x=83, y=70.13276, inset = 0.05, legend = c("Total","Very common","Common","Low frequency", "Rare"),
+#        col=plotColors, pch = c(20,20,20), cex=1, pt.cex = 2, bty="n", y.intersp = 0.27)
+# # Lines for 95% threshold
+# abline(h=95, col="black", lty=3); abline(v=min_95_QUAC.SNP.REF.R0, col="black")
+# # Text for number of individuals to capture 95% threshold
+# mtext(text=paste0("Minimum sampling size (95%) = ", min_95_QUAC.SNP.REF.R0), side=1, line=-1.5, at=67)
+
+# R80 ----
+# READ IN GENIND FILE: QUAC GSNAP4 alignment; R80, min-maf=0, first SNP/locus, 2 populations (garden and wild)
+genpop.filePath <- 
+  "/RAID1/IMLS_GCCO/Analysis/Stacks/reference_filteredReads/QUAC/Q_rubra/output/populations_R80_NOMAF_1SNP_2Pops/"
+setwd(genpop.filePath)
+QUAC.SNP.REF.R80.genind <- read.genepop(paste0(genpop.filePath,"populations.snps.gen"))
+# Correct popNames
+pop(QUAC.SNP.REF.R80.genind) <- factor(read.table("QUAC_popmap_GardenWild", header=FALSE)[,2])
+# Get QUAC SNP Tissue sample names, and rename SNP genind matrix
+# File was created (by Austin K.), and can be found on Hoban Lab Drive ("MSATcomparisons_TissueNames")
+QUAC.SNP.REF.R80.tissueNames_filepath <- paste0(SSRvSNP.wd,"exSituRepresentation/Resampling/QUAC_SNP_TissueNames.csv")
+QUAC.SNP.REF.R80.tissueNames <- unlist(read.csv2(QUAC.SNP.REF.R80.tissueNames_filepath, header = TRUE, sep = ",")[3])
+rownames(QUAC.SNP.REF.R80.genind@tab) <- QUAC.SNP.REF.R80.tissueNames
+
+# CREATE SAMPLING RESULTS ARRAY
+# Export relevant functions and variables
+clusterExport(cl, varlist = c("getAlleleCategories", "exSitu_Sample", "exSitu_Resample", 
+                              "num_reps", "QUAC.SNP.REF.R80.genind"))
+# Run resampling in parallel, to generate an array
+samplingResults_QUAC.SNP.REF.R80 <- 
+  parSapply(cl, 1:num_reps, 
+            function(a) exSitu_Resample(gen.obj = QUAC.SNP.REF.R80.genind), simplify = "array")
+# Close cores
+# stopCluster(cl)
+
+# Average 95% minimum sampling size across replicates, as well as standard deviation
+min_95_QUAC.SNP.REF.R80 <- min(which(apply(samplingResults_QUAC.SNP.REF.R80[,1,],1,mean) > 95))
+min_95.SD_QUAC.SNP.REF.R80 <- apply(samplingResults_QUAC.SNP.REF.R80[,1,],1,sd)[min_95_QUAC.SNP.REF.R80]
+print(min_95_QUAC.SNP.REF.R80); print(min_95.SD_QUAC.SNP.REF.R80)
+
+# *** PLOTTING ----
+# # Calculate means and standard deviations, for each capture rate category
+# total_means <- apply(samplingResults_QUAC.SNP.REF.R80[,1,], 1, mean)
+# v.com_means <- apply(samplingResults_QUAC.SNP.REF.R80[,2,], 1, mean)
+# com_means <- apply(samplingResults_QUAC.SNP.REF.R80[,3,], 1, mean)
+# lowfr_means <- apply(samplingResults_QUAC.SNP.REF.R80[,4,], 1, mean)
+# rare_means <- apply(samplingResults_QUAC.SNP.REF.R80[,5,], 1, mean)
+# # Plots all sets of points onto single graph, as well as 95% threshold line
+# plot(total_means, ylim=c(0,110), col=plotColors[1], pch=16, 
+#      xlab="Number of Individuals", ylab="Percent Diversity Capture",
+#      main="QUAC, SNPs: Reference, R80 (Complete: 97 samples; 50 Replicates)")
+# points(v.com_means, col=plotColors[2], pch=16)
+# points(com_means, col=plotColors[3], pch=16)
+# points(lowfr_means, col=plotColors[4], pch=16)
+# points(rare_means, col=plotColors[5], pch=16)
+# legend(x=83, y=70.13276, inset = 0.05, legend = c("Total","Very common","Common","Low frequency", "Rare"),
+#        col=plotColors, pch = c(20,20,20), cex=1, pt.cex = 2, bty="n", y.intersp = 0.27)
+# # Lines for 95% threshold
+# abline(h=95, col="black", lty=3); abline(v=min_95_QUAC.SNP.REF.R80, col="black")
+# # Text for number of individuals to capture 95% threshold
+# mtext(text=paste0("Minimum sampling size (95%) = ", min_95_QUAC.SNP.REF.R80), side=1, line=-1.5, at=67)
 
 # ---- MSATS AND SNPS: SUBSET ----
 # Subset SNP sample names by those that are also seen within the MSAT samples 
-QUAC_sharedSamples <- sort(QUAC.SNP.tissueNames[which(QUAC.SNP.tissueNames %in% QUAC.MSAT.tissueNames)])
+QUAC_sharedSamples <- sort(QUAC.SNP.DN.R0.tissueNames[which(QUAC.SNP.DN.R0.tissueNames %in% QUAC.MSAT.tissueNames)])
 # Subset MSAT and SNP genind matrices to strictly shared samples, dropping now absent alleles
 QUAC.MSAT_subset.genind <- QUAC.MSAT.genind[QUAC_sharedSamples,, drop=TRUE]
-QUAC.SNP_subset.genind <- QUAC.SNP.genind[QUAC_sharedSamples,, drop=TRUE]
+# De novo
+QUAC.SNP.DN.R0_subset.genind <- QUAC.SNP.DN.R0.genind[QUAC_sharedSamples,, drop=TRUE]
+QUAC.SNP.DN.R80_subset.genind <- QUAC.SNP.DN.R80.genind[QUAC_sharedSamples,, drop=TRUE]
+# Reference
+QUAC.SNP.REF.R0_subset.genind <- QUAC.SNP.REF.R0.genind[QUAC_sharedSamples,, drop=TRUE]
+QUAC.SNP.REF.R80_subset.genind <- QUAC.SNP.REF.R80.genind[QUAC_sharedSamples,, drop=TRUE]
 
-# CREATE SAMPLING RESULTS ARRAYS ----
-# Specify number of replicates
-num_reps <- 50
+# CREATE SAMPLING RESULTS ARRAYS
 # Export relevant functions and variables
 clusterExport(cl, varlist = c("getAlleleCategories", "exSitu_Sample", "exSitu_Resample", 
-                              "num_reps", "QUAC.MSAT_subset.genind", "QUAC.SNP_subset.genind"))
+                              "num_reps", "QUAC.MSAT_subset.genind", "QUAC.SNP.DN.R0_subset.genind",
+                              "QUAC.SNP.DN.R80_subset.genind", "QUAC.SNP.REF.R0_subset.genind", 
+                              "QUAC.SNP.REF.R80_subset.genind"))
 # Run resampling in parallel, to generate arrays
+# MSAT
 samplingResults_QUAC.MSAT_subset <- 
   parSapply(cl, 1:num_reps, 
             function(a) exSitu_Resample(gen.obj = QUAC.MSAT_subset.genind), simplify = "array")
-
-samplingResults_QUAC.SNP_subset <- 
+# SNP
+# De novo
+samplingResults_QUAC.SNP.DN.R0_subset <- 
   parSapply(cl, 1:num_reps, 
-            function(a) exSitu_Resample(gen.obj = QUAC.SNP_subset.genind), simplify = "array")
+            function(a) exSitu_Resample(gen.obj = QUAC.SNP.DN.R0_subset.genind), simplify = "array")
+samplingResults_QUAC.SNP.DN.R80_subset <- 
+  parSapply(cl, 1:num_reps, 
+            function(a) exSitu_Resample(gen.obj = QUAC.SNP.DN.R80_subset.genind), simplify = "array")
+# Reference
+samplingResults_QUAC.SNP.REF.R0_subset <- 
+  parSapply(cl, 1:num_reps, 
+            function(a) exSitu_Resample(gen.obj = QUAC.SNP.REF.R0_subset.genind), simplify = "array")
+samplingResults_QUAC.SNP.REF.R80_subset <- 
+  parSapply(cl, 1:num_reps, 
+            function(a) exSitu_Resample(gen.obj = QUAC.SNP.REF.R80_subset.genind), simplify = "array")
 # Close cores
 # stopCluster(cl)
 
@@ -183,77 +360,162 @@ min_95_QUAC.MSAT_subset <- min(which(apply(samplingResults_QUAC.MSAT_subset[,1,]
 min_95.SD_QUAC.MSAT_subset <- apply(samplingResults_QUAC.MSAT_subset[,1,],1,sd)[min_95_QUAC.MSAT_subset]
 print(min_95_QUAC.MSAT_subset); print(min_95.SD_QUAC.MSAT_subset)
 # SNP_subset: average 95% minimum sampling size across replicates, as well as standard deviation
-min_95_QUAC.SNP_subset <- min(which(apply(samplingResults_QUAC.SNP_subset[,1,],1,mean) > 95))
-min_95.SD_QUAC.SNP_subset <- apply(samplingResults_QUAC.SNP_subset[,1,],1,sd)[min_95_QUAC.SNP_subset]
-print(min_95_QUAC.SNP_subset); print(min_95.SD_QUAC.SNP_subset)
+# De novo
+# R0
+min_95_QUAC.SNP.DN.R0_subset <- min(which(apply(samplingResults_QUAC.SNP.DN.R0_subset[,1,],1,mean) > 95))
+min_95.SD_QUAC.SNP.DN.R0_subset <- apply(samplingResults_QUAC.SNP.DN.R0_subset[,1,],1,sd)[min_95_QUAC.SNP.DN.R0_subset]
+print(min_95_QUAC.SNP.DN.R0_subset); print(min_95.SD_QUAC.SNP.DN.R0_subset)
+# R80
+min_95_QUAC.SNP.DN.R80_subset <- min(which(apply(samplingResults_QUAC.SNP.DN.R80_subset[,1,],1,mean) > 95))
+min_95.SD_QUAC.SNP.DN.R80_subset <- apply(samplingResults_QUAC.SNP.DN.R80_subset[,1,],1,sd)[min_95_QUAC.SNP.DN.R80_subset]
+print(min_95_QUAC.SNP.DN.R80_subset); print(min_95.SD_QUAC.SNP.DN.R80_subset)
+# Reference
+# R0
+min_95_QUAC.SNP.REF.R0_subset <- min(which(apply(samplingResults_QUAC.SNP.REF.R0_subset[,1,],1,mean) > 95))
+min_95.SD_QUAC.SNP.REF.R0_subset <- apply(samplingResults_QUAC.SNP.REF.R0_subset[,1,],1,sd)[min_95_QUAC.SNP.REF.R0_subset]
+print(min_95_QUAC.SNP.REF.R0_subset); print(min_95.SD_QUAC.SNP.REF.R0_subset)
+# R80
+min_95_QUAC.SNP.REF.R80_subset <- min(which(apply(samplingResults_QUAC.SNP.REF.R80_subset[,1,],1,mean) > 95))
+min_95.SD_QUAC.SNP.REF.R80_subset <- apply(samplingResults_QUAC.SNP.REF.R80_subset[,1,],1,sd)[min_95_QUAC.SNP.REF.R80_subset]
+print(min_95_QUAC.SNP.REF.R80_subset); print(min_95.SD_QUAC.SNP.REF.R80_subset)
 
-# PLOTTING ----
-# TWO GRAPHS
-# MSAT_subset: calculate means and standard deviations, for each capture rate category
-total_means <- apply(samplingResults_QUAC.MSAT_subset[,1,], 1, mean)
-v.com_means <- apply(samplingResults_QUAC.MSAT_subset[,2,], 1, mean)
-com_means <- apply(samplingResults_QUAC.MSAT_subset[,3,], 1, mean)
-lowfr_means <- apply(samplingResults_QUAC.MSAT_subset[,4,], 1, mean)
-rare_means <- apply(samplingResults_QUAC.MSAT_subset[,5,], 1, mean)
-# Plots all sets of points onto single graph, as well as 95% threshold line
-plot(total_means, ylim=c(0,110), col=plotColors[1], pch=16, 
-     xlab="Number of Individuals", ylab="Percent Diversity Capture",
-     main="QUAC, MSATs (Subset); 50 Replicates")
-points(v.com_means, col=plotColors[2], pch=16)
-points(com_means, col=plotColors[3], pch=16)
-points(lowfr_means, col=plotColors[4], pch=16)
-points(rare_means, col=plotColors[5], pch=16)
-legend(x=80, y=70.13276, inset = 0.05, legend = c("Total","Very common","Common","Low frequency", "Rare"),
-       col=plotColors, pch = c(20,20,20), cex=1, pt.cex = 2, bty="n", y.intersp = 0.27)
-# Lines for 95% threshold
-abline(h=95, col="black", lty=3); abline(v=min_95_QUAC.MSAT_subset, col="black")
-# Text for number of individuals to capture 95% threshold
-mtext(text=paste0("Minimum sampling size (95%) = ", min_95_QUAC.MSAT_subset), side=1, line=-1.5, at=49)
-
-# SNP_subset: calculate means and standard deviations, for each capture rate category
-total_means <- apply(samplingResults_QUAC.SNP_subset[,1,], 1, mean)
-v.com_means <- apply(samplingResults_QUAC.SNP_subset[,2,], 1, mean)
-com_means <- apply(samplingResults_QUAC.SNP_subset[,3,], 1, mean)
-lowfr_means <- apply(samplingResults_QUAC.SNP_subset[,4,], 1, mean)
-rare_means <- apply(samplingResults_QUAC.SNP_subset[,5,], 1, mean)
-# Plots all sets of points onto single graph, as well as 95% threshold line
-plot(total_means, ylim=c(0,110), col=plotColors[1], pch=16, 
-     xlab="Number of Individuals", ylab="Percent Diversity Capture",
-     main="QUAC, SNPs (Subset); 50 Replicates")
-points(v.com_means, col=plotColors[2], pch=16)
-points(com_means, col=plotColors[3], pch=16)
-points(lowfr_means, col=plotColors[4], pch=16)
-points(rare_means, col=plotColors[5], pch=16)
-legend(x=83, y=70.13276, inset = 0.05, legend = c("Total","Very common","Common","Low frequency", "Rare"),
-       col=plotColors, pch = c(20,20,20), cex=1, pt.cex = 2, bty="n", y.intersp = 0.27)
-# Lines for 95% threshold
-abline(h=95, col="black", lty=3); abline(v=min_95_QUAC.SNP_subset, col="black")
-# Text for number of individuals to capture 95% threshold
-mtext(text=paste0("Minimum sampling size (95%) = ", min_95_QUAC.SNP_subset), side=1, line=-1.5, at=67)
-
-# ONE GRAPH (TOTAL VALUES)
-# Relevant values
-QUAC_total_means_MSAT_subset <- apply(samplingResults_QUAC.MSAT_subset[,1,], 1, mean)
-min_95_QUAC.MSAT_subset <- min(which(apply(samplingResults_QUAC.MSAT_subset[,1,],1,mean) > 95))
-QUAC_total_means_SNP_subset <- apply(samplingResults_QUAC.SNP_subset[,1,], 1, mean)
-min_95_QUAC.SNP_subset <- min(which(apply(samplingResults_QUAC.SNP_subset[,1,],1,mean) > 95))
-# Clear plotting device, to set back to single screen
-dev.off()
-# Generate plot and add points
-plotColors <- plotColors <- alpha(c("purple","darkgreen"), 0.7)
-plot(QUAC_total_means_MSAT_subset, ylim=c(0,110), col=plotColors[1], pch=16, 
-     xlab="Number of Individuals", ylab="Percent Diversity Capture",
-     main="QUAC, MSATs and SNPs (Subset; 50 Replicates): Total Allelic Representation")
-points(QUAC_total_means_SNP_subset, col=plotColors[2], pch=17)
-# Legend
-legend(x=81, y=70.13276, inset = 0.05, legend = c("Microsatellites","SNPs"),
-       col=plotColors, pch = c(16,17), cex=1, pt.cex = 2, bty="n", y.intersp = 0.7)
-# Lines for 95% threshold
-abline(h=95, col="black", lty=3) 
-abline(v=min_95_QUAC.MSAT_subset, col="black"); abline(v=min_95_QUAC.SNP_subset, col="black")
-# Text for number of individuals to capture 95% threshold
-mtext(text=paste0("MSAT min size (95%) = ", min_95_QUAC.MSAT_subset), side=1, line=-1.5, at=54)
-mtext(text=paste0("SNP min size (95%) = ", min_95_QUAC.SNP_subset), side=1, line=-1.5, at=89)
+# *** PLOTTING ----
+# # TWO GRAPHS
+# # MSAT_subset: calculate means and standard deviations, for each capture rate category
+# total_means <- apply(samplingResults_QUAC.MSAT_subset[,1,], 1, mean)
+# v.com_means <- apply(samplingResults_QUAC.MSAT_subset[,2,], 1, mean)
+# com_means <- apply(samplingResults_QUAC.MSAT_subset[,3,], 1, mean)
+# lowfr_means <- apply(samplingResults_QUAC.MSAT_subset[,4,], 1, mean)
+# rare_means <- apply(samplingResults_QUAC.MSAT_subset[,5,], 1, mean)
+# # Plots all sets of points onto single graph, as well as 95% threshold line
+# plot(total_means, ylim=c(0,110), col=plotColors[1], pch=16, 
+#      xlab="Number of Individuals", ylab="Percent Diversity Capture",
+#      main="QUAC, MSATs (Subset); 50 Replicates")
+# points(v.com_means, col=plotColors[2], pch=16)
+# points(com_means, col=plotColors[3], pch=16)
+# points(lowfr_means, col=plotColors[4], pch=16)
+# points(rare_means, col=plotColors[5], pch=16)
+# legend(x=80, y=70.13276, inset = 0.05, legend = c("Total","Very common","Common","Low frequency", "Rare"),
+#        col=plotColors, pch = c(20,20,20), cex=1, pt.cex = 2, bty="n", y.intersp = 0.27)
+# # Lines for 95% threshold
+# abline(h=95, col="black", lty=3); abline(v=min_95_QUAC.MSAT_subset, col="black")
+# # Text for number of individuals to capture 95% threshold
+# mtext(text=paste0("Minimum sampling size (95%) = ", min_95_QUAC.MSAT_subset), side=1, line=-1.5, at=49)
+# 
+# # SNP_subset
+# # De novo
+# # R0 
+# # Calculate means and standard deviations, for each capture rate category
+# total_means <- apply(samplingResults_QUAC.SNP.DN.R0_subset[,1,], 1, mean)
+# v.com_means <- apply(samplingResults_QUAC.SNP.DN.R0_subset[,2,], 1, mean)
+# com_means <- apply(samplingResults_QUAC.SNP.DN.R0_subset[,3,], 1, mean)
+# lowfr_means <- apply(samplingResults_QUAC.SNP.DN.R0_subset[,4,], 1, mean)
+# rare_means <- apply(samplingResults_QUAC.SNP.DN.R0_subset[,5,], 1, mean)
+# # Plots all sets of points onto single graph, as well as 95% threshold line
+# plot(total_means, ylim=c(0,110), col=plotColors[1], pch=16, 
+#      xlab="Number of Individuals", ylab="Percent Diversity Capture",
+#      main="QUAC, SNPs (Subset); 50 Replicates")
+# points(v.com_means, col=plotColors[2], pch=16)
+# points(com_means, col=plotColors[3], pch=16)
+# points(lowfr_means, col=plotColors[4], pch=16)
+# points(rare_means, col=plotColors[5], pch=16)
+# legend(x=83, y=70.13276, inset = 0.05, legend = c("Total","Very common","Common","Low frequency", "Rare"),
+#        col=plotColors, pch = c(20,20,20), cex=1, pt.cex = 2, bty="n", y.intersp = 0.27)
+# # Lines for 95% threshold
+# abline(h=95, col="black", lty=3); abline(v=min_95_QUAC.SNP.DN.R0_subset, col="black")
+# # Text for number of individuals to capture 95% threshold
+# mtext(text=paste0("Minimum sampling size (95%) = ", min_95_QUAC.SNP.DN.R0_subset), side=1, line=-1.5, at=67)
+# 
+# # R80 
+# # Calculate means and standard deviations, for each capture rate category
+# total_means <- apply(samplingResults_QUAC.SNP.DN.R80_subset[,1,], 1, mean)
+# v.com_means <- apply(samplingResults_QUAC.SNP.DN.R80_subset[,2,], 1, mean)
+# com_means <- apply(samplingResults_QUAC.SNP.DN.R80_subset[,3,], 1, mean)
+# lowfr_means <- apply(samplingResults_QUAC.SNP.DN.R80_subset[,4,], 1, mean)
+# rare_means <- apply(samplingResults_QUAC.SNP.DN.R80_subset[,5,], 1, mean)
+# # Plots all sets of points onto single graph, as well as 95% threshold line
+# plot(total_means, ylim=c(0,110), col=plotColors[1], pch=16, 
+#      xlab="Number of Individuals", ylab="Percent Diversity Capture",
+#      main="QUAC, SNPs (Subset); 50 Replicates")
+# points(v.com_means, col=plotColors[2], pch=16)
+# points(com_means, col=plotColors[3], pch=16)
+# points(lowfr_means, col=plotColors[4], pch=16)
+# points(rare_means, col=plotColors[5], pch=16)
+# legend(x=83, y=70.13276, inset = 0.05, legend = c("Total","Very common","Common","Low frequency", "Rare"),
+#        col=plotColors, pch = c(20,20,20), cex=1, pt.cex = 2, bty="n", y.intersp = 0.27)
+# # Lines for 95% threshold
+# abline(h=95, col="black", lty=3); abline(v=min_95_QUAC.SNP.DN.R80_subset, col="black")
+# # Text for number of individuals to capture 95% threshold
+# mtext(text=paste0("Minimum sampling size (95%) = ", min_95_QUAC.SNP.DN.R80_subset), side=1, line=-1.5, at=67)
+# 
+# # Reference
+# # R0 
+# # Calculate means and standard deviations, for each capture rate category
+# total_means <- apply(samplingResults_QUAC.SNP.REF.R0_subset[,1,], 1, mean)
+# v.com_means <- apply(samplingResults_QUAC.SNP.REF.R0_subset[,2,], 1, mean)
+# com_means <- apply(samplingResults_QUAC.SNP.REF.R0_subset[,3,], 1, mean)
+# lowfr_means <- apply(samplingResults_QUAC.SNP.REF.R0_subset[,4,], 1, mean)
+# rare_means <- apply(samplingResults_QUAC.SNP.REF.R0_subset[,5,], 1, mean)
+# # Plots all sets of points onto single graph, as well as 95% threshold line
+# plot(total_means, ylim=c(0,110), col=plotColors[1], pch=16, 
+#      xlab="Number of Individuals", ylab="Percent Diversity Capture",
+#      main="QUAC, SNPs (Subset); 50 Replicates")
+# points(v.com_means, col=plotColors[2], pch=16)
+# points(com_means, col=plotColors[3], pch=16)
+# points(lowfr_means, col=plotColors[4], pch=16)
+# points(rare_means, col=plotColors[5], pch=16)
+# legend(x=83, y=70.13276, inset = 0.05, legend = c("Total","Very common","Common","Low frequency", "Rare"),
+#        col=plotColors, pch = c(20,20,20), cex=1, pt.cex = 2, bty="n", y.intersp = 0.27)
+# # Lines for 95% threshold
+# abline(h=95, col="black", lty=3); abline(v=min_95_QUAC.SNP.REF.R0_subset, col="black")
+# # Text for number of individuals to capture 95% threshold
+# mtext(text=paste0("Minimum sampling size (95%) = ", min_95_QUAC.SNP.REF.R0_subset), side=1, line=-1.5, at=67)
+# 
+# # R80 
+# # Calculate means and standard deviations, for each capture rate category
+# total_means <- apply(samplingResults_QUAC.SNP.REF.R80_subset[,1,], 1, mean)
+# v.com_means <- apply(samplingResults_QUAC.SNP.REF.R80_subset[,2,], 1, mean)
+# com_means <- apply(samplingResults_QUAC.SNP.REF.R80_subset[,3,], 1, mean)
+# lowfr_means <- apply(samplingResults_QUAC.SNP.REF.R80_subset[,4,], 1, mean)
+# rare_means <- apply(samplingResults_QUAC.SNP.REF.R80_subset[,5,], 1, mean)
+# # Plots all sets of points onto single graph, as well as 95% threshold line
+# plot(total_means, ylim=c(0,110), col=plotColors[1], pch=16, 
+#      xlab="Number of Individuals", ylab="Percent Diversity Capture",
+#      main="QUAC, SNPs (Subset); 50 Replicates")
+# points(v.com_means, col=plotColors[2], pch=16)
+# points(com_means, col=plotColors[3], pch=16)
+# points(lowfr_means, col=plotColors[4], pch=16)
+# points(rare_means, col=plotColors[5], pch=16)
+# legend(x=83, y=70.13276, inset = 0.05, legend = c("Total","Very common","Common","Low frequency", "Rare"),
+#        col=plotColors, pch = c(20,20,20), cex=1, pt.cex = 2, bty="n", y.intersp = 0.27)
+# # Lines for 95% threshold
+# abline(h=95, col="black", lty=3); abline(v=min_95_QUAC.SNP.REF.R80_subset, col="black")
+# # Text for number of individuals to capture 95% threshold
+# mtext(text=paste0("Minimum sampling size (95%) = ", min_95_QUAC.SNP.REF.R80_subset), side=1, line=-1.5, at=67)
+# 
+# # ONE GRAPH (TOTAL VALUES)
+# # Relevant values
+# QUAC_total_means_MSAT_subset <- apply(samplingResults_QUAC.MSAT_subset[,1,], 1, mean)
+# min_95_QUAC.MSAT_subset <- min(which(apply(samplingResults_QUAC.MSAT_subset[,1,],1,mean) > 95))
+# QUAC_total_means_SNP_subset <- apply(samplingResults_QUAC.SNP.REF.R0_subset[,1,], 1, mean)
+# min_95_QUAC.SNP.REF.R0_subset <- min(which(apply(samplingResults_QUAC.SNP.REF.R0_subset[,1,],1,mean) > 95))
+# # Clear plotting device, to set back to single screen
+# dev.off()
+# # Generate plot and add points
+# plotColors <- plotColors <- alpha(c("purple","darkgreen"), 0.7)
+# plot(QUAC_total_means_MSAT_subset, ylim=c(0,110), col=plotColors[1], pch=16, 
+#      xlab="Number of Individuals", ylab="Percent Diversity Capture",
+#      main="QUAC, MSATs and SNPs (Subset; 50 Replicates): Total Allelic Representation")
+# points(QUAC_total_means_SNP_subset, col=plotColors[2], pch=17)
+# # Legend
+# legend(x=81, y=70.13276, inset = 0.05, legend = c("Microsatellites","SNPs"),
+#        col=plotColors, pch = c(16,17), cex=1, pt.cex = 2, bty="n", y.intersp = 0.7)
+# # Lines for 95% threshold
+# abline(h=95, col="black", lty=3) 
+# abline(v=min_95_QUAC.MSAT_subset, col="black"); abline(v=min_95_QUAC.SNP.REF.R0_subset, col="black")
+# # Text for number of individuals to capture 95% threshold
+# mtext(text=paste0("MSAT min size (95%) = ", min_95_QUAC.MSAT_subset), side=1, line=-1.5, at=54)
+# mtext(text=paste0("SNP min size (95%) = ", min_95_QUAC.SNP.REF.R0_subset), side=1, line=-1.5, at=89)
 
 # %%%% QUBO %%%% ----
 # ---- MSATS (COMPLETE) ----
@@ -269,9 +531,7 @@ QUBO.MSAT.sampleNames <- unlist(lapply(rownames(QUBO.MSAT.genind@tab),
                                        function(x) strsplit(x, "_")[[1]][3]))
 rownames(QUBO.MSAT.genind@tab) <- QUBO.MSAT.sampleNames
 
-# CREATE SAMPLING RESULTS ARRAY ----
-# Specify number of replicates
-num_reps <- 50
+# CREATE SAMPLING RESULTS ARRAY
 # Export relevant functions and variables
 clusterExport(cl, varlist = c("getAlleleCategories", "exSitu_Sample", "exSitu_Resample", 
                               "num_reps", "QUBO.MSAT.genind"))
@@ -290,68 +550,68 @@ min_95_QUBO.MSAT <- min(which(apply(samplingResults_QUBO.MSAT[,1,],1,mean) > 95)
 min_95.SD_QUBO.MSAT <- apply(samplingResults_QUBO.MSAT[,1,],1,sd)[min_95_QUBO.MSAT]
 print(min_95_QUBO.MSAT); print(min_95.SD_QUBO.MSAT)
 
-# PLOTTING ----
-# Set plotting window to stack 2 graphs vertically
-par(mfcol=c(2,1), oma=rep(0.2,4))
-# Calculate means and standard deviations, for each capture rate category
-total_means <- apply(samplingResults_QUBO.MSAT[,1,], 1, mean)
-v.com_means <- apply(samplingResults_QUBO.MSAT[,2,], 1, mean)
-com_means <- apply(samplingResults_QUBO.MSAT[,3,], 1, mean)
-lowfr_means <- apply(samplingResults_QUBO.MSAT[,4,], 1, mean)
-rare_means <- apply(samplingResults_QUBO.MSAT[,5,], 1, mean)
-# Pick plot colors, with transparency for values other than Total
-plotColors <- c("red","red4","darkorange3","coral","purple")
-plotColors[2:5] <- alpha(plotColors[2:5], 0.5)
-# Plots all sets of points onto single graph, as well as 95% threshold line
-plot(total_means, ylim=c(0,110), col=plotColors[1], pch=16, 
-     xlab="Number of Individuals", ylab="Percent Diversity Capture",
-     main="QUBO, Microsatellites (Complete: 245 samples; 50 Replicates)")
-points(v.com_means, col=plotColors[2], pch=16)
-points(com_means, col=plotColors[3], pch=16)
-points(lowfr_means, col=plotColors[4], pch=16)
-points(rare_means, col=plotColors[5], pch=16)
-legend(x=200, y=86.13276, inset = 0.05, legend = c("Total","Very common","Common","Low frequency", "Rare"),
-       col=plotColors, pch = c(20,20,20), cex=1, pt.cex = 2, bty="n", y.intersp = 0.27)
-# Lines for 95% threshold
-abline(h=95, col="black", lty=3); abline(v=min_95_QUBO.MSAT, col="black")
-# Text for number of individuals to capture 95% threshold
-mtext(text=paste0("Minimum sampling size (95%) = ", min_95_QUBO.MSAT), side=1, line=-1.5, at=150)
+# # *** PLOTTING ----
+# # Set plotting window to stack 2 graphs vertically
+# par(mfcol=c(2,1), oma=rep(0.2,4))
+# # Calculate means and standard deviations, for each capture rate category
+# total_means <- apply(samplingResults_QUBO.MSAT[,1,], 1, mean)
+# v.com_means <- apply(samplingResults_QUBO.MSAT[,2,], 1, mean)
+# com_means <- apply(samplingResults_QUBO.MSAT[,3,], 1, mean)
+# lowfr_means <- apply(samplingResults_QUBO.MSAT[,4,], 1, mean)
+# rare_means <- apply(samplingResults_QUBO.MSAT[,5,], 1, mean)
+# # Pick plot colors, with transparency for values other than Total
+# plotColors <- c("red","red4","darkorange3","coral","purple")
+# plotColors[2:5] <- alpha(plotColors[2:5], 0.5)
+# # Plots all sets of points onto single graph, as well as 95% threshold line
+# plot(total_means, ylim=c(0,110), col=plotColors[1], pch=16, 
+#      xlab="Number of Individuals", ylab="Percent Diversity Capture",
+#      main="QUBO, Microsatellites (Complete: 245 samples; 50 Replicates)")
+# points(v.com_means, col=plotColors[2], pch=16)
+# points(com_means, col=plotColors[3], pch=16)
+# points(lowfr_means, col=plotColors[4], pch=16)
+# points(rare_means, col=plotColors[5], pch=16)
+# legend(x=200, y=86.13276, inset = 0.05, legend = c("Total","Very common","Common","Low frequency", "Rare"),
+#        col=plotColors, pch = c(20,20,20), cex=1, pt.cex = 2, bty="n", y.intersp = 0.27)
+# # Lines for 95% threshold
+# abline(h=95, col="black", lty=3); abline(v=min_95_QUBO.MSAT, col="black")
+# # Text for number of individuals to capture 95% threshold
+# mtext(text=paste0("Minimum sampling size (95%) = ", min_95_QUBO.MSAT), side=1, line=-1.5, at=150)
 
 # ---- SNPS (COMPLETE) ----
-# READ IN GENIND FILE (QUBO DNFA; R0, min-maf=0; first SNP per locus; 2 populations, garden and wild) ----
+# %%% DE NOVO ----
+# R0 ----
+# READ IN GENIND FILE (Optimized de novo assembly; R0, min-maf=0, first SNP/locus, 2 populations (garden and wild))
 genpop.filePath <- 
-  "/RAID1/IMLS_GCCO/Analysis/Stacks/reference_filteredReads/QUBO/GSNAP4/output/populations_R0_NOMAF_1SNP_2Pops/"
+  "/RAID1/IMLS_GCCO/Analysis/Stacks/denovo_finalAssemblies/QUBO/output/populations_R0_NOMAF_1SNP_2Pops/"
 setwd(genpop.filePath)
-QUBO.SNP.genind <- read.genepop(paste0(genpop.filePath,"populations.snps.gen"))
+QUBO.SNP.DN.R0.genind <- read.genepop(paste0(genpop.filePath,"populations.snps.gen"))
 # Correct popNames
-pop(QUBO.SNP.genind) <- factor(read.table("QUBO_popmap_GardenWild", header=FALSE)[,2])
+pop(QUBO.SNP.DN.R0.genind) <- factor(read.table("QUBO_popmap_GardenWild", header=FALSE)[,2])
 # Rename samples: get rid of "QUBO_G/W_" prefix. This will just leave the "IMLS" portion
-QUBO.SNP.sampleNames <- gsub("QUBO_G_",replacement = "", row.names(QUBO.SNP.genind@tab))
-QUBO.SNP.sampleNames <- gsub("QUBO_W_",replacement = "", QUBO.SNP.sampleNames)
+QUBO.SNP.DN.R0.sampleNames <- gsub("QUBO_G_",replacement = "", row.names(QUBO.SNP.DN.R0.genind@tab))
+QUBO.SNP.DN.R0.sampleNames <- gsub("QUBO_W_",replacement = "", QUBO.SNP.DN.R0.sampleNames)
 # Replace SH-Q names in SNP list with IMLS names
 # These were determined by Austin K., and are outlined on the Hoban Lab Drive ("MSATcomparisons_TissueNames")
 # Only 1 of the 11 SH_Q garden samples has an IMLS sample name (SHQ2177); others are unshared 
-QUBO.SNP.sampleNames <- gsub("SH_Q2177",replacement = "IMLS338", QUBO.SNP.sampleNames)
-QUBO.SNP.sampleNames <- gsub("SH_Q2178",replacement = "IMLS312", QUBO.SNP.sampleNames)
-QUBO.SNP.sampleNames <- gsub("SH_Q2179",replacement = "IMLS062", QUBO.SNP.sampleNames)
-QUBO.SNP.sampleNames <- gsub("SH_Q2180",replacement = "IMLS051", QUBO.SNP.sampleNames)
-QUBO.SNP.sampleNames <- gsub("SH_Q2181",replacement = "IMLS011", QUBO.SNP.sampleNames)
-QUBO.SNP.sampleNames <- gsub("SH_Q2182",replacement = "IMLS144", QUBO.SNP.sampleNames)
-QUBO.SNP.sampleNames <- gsub("SH_Q2183",replacement = "IMLS170", QUBO.SNP.sampleNames)
-QUBO.SNP.sampleNames <- gsub("SH_Q2184",replacement = "IMLS005", QUBO.SNP.sampleNames)
-QUBO.SNP.sampleNames <- gsub("SH_Q2186",replacement = "IMLS017", QUBO.SNP.sampleNames)
+QUBO.SNP.DN.R0.sampleNames <- gsub("SH_Q2177",replacement = "IMLS338", QUBO.SNP.DN.R0.sampleNames)
+QUBO.SNP.DN.R0.sampleNames <- gsub("SH_Q2178",replacement = "IMLS312", QUBO.SNP.DN.R0.sampleNames)
+QUBO.SNP.DN.R0.sampleNames <- gsub("SH_Q2179",replacement = "IMLS062", QUBO.SNP.DN.R0.sampleNames)
+QUBO.SNP.DN.R0.sampleNames <- gsub("SH_Q2180",replacement = "IMLS051", QUBO.SNP.DN.R0.sampleNames)
+QUBO.SNP.DN.R0.sampleNames <- gsub("SH_Q2181",replacement = "IMLS011", QUBO.SNP.DN.R0.sampleNames)
+QUBO.SNP.DN.R0.sampleNames <- gsub("SH_Q2182",replacement = "IMLS144", QUBO.SNP.DN.R0.sampleNames)
+QUBO.SNP.DN.R0.sampleNames <- gsub("SH_Q2183",replacement = "IMLS170", QUBO.SNP.DN.R0.sampleNames)
+QUBO.SNP.DN.R0.sampleNames <- gsub("SH_Q2184",replacement = "IMLS005", QUBO.SNP.DN.R0.sampleNames)
+QUBO.SNP.DN.R0.sampleNames <- gsub("SH_Q2186",replacement = "IMLS017", QUBO.SNP.DN.R0.sampleNames)
 # Rename sample matrix
-rownames(QUBO.SNP.genind@tab) <- QUBO.SNP.sampleNames
+rownames(QUBO.SNP.DN.R0.genind@tab) <- QUBO.SNP.DN.R0.sampleNames
 
-# CREATE SAMPLING RESULTS ARRAY ----
-# Specify number of replicates
-num_reps <- 50
+# CREATE SAMPLING RESULTS ARRAY
 # Export relevant functions and variables
 clusterExport(cl, varlist = c("getAlleleCategories", "exSitu_Sample", "exSitu_Resample", 
-                              "num_reps", "QUBO.SNP.genind"))
+                              "num_reps", "QUBO.SNP.DN.R0.genind"))
 # Run resampling in parallel, to generate an array
-samplingResults_QUBO.SNP <- 
-  parSapply(cl, 1:num_reps, function(a) exSitu_Resample(gen.obj = QUBO.SNP.genind), simplify = "array")
+samplingResults_QUBO.SNP.DN.R0 <- 
+  parSapply(cl, 1:num_reps, function(a) exSitu_Resample(gen.obj = QUBO.SNP.DN.R0.genind), simplify = "array")
 # Close cores
 # stopCluster(cl)
 
@@ -359,53 +619,269 @@ samplingResults_QUBO.SNP <-
 # the minimum number of samples required to capture 95% wild genetic diversity
 # (We average samplingResults[,1,], since this column contains the total genetic diversity)
 # Standard deviation is calculated as well
-min_95_QUBO.SNP <- min(which(apply(samplingResults_QUBO.SNP[,1,],1,mean) > 95))
-min_95.SD_QUBO.SNP <- apply(samplingResults_QUBO.SNP[,1,],1,sd)[min_95_QUBO.SNP]
-print(min_95_QUBO.SNP); print(min_95.SD_QUBO.SNP)
+min_95_QUBO.SNP.DN.R0 <- min(which(apply(samplingResults_QUBO.SNP.DN.R0[,1,],1,mean) > 95))
+min_95.SD_QUBO.SNP.DN.R0 <- apply(samplingResults_QUBO.SNP.DN.R0[,1,],1,sd)[min_95_QUBO.SNP.DN.R0]
+print(min_95_QUBO.SNP.DN.R0); print(min_95.SD_QUBO.SNP.DN.R0)
 
-# PLOTTING ----
-# Calculate means and standard deviations, for each capture rate category
-total_means <- apply(samplingResults_QUBO.SNP[,1,], 1, mean)
-v.com_means <- apply(samplingResults_QUBO.SNP[,2,], 1, mean)
-com_means <- apply(samplingResults_QUBO.SNP[,3,], 1, mean)
-lowfr_means <- apply(samplingResults_QUBO.SNP[,4,], 1, mean)
-rare_means <- apply(samplingResults_QUBO.SNP[,5,], 1, mean)
-# Plots all sets of points onto single graph, as well as 95% threshold line
-plot(total_means, ylim=c(0,110), col=plotColors[1], pch=16, 
-     xlab="Number of Individuals", ylab="Percent Diversity Capture",
-     main="QUBO, SNPs (Complete: 95 samples; 50 Replicates)")
-points(v.com_means, col=plotColors[2], pch=16)
-points(com_means, col=plotColors[3], pch=16)
-points(lowfr_means, col=plotColors[4], pch=16)
-points(rare_means, col=plotColors[5], pch=16)
-legend(x=83, y=86.13276, inset = 0.05, legend = c("Total","Very common","Common","Low frequency", "Rare"),
-       col=plotColors, pch = c(20,20,20), cex=1, pt.cex = 2, bty="n", y.intersp = 0.27)
-# Lines for 95% threshold
-abline(h=95, col="black", lty=3); abline(v=min_95_QUBO.SNP, col="black")
-# Text for number of individuals to capture 95% threshold
-mtext(text=paste0("Minimum sampling size (95%) = ", min_95_QUBO.SNP), side=1, line=-1.5, at=61)
+# *** PLOTTING ----
+# # Calculate means and standard deviations, for each capture rate category
+# total_means <- apply(samplingResults_QUBO.SNP.DN.R0[,1,], 1, mean)
+# v.com_means <- apply(samplingResults_QUBO.SNP.DN.R0[,2,], 1, mean)
+# com_means <- apply(samplingResults_QUBO.SNP.DN.R0[,3,], 1, mean)
+# lowfr_means <- apply(samplingResults_QUBO.SNP.DN.R0[,4,], 1, mean)
+# rare_means <- apply(samplingResults_QUBO.SNP.DN.R0[,5,], 1, mean)
+# # Plots all sets of points onto single graph, as well as 95% threshold line
+# plot(total_means, ylim=c(0,110), col=plotColors[1], pch=16, 
+#      xlab="Number of Individuals", ylab="Percent Diversity Capture",
+#      main="QUBO, SNPs (Complete: 95 samples; 50 Replicates)")
+# points(v.com_means, col=plotColors[2], pch=16)
+# points(com_means, col=plotColors[3], pch=16)
+# points(lowfr_means, col=plotColors[4], pch=16)
+# points(rare_means, col=plotColors[5], pch=16)
+# legend(x=83, y=86.13276, inset = 0.05, legend = c("Total","Very common","Common","Low frequency", "Rare"),
+#        col=plotColors, pch = c(20,20,20), cex=1, pt.cex = 2, bty="n", y.intersp = 0.27)
+# # Lines for 95% threshold
+# abline(h=95, col="black", lty=3); abline(v=min_95_QUBO.SNP.DN.R0, col="black")
+# # Text for number of individuals to capture 95% threshold
+# mtext(text=paste0("Minimum sampling size (95%) = ", min_95_QUBO.SNP.DN.R0), side=1, line=-1.5, at=61)
+
+# R80 ----
+# READ IN GENIND FILE (Optimized de novo assembly; R80, min-maf=0, first SNP/locus, 2 populations (garden and wild))
+genpop.filePath <- 
+  "/RAID1/IMLS_GCCO/Analysis/Stacks/denovo_finalAssemblies/QUBO/output/populations_R80_NOMAF_1SNP_2Pops/"
+setwd(genpop.filePath)
+QUBO.SNP.DN.R80.genind <- read.genepop(paste0(genpop.filePath,"populations.snps.gen"))
+# Correct popNames
+pop(QUBO.SNP.DN.R80.genind) <- factor(read.table("QUBO_popmap_GardenWild", header=FALSE)[,2])
+# Rename samples: get rid of "QUBO_G/W_" prefix. This will just leave the "IMLS" portion
+QUBO.SNP.DN.R80.sampleNames <- gsub("QUBO_G_",replacement = "", row.names(QUBO.SNP.DN.R80.genind@tab))
+QUBO.SNP.DN.R80.sampleNames <- gsub("QUBO_W_",replacement = "", QUBO.SNP.DN.R80.sampleNames)
+# Replace SH-Q names in SNP list with IMLS names
+# These were determined by Austin K., and are outlined on the Hoban Lab Drive ("MSATcomparisons_TissueNames")
+# Only 1 of the 11 SH_Q garden samples has an IMLS sample name (SHQ2177); others are unshared 
+QUBO.SNP.DN.R80.sampleNames <- gsub("SH_Q2177",replacement = "IMLS338", QUBO.SNP.DN.R80.sampleNames)
+QUBO.SNP.DN.R80.sampleNames <- gsub("SH_Q2178",replacement = "IMLS312", QUBO.SNP.DN.R80.sampleNames)
+QUBO.SNP.DN.R80.sampleNames <- gsub("SH_Q2179",replacement = "IMLS062", QUBO.SNP.DN.R80.sampleNames)
+QUBO.SNP.DN.R80.sampleNames <- gsub("SH_Q2180",replacement = "IMLS051", QUBO.SNP.DN.R80.sampleNames)
+QUBO.SNP.DN.R80.sampleNames <- gsub("SH_Q2181",replacement = "IMLS011", QUBO.SNP.DN.R80.sampleNames)
+QUBO.SNP.DN.R80.sampleNames <- gsub("SH_Q2182",replacement = "IMLS144", QUBO.SNP.DN.R80.sampleNames)
+QUBO.SNP.DN.R80.sampleNames <- gsub("SH_Q2183",replacement = "IMLS170", QUBO.SNP.DN.R80.sampleNames)
+QUBO.SNP.DN.R80.sampleNames <- gsub("SH_Q2184",replacement = "IMLS005", QUBO.SNP.DN.R80.sampleNames)
+QUBO.SNP.DN.R80.sampleNames <- gsub("SH_Q2186",replacement = "IMLS017", QUBO.SNP.DN.R80.sampleNames)
+# Rename sample matrix
+rownames(QUBO.SNP.DN.R80.genind@tab) <- QUBO.SNP.DN.R80.sampleNames
+
+# CREATE SAMPLING RESULTS ARRAY
+# Export relevant functions and variables
+clusterExport(cl, varlist = c("getAlleleCategories", "exSitu_Sample", "exSitu_Resample", 
+                              "num_reps", "QUBO.SNP.DN.R80.genind"))
+# Run resampling in parallel, to generate an array
+samplingResults_QUBO.SNP.DN.R80 <- 
+  parSapply(cl, 1:num_reps, function(a) exSitu_Resample(gen.obj = QUBO.SNP.DN.R80.genind), simplify = "array")
+# Close cores
+# stopCluster(cl)
+
+# Average results across replicates (slices) of the sampling array, to determine
+# the minimum number of samples required to capture 95% wild genetic diversity
+# (We average samplingResults[,1,], since this column contains the total genetic diversity)
+# Standard deviation is calculated as well
+min_95_QUBO.SNP.DN.R80 <- min(which(apply(samplingResults_QUBO.SNP.DN.R80[,1,],1,mean) > 95))
+min_95.SD_QUBO.SNP.DN.R80 <- apply(samplingResults_QUBO.SNP.DN.R80[,1,],1,sd)[min_95_QUBO.SNP.DN.R80]
+print(min_95_QUBO.SNP.DN.R80); print(min_95.SD_QUBO.SNP.DN.R80)
+
+# *** PLOTTING ----
+# # Calculate means and standard deviations, for each capture rate category
+# total_means <- apply(samplingResults_QUBO.SNP.DN.R80[,1,], 1, mean)
+# v.com_means <- apply(samplingResults_QUBO.SNP.DN.R80[,2,], 1, mean)
+# com_means <- apply(samplingResults_QUBO.SNP.DN.R80[,3,], 1, mean)
+# lowfr_means <- apply(samplingResults_QUBO.SNP.DN.R80[,4,], 1, mean)
+# rare_means <- apply(samplingResults_QUBO.SNP.DN.R80[,5,], 1, mean)
+# # Plots all sets of points onto single graph, as well as 95% threshold line
+# plot(total_means, ylim=c(0,110), col=plotColors[1], pch=16, 
+#      xlab="Number of Individuals", ylab="Percent Diversity Capture",
+#      main="QUBO, SNPs (Complete: 95 samples; 50 Replicates)")
+# points(v.com_means, col=plotColors[2], pch=16)
+# points(com_means, col=plotColors[3], pch=16)
+# points(lowfr_means, col=plotColors[4], pch=16)
+# points(rare_means, col=plotColors[5], pch=16)
+# legend(x=83, y=86.13276, inset = 0.05, legend = c("Total","Very common","Common","Low frequency", "Rare"),
+#        col=plotColors, pch = c(20,20,20), cex=1, pt.cex = 2, bty="n", y.intersp = 0.27)
+# # Lines for 95% threshold
+# abline(h=95, col="black", lty=3); abline(v=min_95_QUBO.SNP.DN.R80, col="black")
+# # Text for number of individuals to capture 95% threshold
+# mtext(text=paste0("Minimum sampling size (95%) = ", min_95_QUBO.SNP.DN.R80), side=1, line=-1.5, at=61)
+
+# %%% REFERENCE ----
+# R0 ----
+# READ IN GENIND FILE (QUBO GSNAP4 alignment; R0, min-maf=0, first SNP/locus, 2 populations (garden and wild))
+genpop.filePath <- 
+  "/RAID1/IMLS_GCCO/Analysis/Stacks/reference_filteredReads/QUBO/GSNAP4/output/populations_R0_NOMAF_1SNP_2Pops/"
+setwd(genpop.filePath)
+QUBO.SNP.REF.R0.genind <- read.genepop(paste0(genpop.filePath,"populations.snps.gen"))
+# Correct popNames
+pop(QUBO.SNP.REF.R0.genind) <- factor(read.table("QUBO_popmap_GardenWild", header=FALSE)[,2])
+# Rename samples: get rid of "QUBO_G/W_" prefix. This will just leave the "IMLS" portion
+QUBO.SNP.REF.R0.sampleNames <- gsub("QUBO_G_",replacement = "", row.names(QUBO.SNP.REF.R0.genind@tab))
+QUBO.SNP.REF.R0.sampleNames <- gsub("QUBO_W_",replacement = "", QUBO.SNP.REF.R0.sampleNames)
+# Replace SH-Q names in SNP list with IMLS names
+# These were determined by Austin K., and are outlined on the Hoban Lab Drive ("MSATcomparisons_TissueNames")
+# Only 1 of the 11 SH_Q garden samples has an IMLS sample name (SHQ2177); others are unshared 
+QUBO.SNP.REF.R0.sampleNames <- gsub("SH_Q2177",replacement = "IMLS338", QUBO.SNP.REF.R0.sampleNames)
+QUBO.SNP.REF.R0.sampleNames <- gsub("SH_Q2178",replacement = "IMLS312", QUBO.SNP.REF.R0.sampleNames)
+QUBO.SNP.REF.R0.sampleNames <- gsub("SH_Q2179",replacement = "IMLS062", QUBO.SNP.REF.R0.sampleNames)
+QUBO.SNP.REF.R0.sampleNames <- gsub("SH_Q2180",replacement = "IMLS051", QUBO.SNP.REF.R0.sampleNames)
+QUBO.SNP.REF.R0.sampleNames <- gsub("SH_Q2181",replacement = "IMLS011", QUBO.SNP.REF.R0.sampleNames)
+QUBO.SNP.REF.R0.sampleNames <- gsub("SH_Q2182",replacement = "IMLS144", QUBO.SNP.REF.R0.sampleNames)
+QUBO.SNP.REF.R0.sampleNames <- gsub("SH_Q2183",replacement = "IMLS170", QUBO.SNP.REF.R0.sampleNames)
+QUBO.SNP.REF.R0.sampleNames <- gsub("SH_Q2184",replacement = "IMLS005", QUBO.SNP.REF.R0.sampleNames)
+QUBO.SNP.REF.R0.sampleNames <- gsub("SH_Q2186",replacement = "IMLS017", QUBO.SNP.REF.R0.sampleNames)
+# Rename sample matrix
+rownames(QUBO.SNP.REF.R0.genind@tab) <- QUBO.SNP.REF.R0.sampleNames
+
+# CREATE SAMPLING RESULTS ARRAY
+# Export relevant functions and variables
+clusterExport(cl, varlist = c("getAlleleCategories", "exSitu_Sample", "exSitu_Resample", 
+                              "num_reps", "QUBO.SNP.REF.R0.genind"))
+# Run resampling in parallel, to generate an array
+samplingResults_QUBO.SNP.REF.R0 <- 
+  parSapply(cl, 1:num_reps, function(a) exSitu_Resample(gen.obj = QUBO.SNP.REF.R0.genind), simplify = "array")
+# Close cores
+# stopCluster(cl)
+
+# Average results across replicates (slices) of the sampling array, to determine
+# the minimum number of samples required to capture 95% wild genetic diversity
+# (We average samplingResults[,1,], since this column contains the total genetic diversity)
+# Standard deviation is calculated as well
+min_95_QUBO.SNP.REF.R0 <- min(which(apply(samplingResults_QUBO.SNP.REF.R0[,1,],1,mean) > 95))
+min_95.SD_QUBO.SNP.REF.R0 <- apply(samplingResults_QUBO.SNP.REF.R0[,1,],1,sd)[min_95_QUBO.SNP.REF.R0]
+print(min_95_QUBO.SNP.REF.R0); print(min_95.SD_QUBO.SNP.REF.R0)
+
+# *** PLOTTING ----
+# # Calculate means and standard deviations, for each capture rate category
+# total_means <- apply(samplingResults_QUBO.SNP.REF.R0[,1,], 1, mean)
+# v.com_means <- apply(samplingResults_QUBO.SNP.REF.R0[,2,], 1, mean)
+# com_means <- apply(samplingResults_QUBO.SNP.REF.R0[,3,], 1, mean)
+# lowfr_means <- apply(samplingResults_QUBO.SNP.REF.R0[,4,], 1, mean)
+# rare_means <- apply(samplingResults_QUBO.SNP.REF.R0[,5,], 1, mean)
+# # Plots all sets of points onto single graph, as well as 95% threshold line
+# plot(total_means, ylim=c(0,110), col=plotColors[1], pch=16, 
+#      xlab="Number of Individuals", ylab="Percent Diversity Capture",
+#      main="QUBO, SNPs (Complete: 95 samples; 50 Replicates)")
+# points(v.com_means, col=plotColors[2], pch=16)
+# points(com_means, col=plotColors[3], pch=16)
+# points(lowfr_means, col=plotColors[4], pch=16)
+# points(rare_means, col=plotColors[5], pch=16)
+# legend(x=83, y=86.13276, inset = 0.05, legend = c("Total","Very common","Common","Low frequency", "Rare"),
+#        col=plotColors, pch = c(20,20,20), cex=1, pt.cex = 2, bty="n", y.intersp = 0.27)
+# # Lines for 95% threshold
+# abline(h=95, col="black", lty=3); abline(v=min_95_QUBO.SNP.REF.R0, col="black")
+# # Text for number of individuals to capture 95% threshold
+# mtext(text=paste0("Minimum sampling size (95%) = ", min_95_QUBO.SNP.REF.R0), side=1, line=-1.5, at=61)
+
+# R80 ----
+# READ IN GENIND FILE (QUBO GSNAP4 alignment; R80, min-maf=0, first SNP/locus, 2 populations (garden and wild))
+genpop.filePath <- 
+  "/RAID1/IMLS_GCCO/Analysis/Stacks/reference_filteredReads/QUBO/GSNAP4/output/populations_R80_NOMAF_1SNP_2Pops/"
+setwd(genpop.filePath)
+QUBO.SNP.REF.R80.genind <- read.genepop(paste0(genpop.filePath,"populations.snps.gen"))
+# Correct popNames
+pop(QUBO.SNP.REF.R80.genind) <- factor(read.table("QUBO_popmap_GardenWild", header=FALSE)[,2])
+# Rename samples: get rid of "QUBO_G/W_" prefix. This will just leave the "IMLS" portion
+QUBO.SNP.REF.R80.sampleNames <- gsub("QUBO_G_",replacement = "", row.names(QUBO.SNP.REF.R80.genind@tab))
+QUBO.SNP.REF.R80.sampleNames <- gsub("QUBO_W_",replacement = "", QUBO.SNP.REF.R80.sampleNames)
+# Replace SH-Q names in SNP list with IMLS names
+# These were determined by Austin K., and are outlined on the Hoban Lab Drive ("MSATcomparisons_TissueNames")
+# Only 1 of the 11 SH_Q garden samples has an IMLS sample name (SHQ2177); others are unshared 
+QUBO.SNP.REF.R80.sampleNames <- gsub("SH_Q2177",replacement = "IMLS338", QUBO.SNP.REF.R80.sampleNames)
+QUBO.SNP.REF.R80.sampleNames <- gsub("SH_Q2178",replacement = "IMLS312", QUBO.SNP.REF.R80.sampleNames)
+QUBO.SNP.REF.R80.sampleNames <- gsub("SH_Q2179",replacement = "IMLS062", QUBO.SNP.REF.R80.sampleNames)
+QUBO.SNP.REF.R80.sampleNames <- gsub("SH_Q2180",replacement = "IMLS051", QUBO.SNP.REF.R80.sampleNames)
+QUBO.SNP.REF.R80.sampleNames <- gsub("SH_Q2181",replacement = "IMLS011", QUBO.SNP.REF.R80.sampleNames)
+QUBO.SNP.REF.R80.sampleNames <- gsub("SH_Q2182",replacement = "IMLS144", QUBO.SNP.REF.R80.sampleNames)
+QUBO.SNP.REF.R80.sampleNames <- gsub("SH_Q2183",replacement = "IMLS170", QUBO.SNP.REF.R80.sampleNames)
+QUBO.SNP.REF.R80.sampleNames <- gsub("SH_Q2184",replacement = "IMLS005", QUBO.SNP.REF.R80.sampleNames)
+QUBO.SNP.REF.R80.sampleNames <- gsub("SH_Q2186",replacement = "IMLS017", QUBO.SNP.REF.R80.sampleNames)
+# Rename sample matrix
+rownames(QUBO.SNP.REF.R80.genind@tab) <- QUBO.SNP.REF.R80.sampleNames
+
+# CREATE SAMPLING RESULTS ARRAY
+# Export relevant functions and variables
+clusterExport(cl, varlist = c("getAlleleCategories", "exSitu_Sample", "exSitu_Resample", 
+                              "num_reps", "QUBO.SNP.REF.R80.genind"))
+# Run resampling in parallel, to generate an array
+samplingResults_QUBO.SNP.REF.R80 <- 
+  parSapply(cl, 1:num_reps, function(a) exSitu_Resample(gen.obj = QUBO.SNP.REF.R80.genind), simplify = "array")
+# Close cores
+# stopCluster(cl)
+
+# Average results across replicates (slices) of the sampling array, to determine
+# the minimum number of samples required to capture 95% wild genetic diversity
+# (We average samplingResults[,1,], since this column contains the total genetic diversity)
+# Standard deviation is calculated as well
+min_95_QUBO.SNP.REF.R80 <- min(which(apply(samplingResults_QUBO.SNP.REF.R80[,1,],1,mean) > 95))
+min_95.SD_QUBO.SNP.REF.R80 <- apply(samplingResults_QUBO.SNP.REF.R80[,1,],1,sd)[min_95_QUBO.SNP.REF.R80]
+print(min_95_QUBO.SNP.REF.R80); print(min_95.SD_QUBO.SNP.REF.R80)
+
+# *** PLOTTING ----
+# # Calculate means and standard deviations, for each capture rate category
+# total_means <- apply(samplingResults_QUBO.SNP.REF.R80[,1,], 1, mean)
+# v.com_means <- apply(samplingResults_QUBO.SNP.REF.R80[,2,], 1, mean)
+# com_means <- apply(samplingResults_QUBO.SNP.REF.R80[,3,], 1, mean)
+# lowfr_means <- apply(samplingResults_QUBO.SNP.REF.R80[,4,], 1, mean)
+# rare_means <- apply(samplingResults_QUBO.SNP.REF.R80[,5,], 1, mean)
+# # Plots all sets of points onto single graph, as well as 95% threshold line
+# plot(total_means, ylim=c(0,110), col=plotColors[1], pch=16, 
+#      xlab="Number of Individuals", ylab="Percent Diversity Capture",
+#      main="QUBO, SNPs (Complete: 95 samples; 50 Replicates)")
+# points(v.com_means, col=plotColors[2], pch=16)
+# points(com_means, col=plotColors[3], pch=16)
+# points(lowfr_means, col=plotColors[4], pch=16)
+# points(rare_means, col=plotColors[5], pch=16)
+# legend(x=83, y=86.13276, inset = 0.05, legend = c("Total","Very common","Common","Low frequency", "Rare"),
+#        col=plotColors, pch = c(20,20,20), cex=1, pt.cex = 2, bty="n", y.intersp = 0.27)
+# # Lines for 95% threshold
+# abline(h=95, col="black", lty=3); abline(v=min_95_QUBO.SNP.REF.R80, col="black")
+# # Text for number of individuals to capture 95% threshold
+# mtext(text=paste0("Minimum sampling size (95%) = ", min_95_QUBO.SNP.REF.R80), side=1, line=-1.5, at=61)
 
 # ---- MSATS AND SNPS: SUBSET ----
 # Subset SNP sample names by those that are also seen within the MSAT samples
-QUBO_sharedSamples <- sort(QUBO.SNP.sampleNames[which(QUBO.SNP.sampleNames %in% QUBO.MSAT.sampleNames)])
+QUBO_sharedSamples <- sort(QUBO.SNP.REF.R0.sampleNames[which(QUBO.SNP.REF.R0.sampleNames %in% QUBO.MSAT.sampleNames)])
 # Subset MSAT and SNP wild matrix objects to strictly shared samples
 QUBO.MSAT_subset.genind <- QUBO.MSAT.genind[QUBO_sharedSamples,, drop=TRUE]
-QUBO.SNP_subset.genind <- QUBO.SNP.genind[QUBO_sharedSamples,, drop=TRUE]
+# De novo
+QUBO.SNP.DN.R0_subset.genind <- QUBO.SNP.DN.R0.genind[QUBO_sharedSamples,, drop=TRUE]
+QUBO.SNP.DN.R80_subset.genind <- QUBO.SNP.DN.R80.genind[QUBO_sharedSamples,, drop=TRUE]
+# Reference
+QUBO.SNP.REF.R0_subset.genind <- QUBO.SNP.REF.R0.genind[QUBO_sharedSamples,, drop=TRUE]
+QUBO.SNP.REF.R80_subset.genind <- QUBO.SNP.REF.R80.genind[QUBO_sharedSamples,, drop=TRUE]
 
-# CREATE SAMPLING RESULTS ARRAYS ----
-# Specify number of replicates
-num_reps <- 50
+# CREATE SAMPLING RESULTS ARRAYS
 # Export relevant functions and variables
 clusterExport(cl, varlist = c("getAlleleCategories", "exSitu_Sample", "exSitu_Resample", 
-                              "num_reps", "QUBO.MSAT_subset.genind", "QUBO.SNP_subset.genind"))
+                              "num_reps", "QUBO.MSAT_subset.genind", "QUBO.SNP.DN.R0_subset.genind",
+                              "QUBO.SNP.DN.R80_subset.genind", "QUBO.SNP.REF.R0_subset.genind",
+                              "QUBO.SNP.REF.R80_subset.genind"))
 # Run resampling in parallel, to generate arrays
+# MSAT
 samplingResults_QUBO.MSAT_subset <- 
   parSapply(cl, 1:num_reps, 
             function(a) exSitu_Resample(gen.obj = QUBO.MSAT_subset.genind), simplify = "array")
-
-samplingResults_QUBO.SNP_subset <- 
+# SNP
+# De novo
+samplingResults_QUBO.SNP.DN.R0_subset <- 
   parSapply(cl, 1:num_reps, 
-            function(a) exSitu_Resample(gen.obj = QUBO.SNP_subset.genind), simplify = "array")
+            function(a) exSitu_Resample(gen.obj = QUBO.SNP.DN.R0_subset.genind), simplify = "array")
+samplingResults_QUBO.SNP.DN.R80_subset <- 
+  parSapply(cl, 1:num_reps, 
+            function(a) exSitu_Resample(gen.obj = QUBO.SNP.DN.R80_subset.genind), simplify = "array")
+# Reference
+samplingResults_QUBO.SNP.REF.R0_subset <- 
+  parSapply(cl, 1:num_reps, 
+            function(a) exSitu_Resample(gen.obj = QUBO.SNP.REF.R0_subset.genind), simplify = "array")
+samplingResults_QUBO.SNP.REF.R80_subset <- 
+  parSapply(cl, 1:num_reps, 
+            function(a) exSitu_Resample(gen.obj = QUBO.SNP.REF.R80_subset.genind), simplify = "array")
 # Close cores
 stopCluster(cl)
 
@@ -414,77 +890,161 @@ min_95_QUBO.MSAT_subset <- min(which(apply(samplingResults_QUBO.MSAT_subset[,1,]
 min_95.SD_QUBO.MSAT_subset <- apply(samplingResults_QUBO.MSAT_subset[,1,],1,sd)[min_95_QUBO.MSAT_subset]
 print(min_95_QUBO.MSAT_subset); print(min_95.SD_QUBO.MSAT_subset)
 # SNP_subset: average 95% minimum sampling size across replicates, as well as standard deviation
-min_95_QUBO.SNP_subset <- min(which(apply(samplingResults_QUBO.SNP_subset[,1,],1,mean) > 95))
-min_95.SD_QUBO.SNP_subset <- apply(samplingResults_QUBO.SNP_subset[,1,],1,sd)[min_95_QUBO.SNP_subset]
-print(min_95_QUBO.SNP_subset); print(min_95.SD_QUBO.SNP_subset)
+# De novo 
+# R0
+min_95_QUBO.SNP.DN.R0_subset <- min(which(apply(samplingResults_QUBO.SNP.DN.R0_subset[,1,],1,mean) > 95))
+min_95.SD_QUBO.SNP.DN.R0_subset <- apply(samplingResults_QUBO.SNP.DN.R0_subset[,1,],1,sd)[min_95_QUBO.SNP.DN.R0_subset]
+print(min_95_QUBO.SNP.DN.R0_subset); print(min_95.SD_QUBO.SNP.DN.R0_subset)
+# R80
+min_95_QUBO.SNP.DN.R80_subset <- min(which(apply(samplingResults_QUBO.SNP.DN.R80_subset[,1,],1,mean) > 95))
+min_95.SD_QUBO.SNP.DN.R80_subset <- apply(samplingResults_QUBO.SNP.DN.R80_subset[,1,],1,sd)[min_95_QUBO.SNP.DN.R80_subset]
+print(min_95_QUBO.SNP.DN.R80_subset); print(min_95.SD_QUBO.SNP.DN.R80_subset)
+# Reference
+# R0
+min_95_QUBO.SNP.REF.R0_subset <- min(which(apply(samplingResults_QUBO.SNP.REF.R0_subset[,1,],1,mean) > 95))
+min_95.SD_QUBO.SNP.REF.R0_subset <- apply(samplingResults_QUBO.SNP.REF.R0_subset[,1,],1,sd)[min_95_QUBO.SNP.REF.R0_subset]
+print(min_95_QUBO.SNP.REF.R0_subset); print(min_95.SD_QUBO.SNP.REF.R0_subset)
+# R80
+min_95_QUBO.SNP.REF.R80_subset <- min(which(apply(samplingResults_QUBO.SNP.REF.R80_subset[,1,],1,mean) > 95))
+min_95.SD_QUBO.SNP.REF.R80_subset <- apply(samplingResults_QUBO.SNP.REF.R80_subset[,1,],1,sd)[min_95_QUBO.SNP.REF.R80_subset]
+print(min_95_QUBO.SNP.REF.R80_subset); print(min_95.SD_QUBO.SNP.REF.R80_subset)
 
-# PLOTTING ----
-# TWO GRAPHS
-# MSAT_subset: calculate means and standard deviations, for each capture rate category
-total_means <- apply(samplingResults_QUBO.MSAT_subset[,1,], 1, mean)
-v.com_means <- apply(samplingResults_QUBO.MSAT_subset[,2,], 1, mean)
-com_means <- apply(samplingResults_QUBO.MSAT_subset[,3,], 1, mean)
-lowfr_means <- apply(samplingResults_QUBO.MSAT_subset[,4,], 1, mean)
-rare_means <- apply(samplingResults_QUBO.MSAT_subset[,5,], 1, mean)
-# Pick colors, with transparency for values other than Total
-plotColors <- c("red","red4","darkorange3","coral","purple")
-plotColors[2:5] <- alpha(plotColors[2:5], 0.5)
-# Plots all sets of points onto single graph, as well as 95% threshold line
-plot(total_means, ylim=c(0,110), col=plotColors[1], pch=16, 
-     xlab="Number of Individuals", ylab="Percent Diversity Capture",
-     main="QUBO, MSATs (Subset); 50 Replicates")
-points(v.com_means, col=plotColors[2], pch=16)
-points(com_means, col=plotColors[3], pch=16)
-points(lowfr_means, col=plotColors[4], pch=16)
-points(rare_means, col=plotColors[5], pch=16)
-legend(x=80, y=70.13276, inset = 0.05, legend = c("Total","Very common","Common","Low frequency", "Rare"),
-       col=plotColors, pch = c(20,20,20), cex=1, pt.cex = 2, bty="n", y.intersp = 0.27)
-# Lines for 95% threshold
-abline(h=95, col="black", lty=3); abline(v=min_95_QUBO.MSAT_subset, col="black")
-# Text for number of individuals to capture 95% threshold
-mtext(text=paste0("Minimum sampling size (95%) = ", min_95_QUBO.MSAT_subset), side=1, line=-1.5, at=61)
-
-# SNP_subset: calculate means and standard deviations, for each capture rate category
-total_means <- apply(samplingResults_QUBO.SNP_subset[,1,], 1, mean)
-v.com_means <- apply(samplingResults_QUBO.SNP_subset[,2,], 1, mean)
-com_means <- apply(samplingResults_QUBO.SNP_subset[,3,], 1, mean)
-lowfr_means <- apply(samplingResults_QUBO.SNP_subset[,4,], 1, mean)
-rare_means <- apply(samplingResults_QUBO.SNP_subset[,5,], 1, mean)
-# Plots all sets of points onto single graph, as well as 95% threshold line
-plot(total_means, ylim=c(0,110), col=plotColors[1], pch=16, 
-     xlab="Number of Individuals", ylab="Percent Diversity Capture",
-     main="QUBO, SNPs (Subset); 50 Replicates")
-points(v.com_means, col=plotColors[2], pch=16)
-points(com_means, col=plotColors[3], pch=16)
-points(lowfr_means, col=plotColors[4], pch=16)
-points(rare_means, col=plotColors[5], pch=16)
-legend(x=83, y=70.13276, inset = 0.05, legend = c("Total","Very common","Common","Low frequency", "Rare"),
-       col=plotColors, pch = c(20,20,20), cex=1, pt.cex = 2, bty="n", y.intersp = 0.27)
-# Lines for 95% threshold
-abline(h=95, col="black", lty=3); abline(v=min_95_QUBO.SNP_subset, col="black")
-# Text for number of individuals to capture 95% threshold
-mtext(text=paste0("Minimum sampling size (95%) = ", min_95_QUBO.SNP_subset), side=1, line=-1.5, at=61)
-
-# ONE GRAPH (TOTAL VALUES)
-# Relevant values
-QUBO_total_means_MSAT_subset <- apply(samplingResults_QUBO.MSAT_subset[,1,], 1, mean)
-min_95_QUBO.MSAT_subset <- min(which(apply(samplingResults_QUBO.MSAT_subset[,1,],1,mean) > 95))
-QUBO_total_means_SNP_subset <- apply(samplingResults_QUBO.SNP_subset[,1,], 1, mean)
-min_95_QUBO.SNP_subset <- min(which(apply(samplingResults_QUBO.SNP_subset[,1,],1,mean) > 95))
-# Clear plotting device, to set back to single screen
-dev.off()
-# Generate plot and add points
-plotColors <- plotColors <- alpha(c("purple","darkgreen"), 0.7)
-plot(QUBO_total_means_MSAT_subset, ylim=c(0,110), col=plotColors[1], pch=16, 
-     xlab="Number of Individuals", ylab="Percent Diversity Capture",
-     main="QUBO, MSATs and SNPs (Subset; 50 Replicates): Total Allelic Representation")
-points(QUBO_total_means_SNP_subset, col=plotColors[2], pch=17)
-# Legend
-legend(x=78, y=70.13276, inset = 0.05, legend = c("Microsatellites","SNPs"),
-       col=plotColors, pch = c(16,17), cex=1, pt.cex = 2, bty="n", y.intersp = 0.7)
-# Lines for 95% threshold
-abline(h=95, col="black", lty=3) 
-abline(v=min_95_QUBO.MSAT_subset, col="black"); abline(v=min_95_QUBO.SNP_subset, col="black")
-# Text for number of individuals to capture 95% threshold
-mtext(text=paste0("MSAT min size (95%) = ", min_95_QUBO.MSAT_subset), side=1, line=-1.5, at=61)
-mtext(text=paste0("SNP min size (95%) = ", min_95_QUBO.SNP_subset), side=1, line=-1.5, at=85)
+# *** PLOTTING ----
+# # TWO GRAPHS
+# # MSAT_subset: calculate means and standard deviations, for each capture rate category
+# total_means <- apply(samplingResults_QUBO.MSAT_subset[,1,], 1, mean)
+# v.com_means <- apply(samplingResults_QUBO.MSAT_subset[,2,], 1, mean)
+# com_means <- apply(samplingResults_QUBO.MSAT_subset[,3,], 1, mean)
+# lowfr_means <- apply(samplingResults_QUBO.MSAT_subset[,4,], 1, mean)
+# rare_means <- apply(samplingResults_QUBO.MSAT_subset[,5,], 1, mean)
+# # Pick colors, with transparency for values other than Total
+# plotColors <- c("red","red4","darkorange3","coral","purple")
+# plotColors[2:5] <- alpha(plotColors[2:5], 0.5)
+# # Plots all sets of points onto single graph, as well as 95% threshold line
+# plot(total_means, ylim=c(0,110), col=plotColors[1], pch=16, 
+#      xlab="Number of Individuals", ylab="Percent Diversity Capture",
+#      main="QUBO, MSATs (Subset); 50 Replicates")
+# points(v.com_means, col=plotColors[2], pch=16)
+# points(com_means, col=plotColors[3], pch=16)
+# points(lowfr_means, col=plotColors[4], pch=16)
+# points(rare_means, col=plotColors[5], pch=16)
+# legend(x=80, y=70.13276, inset = 0.05, legend = c("Total","Very common","Common","Low frequency", "Rare"),
+#        col=plotColors, pch = c(20,20,20), cex=1, pt.cex = 2, bty="n", y.intersp = 0.27)
+# # Lines for 95% threshold
+# abline(h=95, col="black", lty=3); abline(v=min_95_QUBO.MSAT_subset, col="black")
+# # Text for number of individuals to capture 95% threshold
+# mtext(text=paste0("Minimum sampling size (95%) = ", min_95_QUBO.MSAT_subset), side=1, line=-1.5, at=61)
+# 
+# # SNP_subset
+# # De novo
+# # R0 
+# # Calculate means and standard deviations, for each capture rate category
+# total_means <- apply(samplingResults_QUBO.SNP.DN.R0_subset[,1,], 1, mean)
+# v.com_means <- apply(samplingResults_QUBO.SNP.DN.R0_subset[,2,], 1, mean)
+# com_means <- apply(samplingResults_QUBO.SNP.DN.R0_subset[,3,], 1, mean)
+# lowfr_means <- apply(samplingResults_QUBO.SNP.DN.R0_subset[,4,], 1, mean)
+# rare_means <- apply(samplingResults_QUBO.SNP.DN.R0_subset[,5,], 1, mean)
+# # Plots all sets of points onto single graph, as well as 95% threshold line
+# plot(total_means, ylim=c(0,110), col=plotColors[1], pch=16, 
+#      xlab="Number of Individuals", ylab="Percent Diversity Capture",
+#      main="QUBO, SNPs (Subset); 50 Replicates")
+# points(v.com_means, col=plotColors[2], pch=16)
+# points(com_means, col=plotColors[3], pch=16)
+# points(lowfr_means, col=plotColors[4], pch=16)
+# points(rare_means, col=plotColors[5], pch=16)
+# legend(x=83, y=70.13276, inset = 0.05, legend = c("Total","Very common","Common","Low frequency", "Rare"),
+#        col=plotColors, pch = c(20,20,20), cex=1, pt.cex = 2, bty="n", y.intersp = 0.27)
+# # Lines for 95% threshold
+# abline(h=95, col="black", lty=3); abline(v=min_95_QUBO.SNP.DN.R0_subset, col="black")
+# # Text for number of individuals to capture 95% threshold
+# mtext(text=paste0("Minimum sampling size (95%) = ", min_95_QUBO.SNP.DN.R0_subset), side=1, line=-1.5, at=61)
+# 
+# # R80 
+# # Calculate means and standard deviations, for each capture rate category
+# total_means <- apply(samplingResults_QUBO.SNP.DN.R80_subset[,1,], 1, mean)
+# v.com_means <- apply(samplingResults_QUBO.SNP.DN.R80_subset[,2,], 1, mean)
+# com_means <- apply(samplingResults_QUBO.SNP.DN.R80_subset[,3,], 1, mean)
+# lowfr_means <- apply(samplingResults_QUBO.SNP.DN.R80_subset[,4,], 1, mean)
+# rare_means <- apply(samplingResults_QUBO.SNP.DN.R80_subset[,5,], 1, mean)
+# # Plots all sets of points onto single graph, as well as 95% threshold line
+# plot(total_means, ylim=c(0,110), col=plotColors[1], pch=16, 
+#      xlab="Number of Individuals", ylab="Percent Diversity Capture",
+#      main="QUBO, SNPs (Subset); 50 Replicates")
+# points(v.com_means, col=plotColors[2], pch=16)
+# points(com_means, col=plotColors[3], pch=16)
+# points(lowfr_means, col=plotColors[4], pch=16)
+# points(rare_means, col=plotColors[5], pch=16)
+# legend(x=83, y=70.13276, inset = 0.05, legend = c("Total","Very common","Common","Low frequency", "Rare"),
+#        col=plotColors, pch = c(20,20,20), cex=1, pt.cex = 2, bty="n", y.intersp = 0.27)
+# # Lines for 95% threshold
+# abline(h=95, col="black", lty=3); abline(v=min_95_QUBO.SNP.DN.R80_subset, col="black")
+# # Text for number of individuals to capture 95% threshold
+# mtext(text=paste0("Minimum sampling size (95%) = ", min_95_QUBO.SNP.DN.R80_subset), side=1, line=-1.5, at=61)
+# # Reference
+# # R0 
+# # Calculate means and standard deviations, for each capture rate category
+# total_means <- apply(samplingResults_QUBO.SNP.REF.R0_subset[,1,], 1, mean)
+# v.com_means <- apply(samplingResults_QUBO.SNP.REF.R0_subset[,2,], 1, mean)
+# com_means <- apply(samplingResults_QUBO.SNP.REF.R0_subset[,3,], 1, mean)
+# lowfr_means <- apply(samplingResults_QUBO.SNP.REF.R0_subset[,4,], 1, mean)
+# rare_means <- apply(samplingResults_QUBO.SNP.REF.R0_subset[,5,], 1, mean)
+# # Plots all sets of points onto single graph, as well as 95% threshold line
+# plot(total_means, ylim=c(0,110), col=plotColors[1], pch=16, 
+#      xlab="Number of Individuals", ylab="Percent Diversity Capture",
+#      main="QUBO, SNPs (Subset); 50 Replicates")
+# points(v.com_means, col=plotColors[2], pch=16)
+# points(com_means, col=plotColors[3], pch=16)
+# points(lowfr_means, col=plotColors[4], pch=16)
+# points(rare_means, col=plotColors[5], pch=16)
+# legend(x=83, y=70.13276, inset = 0.05, legend = c("Total","Very common","Common","Low frequency", "Rare"),
+#        col=plotColors, pch = c(20,20,20), cex=1, pt.cex = 2, bty="n", y.intersp = 0.27)
+# # Lines for 95% threshold
+# abline(h=95, col="black", lty=3); abline(v=min_95_QUBO.SNP.REF.R0_subset, col="black")
+# # Text for number of individuals to capture 95% threshold
+# mtext(text=paste0("Minimum sampling size (95%) = ", min_95_QUBO.SNP.REF.R0_subset), side=1, line=-1.5, at=61)
+# 
+# # R80 
+# # Calculate means and standard deviations, for each capture rate category
+# total_means <- apply(samplingResults_QUBO.SNP.REF.R80_subset[,1,], 1, mean)
+# v.com_means <- apply(samplingResults_QUBO.SNP.REF.R80_subset[,2,], 1, mean)
+# com_means <- apply(samplingResults_QUBO.SNP.REF.R80_subset[,3,], 1, mean)
+# lowfr_means <- apply(samplingResults_QUBO.SNP.REF.R80_subset[,4,], 1, mean)
+# rare_means <- apply(samplingResults_QUBO.SNP.REF.R80_subset[,5,], 1, mean)
+# # Plots all sets of points onto single graph, as well as 95% threshold line
+# plot(total_means, ylim=c(0,110), col=plotColors[1], pch=16, 
+#      xlab="Number of Individuals", ylab="Percent Diversity Capture",
+#      main="QUBO, SNPs (Subset); 50 Replicates")
+# points(v.com_means, col=plotColors[2], pch=16)
+# points(com_means, col=plotColors[3], pch=16)
+# points(lowfr_means, col=plotColors[4], pch=16)
+# points(rare_means, col=plotColors[5], pch=16)
+# legend(x=83, y=70.13276, inset = 0.05, legend = c("Total","Very common","Common","Low frequency", "Rare"),
+#        col=plotColors, pch = c(20,20,20), cex=1, pt.cex = 2, bty="n", y.intersp = 0.27)
+# # Lines for 95% threshold
+# abline(h=95, col="black", lty=3); abline(v=min_95_QUBO.SNP.REF.R80_subset, col="black")
+# # Text for number of individuals to capture 95% threshold
+# mtext(text=paste0("Minimum sampling size (95%) = ", min_95_QUBO.SNP.REF.R80_subset), side=1, line=-1.5, at=61)
+# 
+# # ONE GRAPH (TOTAL VALUES)
+# # Relevant values
+# QUBO_total_means_MSAT_subset <- apply(samplingResults_QUBO.MSAT_subset[,1,], 1, mean)
+# min_95_QUBO.MSAT_subset <- min(which(apply(samplingResults_QUBO.MSAT_subset[,1,],1,mean) > 95))
+# QUBO_total_means_SNP_subset <- apply(samplingResults_QUBO.SNP.REF.R0_subset[,1,], 1, mean)
+# min_95_QUBO.SNP.REF.R0_subset <- min(which(apply(samplingResults_QUBO.SNP.REF.R0_subset[,1,],1,mean) > 95))
+# # Clear plotting device, to set back to single screen
+# dev.off()
+# # Generate plot and add points
+# plotColors <- plotColors <- alpha(c("purple","darkgreen"), 0.7)
+# plot(QUBO_total_means_MSAT_subset, ylim=c(0,110), col=plotColors[1], pch=16, 
+#      xlab="Number of Individuals", ylab="Percent Diversity Capture",
+#      main="QUBO, MSATs and SNPs (Subset; 50 Replicates): Total Allelic Representation")
+# points(QUBO_total_means_SNP_subset, col=plotColors[2], pch=17)
+# # Legend
+# legend(x=78, y=70.13276, inset = 0.05, legend = c("Microsatellites","SNPs"),
+#        col=plotColors, pch = c(16,17), cex=1, pt.cex = 2, bty="n", y.intersp = 0.7)
+# # Lines for 95% threshold
+# abline(h=95, col="black", lty=3) 
+# abline(v=min_95_QUBO.MSAT_subset, col="black"); abline(v=min_95_QUBO.SNP.REF.R0_subset, col="black")
+# # Text for number of individuals to capture 95% threshold
+# mtext(text=paste0("MSAT min size (95%) = ", min_95_QUBO.MSAT_subset), side=1, line=-1.5, at=61)
+# mtext(text=paste0("SNP min size (95%) = ", min_95_QUBO.SNP.REF.R0_subset), side=1, line=-1.5, at=85)
