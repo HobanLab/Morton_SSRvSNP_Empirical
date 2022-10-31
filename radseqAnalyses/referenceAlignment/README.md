@@ -1,4 +1,4 @@
-## REFERENCE ALIGNMENT
+## Reference alignment
 
 This folder contains the BASH scripts used to obtain and index reference genomes, align samples to reference genomes, 
 and run the Stacks commands used to generate loci datasets from reference alignments. 
