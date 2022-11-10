@@ -1,0 +1,30 @@
+# Empirical analysis files/folders ignored GitHub
+
+# Outdated or development resampling scripts, including those used for failed Resampling timings
+exSituRepresentation/Resampling/QUAC.NEW.samplingArray.Rdata
+exSituRepresentation/Resampling/QUAC.OLD.samplingArray.Rdata
+exSituRepresentation/Resampling/QUBO_1SNP_resamplingArray.Rdata
+exSituRepresentation/Resampling/QUBO_HapSNPs_resamplingArray.Rdata
+exSituRepresentation/Resampling/ResamplingDemo.R
+exSituRepresentation/Resampling/ResamplingTiming_New.R
+exSituRepresentation/Resampling/ResamplingTiming_New.out
+exSituRepresentation/Resampling/ResamplingTiming_Old.R
+exSituRepresentation/Resampling/ResamplingTiming_Old2.R
+exSituRepresentation/Resampling/Resampling_Old.R
+exSituRepresentation/Resampling/exSitu_Sampling.R
+exSituRepresentation/exSituCaptureRates.R
+        
+# Population level analyses scripts: either outdated or in development
+popAnalyses/Fst_Measure.R
+popAnalyses/Fst_plot.R
+popAnalyses/popDiff.R
+popAnalyses/structureMissingData.R
+
+# Scripts used when analyzing RADseq data. 
+# These have largely been replaced, or are obsolete due to decisions in how we decided to process our data
+radseqAnalyses/analyzingAlleleNames.R
+radseqAnalyses/differentPopScenarios.R
+radseqAnalyses/oneCatalog_multiplePops.R
+
+# Rhistory files
+*.Rhistory
