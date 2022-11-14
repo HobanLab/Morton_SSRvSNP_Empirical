@@ -24,7 +24,7 @@ library(adegenet)
 library(hierfstat)
 
 # %%%% FUNCTIONS %%%% ----
-# Read in relevant functions required for ex situ representation analyses
+# Set the working directory, in order to properly read in tissue and population names
 SSRvSNP.wd <- "~/Documents/SSRvSNP/Code/"
 setwd(SSRvSNP.wd)
 source("exSituRepresentation/functions_exSituRepresentation.R")
@@ -285,6 +285,9 @@ rownames(QUBO.SNP.REF.R80.genind@tab) <- rownames(QUBO.SNP.DN.R80.genind@tab) <-
 # Subset SNP sample names by those that are also seen within the MSAT samples
 QUBO_sharedSamples <- sort(QUBO.SNP.sampleNames[which(QUBO.SNP.sampleNames %in% QUBO.MSAT.sampleNames)])
 # Subset MSAT and SNP wild matrix objects to strictly shared samples
+# MSAT
+QUBO.MSAT_subset.genind <- QUBO.MSAT.genind[QUBO_sharedSamples,, drop=TRUE]
+# SNP
 # R0
 QUBO.SNP.DN.R0_subset.genind <- QUBO.SNP.DN.R0.genind[QUBO_sharedSamples,, drop=TRUE]
 QUBO.SNP.REF.R0_subset.genind <- QUBO.SNP.REF.R0.genind[QUBO_sharedSamples,, drop=TRUE]
