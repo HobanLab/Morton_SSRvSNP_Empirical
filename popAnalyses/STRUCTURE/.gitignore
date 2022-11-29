@@ -1,0 +1,4 @@
+# .gitignore file for STRUCTURE subfolder, in IMLS/GCCO SSRvSNP Empirical project
+
+# Ignore all STRUCTURE files included in this folder
+*.str
