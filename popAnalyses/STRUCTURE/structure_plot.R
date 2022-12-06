@@ -70,7 +70,7 @@ plot_multipleK <- function(kList, kValues, kColors, popNamesPresent=FALSE, ...){
   # Determine the number of individuals by counting rows of the kList object
   nInds <- nrow(kList[[1]])
   # Set graphing parameters to allow for multiple rows (for each K value)
-  par(mfrow = c(length(kList),1), mar = c(4,1,2,0.75) + 0.1, oma = c(1.5,0,3,0), mgp = c(2,1,0))
+  par(mfrow = c(length(kList),1), mar = c(3.5,1,2,0.75) + 0.1, oma = c(1.5,0,3,0), mgp = c(2,1,0))
   # Loop through list of Q matrices
   for(i in 1:length(kList)){
     # If population names are present (first column of matrix), remove these prior to plotting
@@ -87,25 +87,25 @@ plot_multipleK <- function(kList, kValues, kColors, popNamesPresent=FALSE, ...){
 }
 
 # Wrapper for plot_multipleK, which just calls that function after reading in the CLUMPP files
-Plot_AllK <- function(clumppPath, Ks, Colors, popNames, popNamesPresent=FALSE, ...){
+Plot_AllK <- function(clumppPath, Ks, Colors, sampleNames, popNames, popNamesPresent=FALSE, ...){
   # Read in the Q matrices within the specified CLUMPP directory
   K2filepath <- paste0(clumppPath, "/K2/CLUMPP.files/ClumppIndFile.output")
-  K2clumpp <- read.CLUMPP(K2filepath, sampleNames = QUAC.sampleNames, popNames = popNames)
+  K2clumpp <- read.CLUMPP(K2filepath, sampleNames = sampleNames, popNames = popNames)
   
   K3filepath <- paste0(clumppPath, "/K3/CLUMPP.files/ClumppIndFile.output")
-  K3clumpp <- read.CLUMPP(K3filepath, sampleNames = QUAC.sampleNames, popNames = popNames)
+  K3clumpp <- read.CLUMPP(K3filepath, sampleNames = sampleNames, popNames = popNames)
   
   K4filepath <- paste0(clumppPath, "/K4/CLUMPP.files/ClumppIndFile.output")
-  K4clumpp <- read.CLUMPP(K4filepath, sampleNames = QUAC.sampleNames, popNames = popNames)
+  K4clumpp <- read.CLUMPP(K4filepath, sampleNames = sampleNames, popNames = popNames)
   
   K5filepath <- paste0(clumppPath, "/K5/CLUMPP.files/ClumppIndFile.output")
-  K5clumpp <- read.CLUMPP(K5filepath, sampleNames = QUAC.sampleNames, popNames = popNames)
+  K5clumpp <- read.CLUMPP(K5filepath, sampleNames = sampleNames, popNames = popNames)
   
   K6filepath <- paste0(clumppPath, "/K6/CLUMPP.files/ClumppIndFile.output")
-  K6clumpp <- read.CLUMPP(K6filepath, sampleNames = QUAC.sampleNames, popNames = popNames)
+  K6clumpp <- read.CLUMPP(K6filepath, sampleNames = sampleNames, popNames = popNames)
   
   K7filepath <- paste0(clumppPath, "/K7/CLUMPP.files/ClumppIndFile.output")
-  K7clumpp <- read.CLUMPP(K7filepath, sampleNames = QUAC.sampleNames, popNames = popNames)
+  K7clumpp <- read.CLUMPP(K7filepath, sampleNames = sampleNames, popNames = popNames)
   
   # Plot specified K values
   clumppList <- list(K2clumpp, K3clumpp, K4clumpp, K5clumpp, K6clumpp, K7clumpp)
@@ -116,6 +116,8 @@ Plot_AllK <- function(clumppPath, Ks, Colors, popNames, popNamesPresent=FALSE, .
 # Colors for different clusters: combinations of RGB components in hexadecimal
 QUAC.colors <- c('#A8FFFD','#B862D3', '#A39D9D','#FFFF00', 
                  '#69C261', '#FF59AC', '#26CDCD',  '#C1C6FF') 
+# Population labels
+QUAC.labelNames <- c("Porter", "Magazine", "Pryor", "Sugarloaf", "Kessler")
 # %%% SNP ----
 # ---- DE NOVO, SUBSET ADEGENET ----
 # Variable file path: directory containing all CLUMPPs output to read in
@@ -129,57 +131,55 @@ QUAC.sampleNames <- factor(read.table(QUAC.popMap, header=FALSE)[,1])
 QUAC.popNames <- factor(read.table(QUAC.popMap, header=FALSE)[,2])
 
 # All Ks (QUAC wild samples, K=2-7) ----
-Plot_AllK(clumppPath = QUAC.clumppDir, Ks=2:7, Colors = QUAC.colors, popNames = QUAC.popNames)
-
-# Variables for lines designating groups beneath K charts. 5 population names provided
-lineWidth <- 1.9; lineHeight <- rep(-0.1,2)
-labelPositions <- c(13, 38, 59, 79, 100.5); labelNames <- c("Porter", "Magazine", "Pryor", "Sugarloaf", "Kessler")
+Plot_AllK(clumppPath = QUAC.clumppDir, Ks=2:7, Colors = QUAC.colors, 
+          sampleNames = QUAC.sampleNames, popNames = QUAC.popNames)
+# Variables for lines designating groups beneath K charts. 
+lineWidth <- 1.9; lineHeight <- rep(-0.05,2)
+QUAC.labelPositions <- c(13, 38, 59, 79, 100) 
 # Plot lines
 lines(x = c(0.2,26), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
 lines(x = c(26.7,50.1), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
 lines(x = c(50.7,68), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
 lines(x = c(68.7,95.4), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
-lines(x = c(96.4,101.9), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
+lines(x = c(96.3,101.9), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
 # Add group labels
-text(x=labelPositions, y=-0.25, srt=35, adj=1, xpd=TRUE, labels=labelNames, cex=1.2)
+text(x=QUAC.labelPositions, y=-0.2, srt=35, adj=1, xpd=TRUE, labels=QUAC.labelNames, cex=1.2)
 # Title
 mtext(text = "QUAC Wild Samples (Subset), SNP: De novo, Adegenet", outer=TRUE, cex=1.3)
 
 # Best K ----
 # Plot two charts per window (one for each Best K metric)
 par(mfrow=c(2,1), mar = c(4.5,3,1,3), oma=c(1,0,1,0))
-# Variables for lines designating groups beneath K charts. 5 population names provided
-lineWidth <- 1.9; lineHeight <- rep(-0.035,2)
-labelPositions <- c(15, 44, 68, 93.5, 112); labelNames <- c("Porter", "Magazine", "Pryor", "Sugarloaf", "Kessler")
 # Plot QUAC K=5 values (Evanno Best K)
 QUAC.clumppDir <- 
   "/RAID1/IMLS_GCCO/Analysis/STRUCTURE/denovo_finalAssemblies/QUAC/Subset/Wild/subsetAdegenet/output/CLUMPAK/Output/mainPipeline/QUAC.DNFA.Subset.Wild.Adegenet/K5/"
 Plot_K(QUAC.clumppDir, K=4, Colors = QUAC.colors, QUAC.sampleNames, QUAC.popNames, 
        mainTitle = "QUAC Wild Samples (Subset), SNP: De novo, Adegenet: K5 (Evanno)")
-
+# Variables for lines designating groups beneath K charts. 
+lineWidth <- 1.9; lineHeight <- rep(-0.035,2)
+QUAC.labelPositions <- c(15, 44, 68, 93.5, 112) 
 # Plot lines
 lines(x = c(0.2,29.5), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
 lines(x = c(30.5,57.5), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
 lines(x = c(58.5,77.6), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
-lines(x = c(78.8,108), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
-lines(x = c(108.5,116.3), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
+lines(x = c(78.8,108.7), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
+lines(x = c(109.7,116.3), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
 # Add group labels
-text(x=labelPositions, y=-0.05, srt=35, adj=1, xpd=TRUE, labels=labelNames, cex=1)
+text(x=QUAC.labelPositions, y=-0.063, srt=35, adj=1, xpd=TRUE, labels=QUAC.labelNames, cex=1)
 
 # Plot QUAC K=7 values (Max Probability Best K)
 QUAC.clumppDir <- 
   "/RAID1/IMLS_GCCO/Analysis/STRUCTURE/denovo_finalAssemblies/QUAC/Subset/Wild/subsetAdegenet/output/CLUMPAK/Output/mainPipeline/QUAC.DNFA.Subset.Wild.Adegenet/K7/"
 Plot_K(QUAC.clumppDir, K=7, Colors = QUAC.colors, QUAC.sampleNames, QUAC.popNames, 
        mainTitle = "QUAC Wild Samples (Subset), SNP: De novo, Adegenet: K7 (Max Probability)")
-
 # Plot lines
 lines(x = c(0.2,29.5), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
 lines(x = c(30.5,57.5), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
 lines(x = c(58.5,77.6), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
-lines(x = c(78.8,108), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
-lines(x = c(108.5,116.3), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
+lines(x = c(78.8,108.7), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
+lines(x = c(109.7,116.3), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
 # Add group labels
-text(x=labelPositions, y=-0.05, srt=35, adj=1, xpd=TRUE, labels=labelNames, cex=1.2)
+text(x=QUAC.labelPositions, y=-0.063, srt=35, adj=1, xpd=TRUE, labels=QUAC.labelNames, cex=1)
 
 # ---- DE NOVO, SUBSET STACKS ----
 # Variable file path: directory containing all CLUMPPs output to read in
@@ -193,57 +193,55 @@ QUAC.sampleNames <- factor(read.table(QUAC.popMap, header=FALSE)[,1])
 QUAC.popNames <- factor(read.table(QUAC.popMap, header=FALSE)[,2])
 
 # All Ks (QUAC wild samples, K=2-7) ----
-Plot_AllK(clumppPath = QUAC.clumppDir, Ks=2:7, Colors = QUAC.colors, popNames = QUAC.popNames)
-
-# Variables for lines designating groups beneath K charts. 5 population names provided
-lineWidth <- 1.9; lineHeight <- rep(-0.1,2)
-labelPositions <- c(13, 38, 59, 79, 100.5); labelNames <- c("Porter", "Magazine", "Pryor", "Sugarloaf", "Kessler")
+Plot_AllK(clumppPath = QUAC.clumppDir, Ks=2:7, Colors = QUAC.colors, 
+          sampleNames = QUAC.sampleNames, popNames = QUAC.popNames)
+# Variables for lines designating groups beneath K charts. 
+lineWidth <- 1.9; lineHeight <- rep(-0.05,2)
+QUAC.labelPositions <- c(13, 38, 59, 79, 100) 
 # Plot lines
 lines(x = c(0.2,26), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
 lines(x = c(26.7,50.1), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
 lines(x = c(50.7,68), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
 lines(x = c(68.7,95.4), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
-lines(x = c(96.4,101.9), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
+lines(x = c(96.3,101.9), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
 # Add group labels
-text(x=labelPositions, y=-0.25, srt=35, adj=1, xpd=TRUE, labels=labelNames, cex=1)
+text(x=QUAC.labelPositions, y=-0.2, srt=35, adj=1, xpd=TRUE, labels=QUAC.labelNames, cex=1.2)
 # Title
 mtext(text = "QUAC Wild Samples (Subset), SNP: De novo, Stacks", outer=TRUE, cex=1.3)
 
 # Best K ----
 # Plot two charts per window (one for each Best K metric)
 par(mfrow=c(2,1), mar = c(4.5,3,1,3), oma=c(1,0,1,0))
-# Variables for lines designating groups beneath K charts. 5 population names provided
-lineWidth <- 1.9; lineHeight <- rep(-0.035,2)
-labelPositions <- c(15, 44, 68, 93.5, 112); labelNames <- c("Porter", "Magazine", "Pryor", "Sugarloaf", "Kessler")
 # Plot QUAC K=6 values (Evanno Best K)
 QUAC.clumppDir <- 
   "/RAID1/IMLS_GCCO/Analysis/STRUCTURE/denovo_finalAssemblies/QUAC/Subset/Wild/subsetStacks/output/CLUMPAK/Output/mainPipeline/QUAC.DNFA.Subset.Wild.Stacks/K6/"
 Plot_K(QUAC.clumppDir, K=6, Colors = QUAC.colors, QUAC.sampleNames, QUAC.popNames, 
        mainTitle = "QUAC Wild Samples (Subset), SNP: De novo, Stacks: K6 (Evanno)")
-
+# Variables for lines designating groups beneath K charts. 
+lineWidth <- 1.9; lineHeight <- rep(-0.035,2)
+QUAC.labelPositions <- c(15, 44, 68, 93.5, 112) 
 # Plot lines
 lines(x = c(0.2,29.5), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
 lines(x = c(30.5,57.5), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
 lines(x = c(58.5,77.6), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
-lines(x = c(78.8,108), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
-lines(x = c(108.5,116.3), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
+lines(x = c(78.8,108.7), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
+lines(x = c(109.7,116.3), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
 # Add group labels
-text(x=labelPositions, y=-0.05, srt=35, adj=1, xpd=TRUE, labels=labelNames, cex=1)
+text(x=QUAC.labelPositions, y=-0.063, srt=35, adj=1, xpd=TRUE, labels=QUAC.labelNames, cex=1)
 
 # Plot QUAC K=4 values (Max Probability Best K)
 QUAC.clumppDir <- 
   "/RAID1/IMLS_GCCO/Analysis/STRUCTURE/denovo_finalAssemblies/QUAC/Subset/Wild/subsetStacks/output/CLUMPAK/Output/mainPipeline/QUAC.DNFA.Subset.Wild.Stacks/K4/"
 Plot_K(QUAC.clumppDir, K=4, Colors = QUAC.colors, QUAC.sampleNames, QUAC.popNames, 
        mainTitle = "QUAC Wild Samples (Subset), SNP: De novo, Stacks: K4 (Max Probability)")
-
 # Plot lines
 lines(x = c(0.2,29.5), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
 lines(x = c(30.5,57.5), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
 lines(x = c(58.5,77.6), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
-lines(x = c(78.8,108), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
-lines(x = c(108.5,116.3), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
+lines(x = c(78.8,108.7), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
+lines(x = c(109.7,116.3), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
 # Add group labels
-text(x=labelPositions, y=-0.05, srt=35, adj=1, xpd=TRUE, labels=labelNames, cex=1)
+text(x=QUAC.labelPositions, y=-0.063, srt=35, adj=1, xpd=TRUE, labels=QUAC.labelNames, cex=1)
 
 # ---- REFERENCE ----
 # Variable file path: directory containing all CLUMPPs output to read in
@@ -257,19 +255,19 @@ QUAC.sampleNames <- factor(read.table(QUAC.popMap, header=FALSE)[,1])
 QUAC.popNames <- factor(read.table(QUAC.popMap, header=FALSE)[,2])
 
 # All Ks (QUAC wild samples, K=2-7) ----
-Plot_AllK(clumppPath = QUAC.clumppDir, Ks=2:7, Colors = QUAC.colors, popNames = QUAC.popNames)
-
-# Variables for lines designating groups beneath K charts. 5 population names provided
-lineWidth <- 1.9; lineHeight <- rep(-0.1,2)
-labelPositions <- c(13, 38, 59, 79, 100.5); labelNames <- c("Porter", "Magazine", "Pryor", "Sugarloaf", "Kessler")
+Plot_AllK(clumppPath = QUAC.clumppDir, Ks=2:7, Colors = QUAC.colors, 
+          sampleNames = QUAC.sampleNames, popNames = QUAC.popNames)
+# Variables for lines designating groups beneath K charts. 
+lineWidth <- 1.9; lineHeight <- rep(-0.05,2)
+QUAC.labelPositions <- c(13, 38, 59, 79, 100) 
 # Plot lines
 lines(x = c(0.2,26), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
 lines(x = c(26.7,50.1), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
 lines(x = c(50.7,68), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
 lines(x = c(68.7,95.4), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
-lines(x = c(96.4,101.9), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
+lines(x = c(96.3,101.9), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
 # Add group labels
-text(x=labelPositions, y=-0.25, srt=35, adj=1, xpd=TRUE, labels=labelNames, cex=1)
+text(x=QUAC.labelPositions, y=-0.2, srt=35, adj=1, xpd=TRUE, labels=QUAC.labelNames, cex=1.2)
 # Title
 mtext(text = "QUAC Wild Samples (Subset), SNP: Reference, Stacks", outer=TRUE, cex=1.3)
 
@@ -277,38 +275,36 @@ mtext(text = "QUAC Wild Samples (Subset), SNP: Reference, Stacks", outer=TRUE, c
 # Currently, we don't know optimal K values for QUAC Reference dataset
 # # Plot two charts per window (one for each Best K metric)
 # par(mfrow=c(2,1), mar = c(4.5,3,1,3), oma=c(1,0,1,0))
-# # Variables for lines designating groups beneath K charts. 5 population names provided
-# lineWidth <- 1.9; lineHeight <- rep(-0.035,2)
-# labelPositions <- c(15, 44, 68, 93.5, 112); labelNames <- c("Porter", "Magazine", "Pryor", "Sugarloaf", "Kessler")
 # # Plot QUAC K=6 values (Evanno Best K)
 # QUAC.clumppDir <- 
 #   "/RAID1/IMLS_GCCO/Analysis/STRUCTURE/denovo_finalAssemblies/QUAC/Subset/Wild/subsetStacks/output/CLUMPAK/Output/mainPipeline/QUAC.DNFA.Subset.Wild.Stacks/K6/"
 # Plot_K(QUAC.clumppDir, K=6, Colors = QUAC.colors, QUAC.sampleNames, QUAC.popNames, 
-#        mainTitle = "QUAC Wild Samples (Subset), SNP: De novo, Stacks: K6 (Evanno)")
-# 
+#        mainTitle = "QUAC Wild Samples (Subset), SNP: Reference K6 (Evanno)")
+# # Variables for lines designating groups beneath K charts. 
+# lineWidth <- 1.9; lineHeight <- rep(-0.035,2)
+# QUAC.labelPositions <- c(15, 44, 68, 93.5, 112) 
 # # Plot lines
 # lines(x = c(0.2,29.5), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
 # lines(x = c(30.5,57.5), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
 # lines(x = c(58.5,77.6), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
-# lines(x = c(78.8,108), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
-# lines(x = c(108.5,116.3), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
+# lines(x = c(78.8,108.7), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
+# lines(x = c(109.7,116.3), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
 # # Add group labels
-# text(x=labelPositions, y=-0.05, srt=35, adj=1, xpd=TRUE, labels=labelNames, cex=1)
+# text(x=QUAC.labelPositions, y=-0.063, srt=35, adj=1, xpd=TRUE, labels=QUAC.labelNames, cex=1)
 # 
 # # Plot QUAC K=4 values (Max Probability Best K)
 # QUAC.clumppDir <- 
 #   "/RAID1/IMLS_GCCO/Analysis/STRUCTURE/denovo_finalAssemblies/QUAC/Subset/Wild/subsetStacks/output/CLUMPAK/Output/mainPipeline/QUAC.DNFA.Subset.Wild.Stacks/K4/"
 # Plot_K(QUAC.clumppDir, K=4, Colors = QUAC.colors, QUAC.sampleNames, QUAC.popNames, 
-#        mainTitle = "QUAC Wild Samples (Subset), SNP: De novo, Stacks: K4 (Max Probability)")
-# 
+#        mainTitle = "QUAC Wild Samples (Subset), SNP: Reference: K4 (Max Probability)")
 # # Plot lines
 # lines(x = c(0.2,29.5), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
 # lines(x = c(30.5,57.5), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
 # lines(x = c(58.5,77.6), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
-# lines(x = c(78.8,108), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
-# lines(x = c(108.5,116.3), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
+# lines(x = c(78.8,108.7), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
+# lines(x = c(109.7,116.3), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
 # # Add group labels
-# text(x=labelPositions, y=-0.05, srt=35, adj=1, xpd=TRUE, labels=labelNames, cex=1.2)
+# text(x=QUAC.labelPositions, y=-0.063, srt=35, adj=1, xpd=TRUE, labels=QUAC.labelNames, cex=1)
 
 # %%% MSAT ----
 # Variable file path: directory containing all CLUMPPs output to read in
@@ -323,62 +319,67 @@ QUAC.popNames <- factor(read.table(QUAC.popMap, header=FALSE)[,2])
 
 # All Ks (QUAC wild samples, K=2-7) ----
 Plot_AllK(clumppPath = QUAC.clumppDir, Ks=2:7, Colors = QUAC.colors, popNames = QUAC.popNames)
-
-# Variables for lines designating groups beneath K charts. 5 population names provided
-lineWidth <- 1.9; lineHeight <- rep(-0.1,2)
-labelPositions <- c(13, 38, 59, 79, 100.5); labelNames <- c("Porter", "Magazine", "Pryor", "Sugarloaf", "Kessler")
+# Variables for lines designating groups beneath K charts. 
+lineWidth <- 1.9; lineHeight <- rep(-0.05,2)
+QUAC.labelPositions <- c(13, 38, 59, 79, 100) 
 # Plot lines
 lines(x = c(0.2,26), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
 lines(x = c(26.7,50.1), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
 lines(x = c(50.7,68), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
 lines(x = c(68.7,95.4), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
-lines(x = c(96.4,101.9), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
+lines(x = c(96.3,101.9), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
 # Add group labels
-text(x=labelPositions, y=-0.25, srt=35, adj=1, xpd=TRUE, labels=labelNames, cex=1.2)
+text(x=QUAC.labelPositions, y=-0.2, srt=35, adj=1, xpd=TRUE, labels=QUAC.labelNames, cex=1.2)
 # Title
-mtext(text = "QUAC Wild Samples (Subset), SNP: De novo, Stacks", outer=TRUE, cex=1.3)
+mtext(text = "QUAC Wild Samples (Subset), MSAT", outer=TRUE, cex=1.3)
 
 # Best K ----
 # Plot two charts per window (one for each Best K metric)
 par(mfrow=c(2,1), mar = c(4.5,3,1,3), oma=c(1,0,1,0))
-# Variables for lines designating groups beneath K charts. 5 population names provided
-lineWidth <- 1.9; lineHeight <- rep(-0.035,2)
-labelPositions <- c(15, 44, 68, 93.5, 112); labelNames <- c("Porter", "Magazine", "Pryor", "Sugarloaf", "Kessler")
 # Plot QUAC K=5 values (Evanno Best K)
 QUAC.clumppDir <- 
-  "/RAID1/IMLS_GCCO/Analysis/STRUCTURE/denovo_finalAssemblies/QUAC/Subset/Wild/subsetStacks/output/CLUMPAK/Output/mainPipeline/QUAC.DNFA.Subset.Wild.Stacks/K5/"
+  "/RAID1/IMLS_GCCO/Analysis/STRUCTURE/MSAT/QUAC/Subset_Wild/output/CLUMPAK/Output/mainPipeline/QUAC.MSAT.Subset.Wild/K5/"
 Plot_K(QUAC.clumppDir, K=5, Colors = QUAC.colors, QUAC.sampleNames, QUAC.popNames, 
-       mainTitle = "QUAC Wild Samples (Subset), SNP: De novo, Stacks: K5 (Evanno)")
-
+       mainTitle = "QUAC Wild Samples (Subset), MSAT: K5 (Evanno)")
+# Variables for lines designating groups beneath K charts. 
+lineWidth <- 1.9; lineHeight <- rep(-0.035,2)
+QUAC.labelPositions <- c(15, 44, 68, 93.5, 112) 
 # Plot lines
 lines(x = c(0.2,29.5), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
 lines(x = c(30.5,57.5), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
 lines(x = c(58.5,77.6), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
-lines(x = c(78.8,108), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
-lines(x = c(108.5,116.3), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
+lines(x = c(78.8,108.7), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
+lines(x = c(109.7,116.3), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
 # Add group labels
-text(x=labelPositions, y=-0.05, srt=35, adj=1, xpd=TRUE, labels=labelNames, cex=1)
+text(x=QUAC.labelPositions, y=-0.063, srt=35, adj=1, xpd=TRUE, labels=QUAC.labelNames, cex=1)
 
 # Plot QUAC K=6 values (Max Probability Best K)
 QUAC.clumppDir <- 
-  "/RAID1/IMLS_GCCO/Analysis/STRUCTURE/denovo_finalAssemblies/QUAC/Subset/Wild/subsetStacks/output/CLUMPAK/Output/mainPipeline/QUAC.DNFA.Subset.Wild.Stacks/K6/"
+  "/RAID1/IMLS_GCCO/Analysis/STRUCTURE/MSAT/QUAC/Subset_Wild/output/CLUMPAK/Output/mainPipeline/QUAC.MSAT.Subset.Wild/K6/"
 Plot_K(QUAC.clumppDir, K=6, Colors = QUAC.colors, QUAC.sampleNames, QUAC.popNames, 
-       mainTitle = "QUAC Wild Samples (Subset), SNP: De novo, Stacks: K6 (Max Probability)")
-
+       mainTitle = "QUAC Wild Samples (Subset), MSAT: K6 (Max Probability)")
 # Plot lines
 lines(x = c(0.2,29.5), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
 lines(x = c(30.5,57.5), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
 lines(x = c(58.5,77.6), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
-lines(x = c(78.8,108), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
-lines(x = c(108.5,116.3), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
+lines(x = c(78.8,108.7), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
+lines(x = c(109.7,116.3), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
 # Add group labels
-text(x=labelPositions, y=-0.05, srt=35, adj=1, xpd=TRUE, labels=labelNames, cex=1)
+text(x=QUAC.labelPositions, y=-0.063, srt=35, adj=1, xpd=TRUE, labels=QUAC.labelNames, cex=1)
 
 # %%%% QUBO %%%% ----
+# Colors for different clusters: combinations of RGB components in hexadecimal
+QUBO.colors <- c('#A8FFFD','#B862D3', '#A39D9D','#FFFF00', 
+                 '#69C261', '#FF59AC', '#26CDCD',  '#C1C6FF')
+# Variables for lines designating groups beneath K charts. 11 population names provided
+lineWidth <- 1.9; lineHeight <- rep(-0.1,2)
+labelPositions <- c(13, 38, 59, 72, 98.5) 
+QUBO.labelNames <- c("Oakbrook", "Worldsong", "Irondale", "BTKC", "EBSCO_ParkingLot", "Peavine",
+                     "Wattsville", "MossRock", "EBSCO_Ridge","HindsRoad", "Pop11")
 # ---- DE NOVO ----
 # Variable file path: directory containing all CLUMPPs output to read in
 QUBO.clumppDir <- 
-  "/RAID1/IMLS_GCCO/Analysis/STRUCTURE/denovo_finalAssemblies/QUBO/Subset/Wild/output/CLUMPAK/Output/mainPipeline/QUBO.DNFA.Subset.Wild/"
+  "/RAID1/IMLS_GCCO/Analysis/STRUCTURE/denovo_finalAssemblies/QUBO/Subset/Wild/output/CLUMPAK/Output/mainPipeline/QUBO.DNFA.Subset.Wild"
 # Variable file path: popmap file used by Stacks, which contains sample and population names
 QUBO.popMap <- 
   "/RAID1/IMLS_GCCO/Analysis/Stacks/denovo_finalAssemblies/QUBO/output/populations_wild_R80_NOMAF_1SNP_Subset/QUBO_popmap_wild_Subset"
@@ -387,11 +388,8 @@ QUBO.sampleNames <- factor(read.table(QUBO.popMap, header=FALSE)[,1])
 QUBO.popNames <- factor(read.table(QUBO.popMap, header=FALSE)[,2])
 
 # All Ks (QUBO wild samples, K=2-7) ----
-plot_multipleK(kList = QUBO.K2_7, kValues=(2:7), kColors = QUBO.colors, popNamesPresent = TRUE)
-
-# Variables for lines designating groups beneath K charts. 5 population names provided
-lineWidth <- 1.9; lineHeight <- rep(-0.1,2)
-labelPositions <- c(13, 38, 59, 72, 98.5); labelNames <- c("Porter", "Magazine", "Pryor", "Sugarloaf", "Kessler")
+Plot_AllK(clumppPath = QUBO.clumppDir, Ks=2:7, Colors = QUBO.colors, 
+          sampleNames = QUBO.sampleNames, popNames = QUBO.popNames)
 # Plot lines
 lines(x = c(0.2,26), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
 lines(x = c(26.7,50.1), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
@@ -399,19 +397,18 @@ lines(x = c(50.7,68), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
 lines(x = c(68.7,95.4), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
 lines(x = c(96.4,101.9), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
 # Add group labels
-text(x=labelPositions, y=-0.15, srt=35, adj=1, xpd=TRUE, labels=labelNames, cex=1.2)
+text(x=labelPositions, y=-0.15, srt=35, adj=1, xpd=TRUE, labels=QUBO.labelNames, cex=1.2)
 # Title
-mtext(text = "QUBO Wild Samples (Subset), SNP: De novo, Stacks", outer=TRUE, cex=1.3)
+mtext(text = "QUBO Wild Samples (Subset), SNP: De novo", outer=TRUE, cex=1.3)
 
 # Best K ----
 # Plot two charts per window (one for each Best K metric)
 par(mfrow=c(2,1), mar = c(4.5,3,1,3), oma=c(1,0,1,0))
-# Variables for lines designating groups beneath K charts. 5 population names provided
-lineWidth <- 1.9; lineHeight <- rep(-0.035,2)
-labelPositions <- c(15, 44, 68, 93.5, 112); labelNames <- c("Porter", "Magazine", "Pryor", "Sugarloaf", "Kessler")
-# Plot QUBO K=6 values (Evanno Best K)
-plot_singleK(K6clumpp, kColors = QUBO.colors, 
-             title = "QUBO Wild Samples (Subset), SNP: De novo, Stacks: K6 (Evanno)", popNamesPresent = TRUE)
+# Plot QUBO K=3 values (Evanno Best K)
+QUBO.clumppDir <- 
+  "/RAID1/IMLS_GCCO/Analysis/STRUCTURE/denovo_finalAssemblies/QUBO/Subset/Wild/subsetAdegenet/output/CLUMPAK/Output/mainPipeline/QUBO.DNFA.Subset.Wild.Adegenet/K3/"
+Plot_K(QUBO.clumppDir, K=3, Colors = QUBO.colors, QUBO.sampleNames, QUBO.popNames, 
+       mainTitle = "QUBO Wild Samples (Subset), SNP: De novo, Adegenet: K3 (Evanno)")
 # Plot lines
 lines(x = c(0.2,29.5), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
 lines(x = c(30.5,57.5), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
@@ -419,11 +416,13 @@ lines(x = c(58.5,77.6), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA
 lines(x = c(78.8,108), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
 lines(x = c(108.5,116.3), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
 # Add group labels
-text(x=labelPositions, y=-0.05, srt=35, adj=1, xpd=TRUE, labels=labelNames, cex=1.2)
+text(x=labelPositions, y=-0.05, srt=35, adj=1, xpd=TRUE, labels=QUBO.labelNames, cex=1)
 
 # Plot QUBO K=4 values (Max Probability Best K)
-plot_singleK(K4clumpp, kColors = QUBO.colors, 
-             title = "QUBO Wild Samples (Subset), SNP: De novo, Stacks: K4 (Max Probability)", popNamesPresent = TRUE)
+QUBO.clumppDir <- 
+  "/RAID1/IMLS_GCCO/Analysis/STRUCTURE/denovo_finalAssemblies/QUBO/Subset/Wild/subsetAdegenet/output/CLUMPAK/Output/mainPipeline/QUBO.DNFA.Subset.Wild.Adegenet/K2/"
+Plot_K(QUBO.clumppDir, K=2, Colors = QUBO.colors, QUBO.sampleNames, QUBO.popNames, 
+       mainTitle = "QUBO Wild Samples (Subset), SNP: De novo, Adegenet: K2 (Max Probability)")
 # Plot lines
 lines(x = c(0.2,29.5), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
 lines(x = c(30.5,57.5), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
@@ -431,46 +430,22 @@ lines(x = c(58.5,77.6), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA
 lines(x = c(78.8,108), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
 lines(x = c(108.5,116.3), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
 # Add group labels
-text(x=labelPositions, y=-0.05, srt=35, adj=1, xpd=TRUE, labels=labelNames, cex=1.2)
+text(x=labelPositions, y=-0.05, srt=35, adj=1, xpd=TRUE, labels=QUBO.labelNames, cex=1)
 
 # ---- REFERENCE ----
 # Variable file path: directory containing all CLUMPPs output to read in
 QUBO.clumppDir <- 
-  "/RAID1/IMLS_GCCO/Analysis/STRUCTURE/reference_filteredReads/QUBO/Subset/Wild/output/CLUMPAK/Output/mainPipeline/QUBO.REF.Subset.Wild/"
+  "/RAID1/IMLS_GCCO/Analysis/STRUCTURE/denovo_finalAssemblies/QUBO/Subset/Wild/output/CLUMPAK/Output/mainPipeline/QUBO.DNFA.Subset.Wild"
 # Variable file path: popmap file used by Stacks, which contains sample and population names
 QUBO.popMap <- 
-  "/RAID1/IMLS_GCCO/Analysis/Stacks/reference_filteredReads/QUBO/GSNAP4/output/populations_wild_R80_NOMAF_1SNP_Subset/"
+  "/RAID1/IMLS_GCCO/Analysis/Stacks/denovo_finalAssemblies/QUBO/output/populations_wild_R80_NOMAF_1SNP_Subset/QUBO_popmap_wild_Subset"
 # Vectors for sample and population names
 QUBO.sampleNames <- factor(read.table(QUBO.popMap, header=FALSE)[,1])
 QUBO.popNames <- factor(read.table(QUBO.popMap, header=FALSE)[,2])
 
-# Read in Q matrices
-K2filepath <- paste0(QUBO.clumppDir, "/K2/CLUMPP.files/ClumppIndFile.output")
-K2clumpp <- read.CLUMPP(K2filepath, sampleNames = QUBO.sampleNames, popNames = QUBO.popNames)
-
-K3filepath <- paste0(QUBO.clumppDir, "/K3/CLUMPP.files/ClumppIndFile.output")
-K3clumpp <- read.CLUMPP(K3filepath, sampleNames = QUBO.sampleNames, popNames = QUBO.popNames)
-
-K4filepath <- paste0(QUBO.clumppDir, "/K4/CLUMPP.files/ClumppIndFile.output")
-K4clumpp <- read.CLUMPP(K4filepath, sampleNames = QUBO.sampleNames, popNames = QUBO.popNames)
-
-K5filepath <- paste0(QUBO.clumppDir, "/K5/CLUMPP.files/ClumppIndFile.output")
-K5clumpp <- read.CLUMPP(K5filepath, sampleNames = QUBO.sampleNames, popNames = QUBO.popNames)
-
-K6filepath <- paste0(QUBO.clumppDir, "/K6/CLUMPP.files/ClumppIndFile.output")
-K6clumpp <- read.CLUMPP(K6filepath, sampleNames = QUBO.sampleNames, popNames = QUBO.popNames)
-
-K7filepath <- paste0(QUBO.clumppDir, "/K7/CLUMPP.files/ClumppIndFile.output")
-K7clumpp <- read.CLUMPP(K7filepath, sampleNames = QUBO.sampleNames, popNames = QUBO.popNames)
-
 # All Ks (QUBO wild samples, K=2-7) ----
-QUBO.K2_7 <- list(K2clumpp, K3clumpp, K4clumpp, 
-                  K5clumpp, K6clumpp, K7clumpp)
-plot_multipleK(kList = QUBO.K2_7, kValues=(2:7), kColors = QUBO.colors, popNamesPresent = TRUE)
-
-# Variables for lines designating groups beneath K charts. 5 population names provided
-lineWidth <- 1.9; lineHeight <- rep(-0.1,2)
-labelPositions <- c(13, 38, 59, 72, 98.5); labelNames <- c("Porter", "Magazine", "Pryor", "Sugarloaf", "Kessler")
+Plot_AllK(clumppPath = QUBO.clumppDir, Ks=2:7, Colors = QUBO.colors, 
+          sampleNames = QUBO.sampleNames, popNames = QUBO.popNames)
 # Plot lines
 lines(x = c(0.2,26), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
 lines(x = c(26.7,50.1), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
@@ -478,19 +453,21 @@ lines(x = c(50.7,68), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
 lines(x = c(68.7,95.4), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
 lines(x = c(96.4,101.9), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
 # Add group labels
-text(x=labelPositions, y=-0.15, srt=35, adj=1, xpd=TRUE, labels=labelNames, cex=1.2)
+text(x=labelPositions, y=-0.15, srt=35, adj=1, xpd=TRUE, labels=QUBO.labelNames, cex=1.2)
 # Title
-mtext(text = "QUBO Wild Samples (Subset), SNP: De novo, Stacks", outer=TRUE, cex=1.3)
+mtext(text = "QUBO Wild Samples (Subset), SNP: Reference", outer=TRUE, cex=1.3)
 
 # Best K ----
 # Plot two charts per window (one for each Best K metric)
 par(mfrow=c(2,1), mar = c(4.5,3,1,3), oma=c(1,0,1,0))
-# Variables for lines designating groups beneath K charts. 5 population names provided
+# Variables for lines designating groups beneath K charts. 
 lineWidth <- 1.9; lineHeight <- rep(-0.035,2)
-labelPositions <- c(15, 44, 68, 93.5, 112); labelNames <- c("Porter", "Magazine", "Pryor", "Sugarloaf", "Kessler")
-# Plot QUBO K=6 values (Evanno Best K)
-plot_singleK(K6clumpp, kColors = QUBO.colors, 
-             title = "QUBO Wild Samples (Subset), SNP: De novo, Stacks: K6 (Evanno)", popNamesPresent = TRUE)
+labelPositions <- c(15, 44, 68, 93.5, 112)
+# Plot QUBO K=4 values (Evanno Best K)
+QUBO.clumppDir <- 
+  "/RAID1/IMLS_GCCO/Analysis/STRUCTURE/denovo_finalAssemblies/QUBO/Subset/Wild/subsetAdegenet/output/CLUMPAK/Output/mainPipeline/QUBO.DNFA.Subset.Wild.Adegenet/K4/"
+Plot_K(QUBO.clumppDir, K=6, Colors = QUBO.colors, QUBO.sampleNames, QUBO.popNames, 
+       mainTitle = "QUBO Wild Samples (Subset), SNP: De novo, Adegenet: K4 (Evanno)")
 # Plot lines
 lines(x = c(0.2,29.5), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
 lines(x = c(30.5,57.5), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
@@ -498,11 +475,13 @@ lines(x = c(58.5,77.6), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA
 lines(x = c(78.8,108), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
 lines(x = c(108.5,116.3), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
 # Add group labels
-text(x=labelPositions, y=-0.05, srt=35, adj=1, xpd=TRUE, labels=labelNames, cex=1.2)
+text(x=labelPositions, y=-0.05, srt=35, adj=1, xpd=TRUE, labels=QUBO.labelNames, cex=1)
 
-# Plot QUBO K=4 values (Max Probability Best K)
-plot_singleK(K4clumpp, kColors = QUBO.colors, 
-             title = "QUBO Wild Samples (Subset), SNP: De novo, Stacks: K4 (Max Probability)", popNamesPresent = TRUE)
+# Plot QUBO K=2 values (Max Probability Best K)
+QUBO.clumppDir <- 
+  "/RAID1/IMLS_GCCO/Analysis/STRUCTURE/denovo_finalAssemblies/QUBO/Subset/Wild/subsetAdegenet/output/CLUMPAK/Output/mainPipeline/QUBO.DNFA.Subset.Wild.Adegenet/K2/"
+Plot_K(QUBO.clumppDir, K=2, Colors = QUBO.colors, QUBO.sampleNames, QUBO.popNames, 
+       mainTitle = "QUBO Wild Samples (Subset), SNP: De novo, Adegenet: K4 (Max Probability)")
 # Plot lines
 lines(x = c(0.2,29.5), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
 lines(x = c(30.5,57.5), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
@@ -510,7 +489,7 @@ lines(x = c(58.5,77.6), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA
 lines(x = c(78.8,108), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
 lines(x = c(108.5,116.3), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
 # Add group labels
-text(x=labelPositions, y=-0.05, srt=35, adj=1, xpd=TRUE, labels=labelNames, cex=1.2)
+text(x=labelPositions, y=-0.05, srt=35, adj=1, xpd=TRUE, labels=QUBO.labelNames, cex=1)
 
 # %%% MSAT ----
 # Variable file path: directory containing all CLUMPPs output to read in
@@ -523,33 +502,8 @@ QUBO.popMap <-
 QUBO.sampleNames <- factor(read.table(QUBO.popMap, header=FALSE)[,1])
 QUBO.popNames <- factor(read.table(QUBO.popMap, header=FALSE)[,2])
 
-# Read in Q matrices
-K2filepath <- paste0(QUBO.clumppDir, "/K2/CLUMPP.files/ClumppIndFile.output")
-K2clumpp <- read.CLUMPP(K2filepath, sampleNames = QUBO.sampleNames, popNames = QUBO.popNames)
-
-K3filepath <- paste0(QUBO.clumppDir, "/K3/CLUMPP.files/ClumppIndFile.output")
-K3clumpp <- read.CLUMPP(K3filepath, sampleNames = QUBO.sampleNames, popNames = QUBO.popNames)
-
-K4filepath <- paste0(QUBO.clumppDir, "/K4/CLUMPP.files/ClumppIndFile.output")
-K4clumpp <- read.CLUMPP(K4filepath, sampleNames = QUBO.sampleNames, popNames = QUBO.popNames)
-
-K5filepath <- paste0(QUBO.clumppDir, "/K5/CLUMPP.files/ClumppIndFile.output")
-K5clumpp <- read.CLUMPP(K5filepath, sampleNames = QUBO.sampleNames, popNames = QUBO.popNames)
-
-K6filepath <- paste0(QUBO.clumppDir, "/K6/CLUMPP.files/ClumppIndFile.output")
-K6clumpp <- read.CLUMPP(K6filepath, sampleNames = QUBO.sampleNames, popNames = QUBO.popNames)
-
-K7filepath <- paste0(QUBO.clumppDir, "/K7/CLUMPP.files/ClumppIndFile.output")
-K7clumpp <- read.CLUMPP(K7filepath, sampleNames = QUBO.sampleNames, popNames = QUBO.popNames)
-
 # All Ks (QUBO wild samples, K=2-7) ----
-QUBO.K2_7 <- list(K2clumpp, K3clumpp, K4clumpp, 
-                  K5clumpp, K6clumpp, K7clumpp)
-plot_multipleK(kList = QUBO.K2_7, kValues=(2:7), kColors = QUBO.colors, popNamesPresent = TRUE)
-
-# Variables for lines designating groups beneath K charts. 5 population names provided
-lineWidth <- 1.9; lineHeight <- rep(-0.1,2)
-labelPositions <- c(13, 38, 59, 72, 98.5); labelNames <- c("Porter", "Magazine", "Pryor", "Sugarloaf", "Kessler")
+Plot_AllK(clumppPath = QUBO.clumppDir, Ks=2:7, Colors = QUBO.colors, popNames = QUBO.popNames)
 # Plot lines
 lines(x = c(0.2,26), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
 lines(x = c(26.7,50.1), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
@@ -557,19 +511,21 @@ lines(x = c(50.7,68), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
 lines(x = c(68.7,95.4), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
 lines(x = c(96.4,101.9), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
 # Add group labels
-text(x=labelPositions, y=-0.15, srt=35, adj=1, xpd=TRUE, labels=labelNames, cex=1.2)
+text(x=labelPositions, y=-0.25, srt=35, adj=1, xpd=TRUE, labels=QUBO.labelNames, cex=1.2)
 # Title
-mtext(text = "QUBO Wild Samples (Subset), SNP: De novo, Adegenet", outer=TRUE, cex=1.3)
+mtext(text = "QUBO Wild Samples (Subset), MSAT", outer=TRUE, cex=1.3)
 
 # Best K ----
 # Plot two charts per window (one for each Best K metric)
 par(mfrow=c(2,1), mar = c(4.5,3,1,3), oma=c(1,0,1,0))
-# Variables for lines designating groups beneath K charts. 5 population names provided
+# Variables for lines designating groups beneath K charts. 
 lineWidth <- 1.9; lineHeight <- rep(-0.035,2)
-labelPositions <- c(15, 44, 68, 93.5, 112); labelNames <- c("Porter", "Magazine", "Pryor", "Sugarloaf", "Kessler")
-# Plot QUBO K=5 values (Evanno Best K)
-plot_singleK(K5clumpp, kColors = QUBO.colors, 
-             title = "QUBO Wild Samples (Subset), SNP: De novo, Adegenet: K5 (Evanno)", popNamesPresent = TRUE)
+labelPositions <- c(15, 44, 68, 93.5, 112)
+# Plot QUBO K=3 values (Evanno Best K)
+QUBO.clumppDir <- 
+  "/RAID1/IMLS_GCCO/Analysis/STRUCTURE/denovo_finalAssemblies/QUBO/Subset/Wild/subsetAdegenet/output/CLUMPAK/Output/mainPipeline/QUBO.DNFA.Subset.Wild.Adegenet/K3/"
+Plot_K(QUBO.clumppDir, K=3, Colors = QUBO.colors, QUBO.sampleNames, QUBO.popNames, 
+       mainTitle = "QUBO Wild Samples (Subset), MSAT: K5 (Evanno)")
 # Plot lines
 lines(x = c(0.2,29.5), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
 lines(x = c(30.5,57.5), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
@@ -577,11 +533,13 @@ lines(x = c(58.5,77.6), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA
 lines(x = c(78.8,108), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
 lines(x = c(108.5,116.3), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
 # Add group labels
-text(x=labelPositions, y=-0.05, srt=35, adj=1, xpd=TRUE, labels=labelNames, cex=1.2)
+text(x=labelPositions, y=-0.05, srt=35, adj=1, xpd=TRUE, labels=QUBO.labelNames, cex=1)
 
-# Plot QUBO K=7 values (Max Probability Best K)
-plot_singleK(K7clumpp, kColors = QUBO.colors, 
-             title = "QUBO Wild Samples (Subset), SNP: De novo, Adegenet: K7 (Max Probability)", popNamesPresent = TRUE)
+# Plot QUBO K=3 values (Max Probability Best K)
+QUBO.clumppDir <- 
+  "/RAID1/IMLS_GCCO/Analysis/STRUCTURE/denovo_finalAssemblies/QUBO/Subset/Wild/subsetAdegenet/output/CLUMPAK/Output/mainPipeline/QUBO.DNFA.Subset.Wild.Adegenet/K3/"
+Plot_K(QUBO.clumppDir, K=3, Colors = QUBO.colors, QUBO.sampleNames, QUBO.popNames, 
+       mainTitle = "QUBO Wild Samples (Subset), MSAT: K3 (Max Probability)")
 # Plot lines
 lines(x = c(0.2,29.5), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
 lines(x = c(30.5,57.5), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
@@ -589,10 +547,10 @@ lines(x = c(58.5,77.6), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA
 lines(x = c(78.8,108), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
 lines(x = c(108.5,116.3), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
 # Add group labels
-text(x=labelPositions, y=-0.05, srt=35, adj=1, xpd=TRUE, labels=labelNames, cex=1.2)
+text(x=labelPositions, y=-0.05, srt=35, adj=1, xpd=TRUE, labels=QUBO.labelNames, cex=1)
 
 # %%%% ARCHIVED %%%% ----
-# # %%%% QUAC GARDEN & WILD ----
+# # %%%% QUAC GARDEN & WILD
 # # Variable file path: directory containing all CLUMPPs output to read in
 # QUAC.clumppDir <- 
 #   "/RAID1/IMLS_GCCO/Analysis/structure/denovo_finalAssemblies/QUAC/R80/garden_wild/firstSNP/output/CLUMPAK/QUAC_gardenAndWild_CLUMPAK_1659990425/"
@@ -616,7 +574,7 @@ text(x=labelPositions, y=-0.05, srt=35, adj=1, xpd=TRUE, labels=labelNames, cex=
 # K7filepath <- paste0(QUAC.clumppDir, "/K7/CLUMPP.files/ClumppIndFile.output")
 # K7clumpp <- read.CLUMPP(K7filepath)
 # 
-# # All Ks (QUAC garden and wild, K=2-7) ----
+# # All Ks (QUAC garden and wild, K=2-7)
 # # QUAC.K2_4 <- list(K2clumpp, K3clumpp, K4clumpp)
 # # QUAC.K5_7 <- list(K5clumpp, K6clumpp, K7clumpp)
 # QUAC.K2_7 <- list(K2clumpp, K3clumpp, K4clumpp, 
@@ -637,7 +595,7 @@ text(x=labelPositions, y=-0.05, srt=35, adj=1, xpd=TRUE, labels=labelNames, cex=
 # # Title
 # mtext(text = "QUAC, Garden and Wild", outer=TRUE, cex=1.3)
 # 
-# # Best K ----
+# # Best K 
 # # Plot two charts per window (one for each Best K metric)
 # par(mfrow=c(2,1), mar = c(3,3,1,3), oma=c(1,0,1,0))
 # # Variables for lines beneath K charts. 1-96 are garden; 97-193 are wild
@@ -659,7 +617,7 @@ text(x=labelPositions, y=-0.05, srt=35, adj=1, xpd=TRUE, labels=labelNames, cex=
 # # Add group labels
 # text(x=labelPositions, y=-0.05, srt=35, adj=1, xpd=TRUE, labels=labelNames, cex=1.2)
 # 
-# # %%%% QUBO GARDEN & WILD ----
+# # %%%% QUBO GARDEN & WILD
 # # Variable file path: directory containing all CLUMPPs output to read in
 # QUBO.clumppDir <- 
 #   "/RAID1/IMLS_GCCO/Analysis/structure/reference_filteredReads/QUBO/R80/garden_wild/firstSNP/output/CLUMPAK/QUBO_gardenAndWild_CLUMPAK_1658769113/"
@@ -686,7 +644,7 @@ text(x=labelPositions, y=-0.05, srt=35, adj=1, xpd=TRUE, labels=labelNames, cex=
 # K8filepath <- paste0(QUBO.clumppDir, "/K8/CLUMPP.files/ClumppIndFile.output")
 # K8clumpp <- read.CLUMPP(K8filepath)
 # 
-# # All Ks (QUBO garden and wild, K=2-8) ----
+# # All Ks (QUBO garden and wild, K=2-8) 
 # # QUBO.K2_4 <- list(K2clumpp, K3clumpp, K4clumpp)
 # # QUBO.K5_8 <- list(K5clumpp, K6clumpp, K7clumpp, K8clumpp)
 # QUBO.K2_8 <- list(K2clumpp, K3clumpp, K4clumpp, 
@@ -707,7 +665,7 @@ text(x=labelPositions, y=-0.05, srt=35, adj=1, xpd=TRUE, labels=labelNames, cex=
 # # Title
 # mtext(text = "QUBO, Garden and Wild", outer=TRUE, cex=1.3)
 # 
-# # Best K ----
+# # Best K
 # # Plot two charts per window (one for each Best K metric)
 # par(mfrow=c(2,1), mar = c(4,1.5,4,2), oma=c(2,0,2,1))
 # # Designate groups beneath K charts. 1-85 are garden; 86-180 are wild
@@ -729,7 +687,7 @@ text(x=labelPositions, y=-0.05, srt=35, adj=1, xpd=TRUE, labels=labelNames, cex=
 # # Add group labels
 # text(x=labelPositions, y=-0.1, srt=35, adj=1, xpd=TRUE, labels=labelNames, cex=1.2)
 # 
-# # %%%% QUBO WILD ----
+# # %%%% QUBO WILD 
 # # Variable file path: directory containing all CLUMPPs output to read in
 # QUBO.W.clumppDir <- 
 #   "/RAID1/IMLS_GCCO/Analysis/structure/reference_filteredReads/QUBO/R80/wild/output/CLUMPAK/QUBO_wild_CLUMPAK_1658771421/"
@@ -756,7 +714,7 @@ text(x=labelPositions, y=-0.05, srt=35, adj=1, xpd=TRUE, labels=labelNames, cex=
 # K8filepath <- paste0(QUBO.W.clumppDir, "/K8/CLUMPP.files/ClumppIndFile.output")
 # K8clumpp <- read.CLUMPP(K8filepath)
 # 
-# # All Ks (QUBO wild, K=2-8) ----
+# # All Ks (QUBO wild, K=2-8)
 # # QUBO.W.K2_4 <- list(K2clumpp, K3clumpp, K4clumpp)
 # # QUBO.W.K5_8 <- list(K5clumpp, K6clumpp, K7clumpp, K8clumpp)
 # QUBO.W.K2_8 <- list(K2clumpp, K3clumpp, K4clumpp, 
@@ -767,7 +725,7 @@ text(x=labelPositions, y=-0.05, srt=35, adj=1, xpd=TRUE, labels=labelNames, cex=
 # # Title
 # mtext(text = "QUBO, Wild", outer=TRUE, cex=1.3)
 # 
-# # Best K ----
+# # Best K 
 # # Plot two charts per window (one for each Best K metric)
 # par(mfrow=c(2,1), mar = c(3,3,1,3), oma=c(1,0,1,0))
 # # Plot QUBO K=3 values (Evanno and Max Probability Best K)
