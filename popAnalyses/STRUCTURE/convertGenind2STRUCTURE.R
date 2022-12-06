@@ -143,25 +143,21 @@ levels(QUBO.MSAT.genind@pop) <- c(rep("wild",9), "garden")
 # Subset to only wild individuals
 QUBO.MSAT.genind <- QUBO.MSAT.genind[which(pop(QUBO.MSAT.genind)=="wild"),, drop=TRUE]
 
-# SNP: DE NOVO, R80
+# SNP: DE NOVO, R80, WILD
 genpop.filePath <- 
-  "/RAID1/IMLS_GCCO/Analysis/Stacks/denovo_finalAssemblies/QUBO/output/populations_R80_NOMAF_1SNP_2Pops/"
+  "/RAID1/IMLS_GCCO/Analysis/Stacks/reference_filteredReads/QUBO/GSNAP4/output/populations_wild_R80_NOMAF_1SNP_Subset_Ordered/"
 setwd(genpop.filePath)
 QUBO.SNP.DN.R80.genind <- read.genepop(paste0(genpop.filePath,"populations.snps.gen"))
 # Correct popNames
-pop(QUBO.SNP.DN.R80.genind) <- factor(read.table("QUBO_popmap_GardenWild", header=FALSE)[,2])
-# Subset to only wild individuals
-QUBO.SNP.DN.R80.genind <- QUBO.SNP.DN.R80.genind[which(pop(QUBO.SNP.DN.R80.genind)=="wild"),, drop=TRUE]
+pop(QUBO.SNP.DN.R80.genind) <- factor(read.table("QUBO_popmap_wild_Subset_Ordered", header=FALSE)[,2])
 
-# SNP: REFERENCE, R80
+# SNP: REFERENCE, R80, WILD
 genpop.filePath <- 
-  "/RAID1/IMLS_GCCO/Analysis/Stacks/reference_filteredReads/QUBO/GSNAP4/output/populations_R80_NOMAF_1SNP_2Pops/"
+  "/RAID1/IMLS_GCCO/Analysis/Stacks/reference_filteredReads/QUBO/GSNAP4/output/populations_wild_R80_NOMAF_1SNP_Subset_Ordered//"
 setwd(genpop.filePath)
 QUBO.SNP.REF.R80.genind <- read.genepop(paste0(genpop.filePath,"populations.snps.gen"))
 # Correct popNames
-pop(QUBO.SNP.REF.R80.genind) <- factor(read.table("QUBO_popmap_GardenWild", header=FALSE)[,2])
-# Subset to only wild individuals
-QUBO.SNP.REF.R80.genind <- QUBO.SNP.REF.R80.genind[which(pop(QUBO.SNP.REF.R80.genind)=="wild"),, drop=TRUE]
+pop(QUBO.SNP.REF.R80.genind) <- factor(read.table("QUBO_popmap_wild_Subset_Ordered", header=FALSE)[,2])
 
 # ---- SUBSET GENIND FILES ----
 # MSAT: Split sample names on underscore, and return 3rd element. Rename the sample matrix 
@@ -170,6 +166,7 @@ rownames(QUBO.MSAT.genind@tab) <- QUBO.MSAT.sampleNames
 
 # SNP: Remove QUBO_W_ headers from sample names
 QUBO.SNP.sampleNames <- gsub("QUBO_W_",replacement = "", row.names(QUBO.SNP.REF.R80.genind@tab))
+QUBO.SNP.sampleNames <- gsub("QUBO_W_",replacement = "", row.names(QUBO.SNP.DN.R80.genind@tab))
 # Replace SH-Q names in SNP list with IMLS names
 # These were determined by Austin K., and are outlined on the Hoban Lab Drive ("MSATcomparisons_TissueNames")
 # Only 1 of the 11 SH_Q garden samples has an IMLS sample name (SHQ2177); others are unshared 
@@ -186,7 +183,7 @@ QUBO.SNP.sampleNames <- gsub("SH_Q2186",replacement = "IMLS017", QUBO.SNP.sample
 rownames(QUBO.SNP.REF.R80.genind@tab) <- rownames(QUBO.SNP.DN.R80.genind@tab) <- QUBO.SNP.sampleNames
 
 # Subset SNP sample names by those that are also seen within the MSAT samples
-QUBO_sharedSamples <- sort(QUBO.SNP.sampleNames[which(QUBO.SNP.sampleNames %in% QUBO.MSAT.sampleNames)])
+QUBO_sharedSamples <- QUBO.SNP.sampleNames[which(QUBO.SNP.sampleNames %in% QUBO.MSAT.sampleNames)]
 # Subset MSAT and SNP wild matrix objects to strictly shared samples
 # MSAT
 QUBO.MSAT_subset.genind <- QUBO.MSAT.genind[QUBO_sharedSamples,, drop=TRUE]
