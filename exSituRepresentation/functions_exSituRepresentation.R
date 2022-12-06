@@ -9,30 +9,32 @@
 library(adegenet)
 
 # ---- REPRESENTATION FUNCTIONS ----
-# Function for reporting representation rates, using a sample matrix and a vector of allele frequencies
+# Function for reporting representation rates, using a vector of allele frequencies and a sample matrix.
 # This function assumes that the freqVector represents the absolute allele frequencies
-# for the population of interest. Allele names between the frequency vector and the sample matrix
-# must correspond in order for values to be comparable. Numbers of alleles are also reported
+# for the population of interest (typically, wild). Allele names between the frequency vector and the sample matrix
+# must correspond in order for values to be comparable. First, the length of matches between garden alleles and 
+# wild alleles of a given category is calculated. Then, the number of wild alleles of that category is calculated.
+# From these 2 values, a percentage is calculated, and all 3 values (garden, wild, percentage) are returned, for each category.
 getAlleleCategories <- function(freqVector, sampleMat){
-  # Determine how many total alleles in the sample (i.e. greater than 0) are found in the frequency vector 
-  garden.total_Alleles <- length(which(names(which(freqVector > 0)) %in% names(which(colSums(sampleMat, na.rm = TRUE) > 0))))
-  wild.total_Alleles <- length(which(freqVector > 0))
+  # Determine how many total alleles in the sample matrix are found in the frequency vector 
+  garden.total_Alleles <- length(which(names(freqVector) %in% colnames(sampleMat)))
+  wild.total_Alleles <- length(freqVector)
   total_Percentage <- (garden.total_Alleles/wild.total_Alleles)*100
   # Very common alleles (greater than 10%)
-  garden.vCom_Alleles <- length(which(names(which(freqVector > 10)) %in% names(which(colSums(sampleMat, na.rm = TRUE) > 0))))
+  garden.vCom_Alleles <- length(which(names(which(freqVector > 10)) %in% colnames(sampleMat)))
   wild.vCom_Alleles <- length(which(freqVector > 10))
   vCom_Percentage <- (garden.vCom_Alleles/wild.vCom_Alleles)*100
   # Common alleles (greater than 5%)
-  garden.com_Alleles <- length(which(names(which(freqVector > 5)) %in% names(which(colSums(sampleMat, na.rm = TRUE) > 0))))
+  garden.com_Alleles <- length(which(names(which(freqVector > 5)) %in% colnames(sampleMat)))
   wild.com_Alleles <- length(which(freqVector > 5))
   com_Percentage <- (garden.com_Alleles/wild.com_Alleles)*100
   # Low frequency alleles (between 1% and 10%)
-  garden.lowFr_Alleles <- length(which(names(which(freqVector < 10 & freqVector > 1)) %in% names(which(colSums(sampleMat, na.rm = TRUE) > 0))))
+  garden.lowFr_Alleles <- length(which(names(which(freqVector < 10 & freqVector > 1)) %in% colnames(sampleMat)))
   wild.lowFr_Alleles <- length(which(freqVector < 10 & freqVector > 1))
   lowFr_Percentage <- (garden.lowFr_Alleles/wild.lowFr_Alleles)*100
   # Rare alleles (less than 1%)
-  garden.rare_Alleles <- length(which(names(which(freqVector < 1 & freqVector > 0)) %in% names(which(colSums(sampleMat, na.rm = TRUE) > 0))))
-  wild.rare_Alleles <- length(which(freqVector < 1 & freqVector > 0))
+  garden.rare_Alleles <- length(which(names(which(freqVector < 1)) %in% colnames(sampleMat)))
+  wild.rare_Alleles <- length(which(freqVector < 1))
   rare_Percentage <- (garden.rare_Alleles/wild.rare_Alleles)*100
   # Concatenate values to vectors
   gardenAlleles <- c(garden.total_Alleles, garden.vCom_Alleles, garden.com_Alleles, garden.lowFr_Alleles, garden.rare_Alleles)
@@ -41,8 +43,8 @@ getAlleleCategories <- function(freqVector, sampleMat){
   # Bind vectors to a matrix, name dimensions, and return
   exSituValues <- cbind(gardenAlleles, wildAlleles, repRates)
   rownames(exSituValues) <- c("Total","Very common (>10%)","Common (>5%)",
-                             "Low frequency (1% -- 10%)","Rare (<1%)")
-  colnames(exSituValues) <- c("Garden", "Wild", "Rate")
+                              "Low frequency (1% -- 10%)","Rare (<1%)")
+  colnames(exSituValues) <- c("Garden", "Wild", "Rate (%)")
   return(exSituValues)
 }
 
@@ -69,17 +71,27 @@ getAlleleCategories_Partial <- function(freqVector, sampleMat){
 }
 
 # REPORT ALLELIC REPRESENTATION FUNCTIONS----
-# This function is a wrapper of getAlleleCategories, using a single genind object
-# The garden and wild rows in the gen.obj@tab matrix are detected, the wild allele frequency vector is built,
-# and the allelic representation of the garden samples is measured
+# This function is a wrapper of getAlleleCategories, and takes as an argument a single genind object
+# (containing both garden and wild samples to analyze). It processes that genind object to extract the
+# objects it needs to calculate ex situ representation: a vector of wild allele frequencies, and a 
+# sample matrix of garden samples. Missing alleles (those with allele frequencies or colSums of 0) 
+# are removed from the wild allele frequency vector and the garden sample matrix, prior to 
+# ex situ representation rates being calculated.
 reportAllelicRepresentation_Together <- function(gen.obj){
-  # Generate numerical vectors corresponding to garden and wild rows, for later calculations
+  # Generate numerical vectors corresponding to garden and wild rows
   garden.Rows <- which(gen.obj@pop == "garden")
   wild.Rows <- which(gen.obj@pop == "wild")
-  # Build the wild allele frequency vector. The number of rows in the sample matrix equals the number of samples
+  # Build the wild allele frequency vector: sum the allele counts, and divide by the number of wild samples
+  # (which is equal to the number of wild rows in the genind matrix) times 2 (assuming diploid individuals)
   wildFreqs <- colSums(gen.obj@tab[wild.Rows,], na.rm = TRUE)/(length(wild.Rows)*2)*100
+  # Remove any missing alleles (those with frequencies of 0) from the wild allele frequency vector
+  wildFreqs <- wildFreqs[which(wildFreqs != 0)]
+  # Generate the sample matrix to analyze (i.e. matrix of garden samples).
+  gardenMat <- gen.obj@tab[garden.Rows,]
+  # Remove any missing alleles (those with colSums of 0) from the matrix of garden samples
+  gardenMat <- gardenMat[,which(colSums(gardenMat, na.rm = TRUE) != 0)]
   # Calculate how many alleles (of each category) the garden samples represent, and return
-  repRates <- getAlleleCategories(wildFreqs, sampleMat = gen.obj@tab[garden.Rows,])
+  repRates <- getAlleleCategories_TEST(freqVector=wildFreqs, sampleMat = gardenMat)
   return(repRates)
 }
 
