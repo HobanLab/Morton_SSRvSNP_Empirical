@@ -91,7 +91,7 @@ reportAllelicRepresentation_Together <- function(gen.obj){
   # Remove any missing alleles (those with colSums of 0) from the matrix of garden samples
   gardenMat <- gardenMat[,which(colSums(gardenMat, na.rm = TRUE) != 0)]
   # Calculate how many alleles (of each category) the garden samples represent, and return
-  repRates <- getAlleleCategories_TEST(freqVector=wildFreqs, sampleMat = gardenMat)
+  repRates <- getAlleleCategories(freqVector=wildFreqs, sampleMat = gardenMat)
   return(repRates)
 }
 
