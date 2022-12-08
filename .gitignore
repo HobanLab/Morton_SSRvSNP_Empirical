@@ -12,6 +12,7 @@ exSituRepresentation/Resampling/ResamplingTiming_Old.R
 exSituRepresentation/Resampling/ResamplingTiming_Old2.R
 exSituRepresentation/Resampling/Resampling_Old.R
 exSituRepresentation/Resampling/exSitu_Sampling.R
+exSituRepresentation/Resampling/resamplingData
 exSituRepresentation/exSituCaptureRates.R
         
 # Population level analyses scripts: either outdated or in development
