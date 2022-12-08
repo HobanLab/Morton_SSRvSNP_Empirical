@@ -53,7 +53,7 @@ QUAC.DN.R0_NOMAF_AllSNPs.genind <- read.genepop(paste0(genpop.filePath,"populati
 # Correct popNames
 pop(QUAC.DN.R0_NOMAF_AllSNPs.genind) <- factor(read.table("QUAC_popmap2", header=FALSE)[,2])
 # Representation rates
-reportAllelicRepresentation_Together(QUAC.DN.R0_NOMAF_AllSNPs.genind)
+exSitu_Rep(QUAC.DN.R0_NOMAF_AllSNPs.genind)
 
 # TWO POPULATIONS ----
 # Read in genind file
@@ -64,7 +64,7 @@ QUAC.DN.R0_NOMAF_AllSNPs.TwoPops.genind <- read.genepop(paste0(genpop.filePath,"
 # Correct popNames
 pop(QUAC.DN.R0_NOMAF_AllSNPs.TwoPops.genind) <- factor(read.table("QUAC_popmap_GardenWild", header=FALSE)[,2])
 # Representation rates
-reportAllelicRepresentation_Together(QUAC.DN.R0_NOMAF_AllSNPs.TwoPops.genind)
+exSitu_Rep(QUAC.DN.R0_NOMAF_AllSNPs.TwoPops.genind)
 
 # ---- FIRST SNP ----
 # MULTIPLE WILD POPULATIONS ----
@@ -76,7 +76,7 @@ QUAC.DN.R0_NOMAF_1SNP.genind <- read.genepop(paste0(genpop.filePath,"populations
 # Correct popNames
 pop(QUAC.DN.R0_NOMAF_1SNP.genind) <- factor(read.table("QUAC_popmap2", header=FALSE)[,2])
 # Representation rates
-reportAllelicRepresentation_Together(QUAC.DN.R0_NOMAF_1SNP.genind)
+exSitu_Rep(QUAC.DN.R0_NOMAF_1SNP.genind)
 
 # TWO POPULATIONS ----
 # Read in genind file
@@ -87,7 +87,7 @@ QUAC.DN.R0_NOMAF_1SNP.TwoPops.genind <- read.genepop(paste0(genpop.filePath,"pop
 # Correct popNames
 pop(QUAC.DN.R0_NOMAF_1SNP.TwoPops.genind) <- factor(read.table("QUAC_popmap_GardenWild", header=FALSE)[,2])
 # Representation rates
-reportAllelicRepresentation_Together(QUAC.DN.R0_NOMAF_1SNP.TwoPops.genind)
+exSitu_Rep(QUAC.DN.R0_NOMAF_1SNP.TwoPops.genind)
 # Exploration of total and wild allele frequency proportions
 getWildAlleleFreqProportions(QUAC.DN.R0_NOMAF_1SNP.TwoPops.genind)
 getTotalAlleleFreqProportions(QUAC.DN.R0_NOMAF_1SNP.TwoPops.genind)
@@ -102,7 +102,7 @@ QUAC.DN.R0_NOMAF_H.TwoPops.genind <- read.genepop(paste0(genpop.filePath,"popula
 # Correct popNames
 pop(QUAC.DN.R0_NOMAF_H.TwoPops.genind) <- factor(read.table("QUAC_popmap_GardenWild", header=FALSE)[,2])
 # Representation rates
-reportAllelicRepresentation_Together(QUAC.DN.R0_NOMAF_H.TwoPops.genind)
+exSitu_Rep(QUAC.DN.R0_NOMAF_H.TwoPops.genind)
 
 # %%%% R80 ----
 # ALL SNPS, TWO POPULATIONS ----
@@ -114,7 +114,7 @@ QUAC.DN.R80_NOMAF_AllSNPs.TwoPops.genind <- read.genepop(paste0(genpop.filePath,
 # Correct popNames
 pop(QUAC.DN.R80_NOMAF_AllSNPs.TwoPops.genind) <- factor(read.table("QUAC_popmap_GardenWild", header=FALSE)[,2])
 # R80_NOMAF Representation rates
-reportAllelicRepresentation_Together(QUAC.DN.R80_NOMAF_AllSNPs.TwoPops.genind)
+exSitu_Rep(QUAC.DN.R80_NOMAF_AllSNPs.TwoPops.genind)
 
 # FIRST SNP, TWO POPULATIONS ----
 # Read in genind file
@@ -125,7 +125,7 @@ QUAC.DN.R80_NOMAF_1SNP.TwoPops.genind <- read.genepop(paste0(genpop.filePath,"po
 # Correct popNames
 pop(QUAC.DN.R80_NOMAF_1SNP.TwoPops.genind) <- factor(read.table("QUAC_popmap_GardenWild", header=FALSE)[,2])
 # R80_NOMAF Representation rates
-reportAllelicRepresentation_Together(QUAC.DN.R80_NOMAF_1SNP.TwoPops.genind)
+exSitu_Rep(QUAC.DN.R80_NOMAF_1SNP.TwoPops.genind)
 # Exploration of total and wild allele frequency proportions
 getWildAlleleFreqProportions(QUAC.DN.R80_NOMAF_1SNP.TwoPops.genind)
 getTotalAlleleFreqProportions(QUAC.DN.R80_NOMAF_1SNP.TwoPops.genind)
@@ -139,7 +139,7 @@ QUAC.DN.R80_NOMAF_H.TwoPops.genind <- read.genepop(paste0(genpop.filePath,"popul
 # Correct popNames
 pop(QUAC.DN.R80_NOMAF_H.TwoPops.genind) <- factor(read.table("QUAC_popmap_GardenWild", header=FALSE)[,2])
 # R80_NOMAF Representation rates
-reportAllelicRepresentation_Together(QUAC.DN.R80_NOMAF_H.TwoPops.genind)
+exSitu_Rep(QUAC.DN.R80_NOMAF_H.TwoPops.genind)
 # %%%% REFERENCE ALIGNMENT %%%% ----
 # %%%% R0 ----
 # FIRST SNP, TWO POPULATIONS ----
@@ -151,7 +151,7 @@ QUAC.R.R0_NOMAF_1SNP.TwoPops.genind <- read.genepop(paste0(genpop.filePath,"popu
 # Correct popNames
 pop(QUAC.R.R0_NOMAF_1SNP.TwoPops.genind) <- factor(read.table("QUAC_popmap_GardenWild", header=FALSE)[,2])
 # Representation rates
-reportAllelicRepresentation_Together(QUAC.R.R0_NOMAF_1SNP.TwoPops.genind)
+exSitu_Rep(QUAC.R.R0_NOMAF_1SNP.TwoPops.genind)
 
 # %%%% R80 ----
 # FIRST SNP, TWO POPULATIONS ----
@@ -163,7 +163,7 @@ QUAC.R.R80_NOMAF_1SNP.TwoPops.genind <- read.genepop(paste0(genpop.filePath,"pop
 # Correct popNames
 pop(QUAC.R.R80_NOMAF_1SNP.TwoPops.genind) <- factor(read.table("QUAC_popmap_GardenWild", header=FALSE)[,2])
 # R80_NOMAF Representation rates
-reportAllelicRepresentation_Together(QUAC.R.R80_NOMAF_1SNP.TwoPops.genind)
+exSitu_Rep(QUAC.R.R80_NOMAF_1SNP.TwoPops.genind)
 # Exploration of total and wild allele frequency proportions
 # Functions come from Simulated repository 
 # (https://github.com/akoontz11/Morton_SSRvSNP_Simulations/blob/main/RScripts/functions_SSRvSNP_Sim.R)
@@ -183,7 +183,7 @@ QUBO.DN.R0_NOMAF_AllSNPs.genind <- read.genepop(paste0(genpop.filePath,"populati
 # Correct popNames
 pop(QUBO.DN.R0_NOMAF_AllSNPs.genind) <- factor(read.table("QUBO_popmap2", header=FALSE)[,2])
 # R0_NOMAF Representation rates
-reportAllelicRepresentation_Together(QUBO.DN.R0_NOMAF_AllSNPs.genind)
+exSitu_Rep(QUBO.DN.R0_NOMAF_AllSNPs.genind)
 
 # TWO POPULATIONS ----
 # Read in genind file
@@ -194,7 +194,7 @@ QUBO.DN.R0_NOMAF_1SNP.TwoPops.genind <- read.genepop(paste0(genpop.filePath,"pop
 # Correct popNames
 pop(QUBO.DN.R0_NOMAF_1SNP.TwoPops.genind) <- factor(read.table("QUBO_popmap_GardenWild", header=FALSE)[,2])
 # R0_NOMAF Representation rates
-reportAllelicRepresentation_Together(QUBO.DN.R0_NOMAF_1SNP.TwoPops.genind)
+exSitu_Rep(QUBO.DN.R0_NOMAF_1SNP.TwoPops.genind)
 
 # ---- FIRST SNP ----
 # MULTIPLE WILD POPULATIONS ----
@@ -206,7 +206,7 @@ QUBO.DN.R0_NOMAF_1SNP.genind <- read.genepop(paste0(genpop.filePath,"populations
 # Correct popNames
 pop(QUBO.DN.R0_NOMAF_1SNP.genind) <- factor(read.table("QUBO_popmap2", header=FALSE)[,2])
 # R0_NOMAF Representation rates
-reportAllelicRepresentation_Together(QUBO.DN.R0_NOMAF_1SNP.genind)
+exSitu_Rep(QUBO.DN.R0_NOMAF_1SNP.genind)
 
 # TWO POPULATIONS ----
 # Read in genind file
@@ -217,7 +217,7 @@ QUBO.DN.R0_NOMAF_1SNP.TwoPops.genind <- read.genepop(paste0(genpop.filePath,"pop
 # Correct popNames
 pop(QUBO.DN.R0_NOMAF_1SNP.TwoPops.genind) <- factor(read.table("QUBO_popmap_GardenWild", header=FALSE)[,2])
 # R0_NOMAF Representation rates
-reportAllelicRepresentation_Together(QUBO.DN.R0_NOMAF_1SNP.TwoPops.genind)
+exSitu_Rep(QUBO.DN.R0_NOMAF_1SNP.TwoPops.genind)
 # Exploration of total and wild allele frequency proportions
 getWildAlleleFreqProportions(QUBO.DN.R0_NOMAF_1SNP.TwoPops.genind)
 getTotalAlleleFreqProportions(QUBO.DN.R0_NOMAF_1SNP.TwoPops.genind)
@@ -232,7 +232,7 @@ QUBO.DN.R0_NOMAF_H.TwoPops.genind <- read.genepop(paste0(genpop.filePath,"popula
 # Correct popNames
 pop(QUBO.DN.R0_NOMAF_H.TwoPops.genind) <- factor(read.table("QUBO_popmap_GardenWild", header=FALSE)[,2])
 # R0_NOMAF Representation rates
-reportAllelicRepresentation_Together(QUBO.DN.R0_NOMAF_H.TwoPops.genind)
+exSitu_Rep(QUBO.DN.R0_NOMAF_H.TwoPops.genind)
 
 # %%%% R80 ----
 # ---- ALL SNPS ----
@@ -245,7 +245,7 @@ QUBO.DN.R80_NOMAF_AllSNPs.genind <- read.genepop(paste0(genpop.filePath,"populat
 # Correct popNames
 pop(QUBO.DN.R80_NOMAF_AllSNPs.genind) <- factor(read.table("QUBO_popmap2", header=FALSE)[,2])
 # R80_NOMAF Representation rates
-reportAllelicRepresentation_Together(QUBO.DN.R80_NOMAF_AllSNPs.genind)
+exSitu_Rep(QUBO.DN.R80_NOMAF_AllSNPs.genind)
 
 # TWO POPULATIONS ----
 # Read in genind file
@@ -256,7 +256,7 @@ QUBO.DN.R80_NOMAF_AllSNPs.TwoPops.genind <- read.genepop(paste0(genpop.filePath,
 # Correct popNames
 pop(QUBO.DN.R80_NOMAF_AllSNPs.TwoPops.genind) <- factor(read.table("QUBO_popmap_GardenWild", header=FALSE)[,2])
 # R80_NOMAF Representation rates
-reportAllelicRepresentation_Together(QUBO.DN.R80_NOMAF_AllSNPs.TwoPops.genind)
+exSitu_Rep(QUBO.DN.R80_NOMAF_AllSNPs.TwoPops.genind)
 
 # ---- FIRST SNP ----
 # TWO POPULATIONS ----
@@ -268,7 +268,7 @@ QUBO.DN.R80_NOMAF_1SNP.TwoPops.genind <- read.genepop(paste0(genpop.filePath,"po
 # Correct popNames
 pop(QUBO.DN.R80_NOMAF_1SNP.TwoPops.genind) <- factor(read.table("QUBO_popmap_GardenWild", header=FALSE)[,2])
 # R80_NOMAF Representation rates
-reportAllelicRepresentation_Together(QUBO.DN.R80_NOMAF_1SNP.TwoPops.genind)
+exSitu_Rep(QUBO.DN.R80_NOMAF_1SNP.TwoPops.genind)
 # Exploration of total and wild allele frequency proportions
 getWildAlleleFreqProportions(QUBO.DN.R80_NOMAF_1SNP.TwoPops.genind)
 getTotalAlleleFreqProportions(QUBO.DN.R80_NOMAF_1SNP.TwoPops.genind)
@@ -283,7 +283,7 @@ QUBO.DN.R80_NOMAF_H.TwoPops.genind <- read.genepop(paste0(genpop.filePath,"popul
 # Correct popNames
 pop(QUBO.DN.R80_NOMAF_H.TwoPops.genind) <- factor(read.table("QUBO_popmap_GardenWild", header=FALSE)[,2])
 # R80_NOMAF Representation rates
-reportAllelicRepresentation_Together(QUBO.DN.R80_NOMAF_H.TwoPops.genind)
+exSitu_Rep(QUBO.DN.R80_NOMAF_H.TwoPops.genind)
 
 # %%%% DE NOVO %%%% ----
 # %%%% R0 ----
@@ -296,7 +296,7 @@ QUBO.R.R0_NOMAF_1SNP.TwoPops.genind <- read.genepop(paste0(genpop.filePath,"popu
 # Correct popNames
 pop(QUBO.R.R0_NOMAF_1SNP.TwoPops.genind) <- factor(read.table("QUBO_popmap_GardenWild", header=FALSE)[,2])
 # R80_NOMAF Representation rates
-reportAllelicRepresentation_Together(QUBO.R.R0_NOMAF_1SNP.TwoPops.genind)
+exSitu_Rep(QUBO.R.R0_NOMAF_1SNP.TwoPops.genind)
 # Exploration of total and wild allele frequency proportions
 getWildAlleleFreqProportions(QUBO.R.R0_NOMAF_1SNP.TwoPops.genind)
 getTotalAlleleFreqProportions(QUBO.R.R0_NOMAF_1SNP.TwoPops.genind)
@@ -311,7 +311,7 @@ QUBO.R.R80_NOMAF_1SNP.TwoPops.genind <- read.genepop(paste0(genpop.filePath,"pop
 # Correct popNames
 pop(QUBO.R.R80_NOMAF_1SNP.TwoPops.genind) <- factor(read.table("QUBO_popmap_GardenWild", header=FALSE)[,2])
 # R80_NOMAF Representation rates
-reportAllelicRepresentation_Together(QUBO.R.R80_NOMAF_1SNP.TwoPops.genind)
+exSitu_Rep(QUBO.R.R80_NOMAF_1SNP.TwoPops.genind)
 # Exploration of total and wild allele frequency proportions
 getWildAlleleFreqProportions(QUBO.R.R80_NOMAF_1SNP.TwoPops.genind)
 getTotalAlleleFreqProportions(QUBO.R.R80_NOMAF_1SNP.TwoPops.genind)

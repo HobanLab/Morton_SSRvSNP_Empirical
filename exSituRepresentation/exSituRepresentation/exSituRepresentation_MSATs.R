@@ -33,7 +33,7 @@ QUAC.MSAT.genind <- read.genepop("QUAC_wK_garden_wild_clean.gen", ncode = 3)
 pop(QUAC.MSAT.genind) <- gsub("pop1", "garden", pop(QUAC.MSAT.genind))
 pop(QUAC.MSAT.genind) <- gsub("pop2", "wild", pop(QUAC.MSAT.genind))
 # Report representation of wild alleles in gardens
-reportAllelicRepresentation_Together(QUAC.MSAT.genind)
+exSitu_Rep(QUAC.MSAT.genind)
 # Exploration of total and wild allele frequency proportions
 getWildAlleleFreqProportions(QUAC.MSAT.genind)
 getTotalAlleleFreqProportions(QUAC.MSAT.genind)
@@ -48,7 +48,7 @@ QUAC.SNP.DN.R0.genind <- read.genepop(paste0(genpop.filePath,"populations.snps.g
 # Correct popNames
 pop(QUAC.SNP.DN.R0.genind) <- factor(read.table("QUAC_popmap_GardenWild", header=FALSE)[,2])
 # Report representation of wild alleles in gardens
-reportAllelicRepresentation_Together(QUAC.SNP.DN.R0.genind)
+exSitu_Rep(QUAC.SNP.DN.R0.genind)
 # Exploration of total and wild allele frequency proportions
 getWildAlleleFreqProportions(QUAC.SNP.DN.R0.genind)
 getTotalAlleleFreqProportions(QUAC.SNP.DN.R0.genind)
@@ -62,7 +62,7 @@ QUAC.SNP.DN.R80.genind <- read.genepop(paste0(genpop.filePath,"populations.snps.
 # Correct popNames
 pop(QUAC.SNP.DN.R80.genind) <- factor(read.table("QUAC_popmap_GardenWild", header=FALSE)[,2])
 # Report representation of wild alleles in gardens
-reportAllelicRepresentation_Together(QUAC.SNP.DN.R80.genind)
+exSitu_Rep(QUAC.SNP.DN.R80.genind)
 # Exploration of total and wild allele frequency proportions
 getWildAlleleFreqProportions(QUAC.SNP.DN.R80.genind)
 getTotalAlleleFreqProportions(QUAC.SNP.DN.R80.genind)
@@ -77,7 +77,7 @@ QUAC.SNP.REF.R0.genind <- read.genepop(paste0(genpop.filePath,"populations.snps.
 # Correct popNames
 pop(QUAC.SNP.REF.R0.genind) <- factor(read.table("QUAC_popmap_GardenWild", header=FALSE)[,2])
 # Representation rates
-reportAllelicRepresentation_Together(QUAC.SNP.REF.R0.genind)
+exSitu_Rep(QUAC.SNP.REF.R0.genind)
 # Exploration of total and wild allele frequency proportions
 getWildAlleleFreqProportions(QUAC.SNP.REF.R0.genind)
 getTotalAlleleFreqProportions(QUAC.SNP.REF.R0.genind)
@@ -91,7 +91,7 @@ QUAC.SNP.REF.R80.genind <- read.genepop(paste0(genpop.filePath,"populations.snps
 # Correct popNames
 pop(QUAC.SNP.REF.R80.genind) <- factor(read.table("QUAC_popmap_GardenWild", header=FALSE)[,2])
 # Representation rates
-reportAllelicRepresentation_Together(QUAC.SNP.REF.R80.genind)
+exSitu_Rep(QUAC.SNP.REF.R80.genind)
 # Exploration of total and wild allele frequency proportions
 getWildAlleleFreqProportions(QUAC.SNP.REF.R80.genind)
 getTotalAlleleFreqProportions(QUAC.SNP.REF.R80.genind)
@@ -123,7 +123,7 @@ QUAC.SNP.REF.R80_subset.genind <- QUAC.SNP.REF.R80.genind[QUAC_sharedSamples,, d
 
 # Subset MSAT
 # Wild allelic representation in gardens
-reportAllelicRepresentation_Together(QUAC.MSAT_subset.genind)
+exSitu_Rep(QUAC.MSAT_subset.genind)
 # Allele frequency proportions
 getWildAlleleFreqProportions(QUAC.MSAT_subset.genind)
 getTotalAlleleFreqProportions(QUAC.MSAT_subset.genind)
@@ -131,11 +131,11 @@ getTotalAlleleFreqProportions(QUAC.MSAT_subset.genind)
 # Subset SNP
 # Wild allelic representation in gardens
 # De novo
-reportAllelicRepresentation_Together(QUAC.SNP.DN.R0_subset.genind)
-reportAllelicRepresentation_Together(QUAC.SNP.DN.R80_subset.genind)
+exSitu_Rep(QUAC.SNP.DN.R0_subset.genind)
+exSitu_Rep(QUAC.SNP.DN.R80_subset.genind)
 # Reference
-reportAllelicRepresentation_Together(QUAC.SNP.REF.R0_subset.genind)
-reportAllelicRepresentation_Together(QUAC.SNP.REF.R80_subset.genind)
+exSitu_Rep(QUAC.SNP.REF.R0_subset.genind)
+exSitu_Rep(QUAC.SNP.REF.R80_subset.genind)
 # Allele frequency proportions
 # De novo
 getWildAlleleFreqProportions(QUAC.SNP.DN.R80_subset.genind)
@@ -158,7 +158,7 @@ QUBO.MSAT.genind <- read.genepop(paste0(genpop.filePath,"Qb_total.gen"), ncode=3
 # Correct popNames: last population (IMLS4_MP1_IMLS336_C05) is garden; rest (9) are wild
 levels(QUBO.MSAT.genind@pop) <- c(rep("wild",9), "garden") 
 # Report representation of wild alleles in gardens
-reportAllelicRepresentation_Together(QUBO.MSAT.genind)
+exSitu_Rep(QUBO.MSAT.genind)
 # Exploration of total and wild allele frequency proportions
 getWildAlleleFreqProportions(QUBO.MSAT.genind)
 getTotalAlleleFreqProportions(QUBO.MSAT.genind)
@@ -173,7 +173,7 @@ QUBO.SNP.DN.R0.genind <- read.genepop(paste0(genpop.filePath,"populations.snps.g
 # Correct popNames
 pop(QUBO.SNP.DN.R0.genind) <- factor(read.table("QUBO_popmap_GardenWild", header=FALSE)[,2])
 # Report representation of wild alleles in gardens
-reportAllelicRepresentation_Together(QUBO.SNP.DN.R0.genind)
+exSitu_Rep(QUBO.SNP.DN.R0.genind)
 # Exploration of total and wild allele frequency proportions
 getWildAlleleFreqProportions(QUBO.SNP.DN.R0.genind)
 getTotalAlleleFreqProportions(QUBO.SNP.DN.R0.genind)
@@ -187,7 +187,7 @@ QUBO.SNP.DN.R80.genind <- read.genepop(paste0(genpop.filePath,"populations.snps.
 # Correct popNames
 pop(QUBO.SNP.DN.R80.genind) <- factor(read.table("QUBO_popmap_GardenWild", header=FALSE)[,2])
 # Report representation of wild alleles in gardens
-reportAllelicRepresentation_Together(QUBO.SNP.DN.R80.genind)
+exSitu_Rep(QUBO.SNP.DN.R80.genind)
 # Exploration of total and wild allele frequency proportions
 getWildAlleleFreqProportions(QUBO.SNP.DN.R80.genind)
 getTotalAlleleFreqProportions(QUBO.SNP.DN.R80.genind)
@@ -202,7 +202,7 @@ QUBO.SNP.REF.R0.genind <- read.genepop(paste0(genpop.filePath,"populations.snps.
 # Correct popNames
 pop(QUBO.SNP.REF.R0.genind) <- factor(read.table("QUBO_popmap_GardenWild", header=FALSE)[,2])
 # Report representation of wild alleles in gardens
-reportAllelicRepresentation_Together(QUBO.SNP.REF.R0.genind)
+exSitu_Rep(QUBO.SNP.REF.R0.genind)
 # Exploration of total and wild allele frequency proportions
 getWildAlleleFreqProportions(QUBO.SNP.REF.R0.genind)
 getTotalAlleleFreqProportions(QUBO.SNP.REF.R0.genind)
@@ -216,7 +216,7 @@ QUBO.SNP.REF.R80.genind <- read.genepop(paste0(genpop.filePath,"populations.snps
 # Correct popNames
 pop(QUBO.SNP.REF.R80.genind) <- factor(read.table("QUBO_popmap_GardenWild", header=FALSE)[,2])
 # Report representation of wild alleles in gardens
-reportAllelicRepresentation_Together(QUBO.SNP.REF.R80.genind)
+exSitu_Rep(QUBO.SNP.REF.R80.genind)
 # Exploration of total and wild allele frequency proportions
 getWildAlleleFreqProportions(QUBO.SNP.REF.R80.genind)
 getTotalAlleleFreqProportions(QUBO.SNP.REF.R80.genind)
@@ -258,7 +258,7 @@ QUBO.SNP.REF.R80_subset.genind <- QUBO.SNP.REF.R80.genind[QUBO_sharedSamples,, d
 
 # Subset MSAT 
 # Wild allelic representation in gardens
-reportAllelicRepresentation_Together(QUBO.MSAT_subset.genind)
+exSitu_Rep(QUBO.MSAT_subset.genind)
 # Allele frequency proportions
 getWildAlleleFreqProportions(QUBO.MSAT_subset.genind)
 getTotalAlleleFreqProportions(QUBO.MSAT_subset.genind)
@@ -266,11 +266,11 @@ getTotalAlleleFreqProportions(QUBO.MSAT_subset.genind)
 # Subset SNP
 # Wild allelic representation in gardens
 # De novo
-reportAllelicRepresentation_Together(QUBO.SNP.DN.R0_subset.genind)
-reportAllelicRepresentation_Together(QUBO.SNP.DN.R80_subset.genind)
+exSitu_Rep(QUBO.SNP.DN.R0_subset.genind)
+exSitu_Rep(QUBO.SNP.DN.R80_subset.genind)
 # Reference
-reportAllelicRepresentation_Together(QUBO.SNP.REF.R0_subset.genind)
-reportAllelicRepresentation_Together(QUBO.SNP.REF.R80_subset.genind)
+exSitu_Rep(QUBO.SNP.REF.R0_subset.genind)
+exSitu_Rep(QUBO.SNP.REF.R80_subset.genind)
 # Allele frequency proportions
 # De novo
 getWildAlleleFreqProportions(QUBO.SNP.DN.R80_subset.genind)
