@@ -45,7 +45,7 @@ plotWidth <- 1262 ; plotHeight <- 734
 plotColors <- c("red","red4","darkorange3","coral","purple")
 plotColors[2:5] <- alpha(plotColors[2:5], 0.5)
 # Set up relevant cores, and make sure adegenet library is present on cluster
-num_cores <- detectCores() - 20 ; cl <- makeCluster(num_cores)
+num_cores <- detectCores() - 16 ; cl <- makeCluster(num_cores)
 clusterEvalQ(cl, library("adegenet"))
 # Specify number of replicates. This value is used uniformly, for ALL datasets (QUAC and QUBO)
 num_reps <- 5000
@@ -828,7 +828,7 @@ dev.off()
 
 # ---- MSATS AND SNPS: SUBSET ----
 # Subset SNP sample names by those that are also seen within the MSAT samples
-QUBO_sharedSamples <- sort(QUBO.SNP.REF.R0.sampleNames[which(QUBO.SNP.REF.R0.sampleNames %in% QUBO.MSAT.sampleNames)])
+QUBO_sharedSamples <- sort(QUBO.SNP.DN.R0.sampleNamess[which(QUBO.SNP.DN.R0.sampleNames %in% QUBO.MSAT.sampleNames)])
 # Subset MSAT and SNP wild matrix objects to strictly shared samples
 QUBO.MSAT_subset.genind <- QUBO.MSAT.genind[QUBO_sharedSamples,, drop=TRUE]
 # De novo
