@@ -41,9 +41,9 @@ source("exSituRepresentation/functions_exSituRepresentation.R")
 resamplingDataDir <- paste0(SSRvSNP.wd, "exSituRepresentation/Resampling/resamplingData/")
 # Dimensions for resmpling plots
 plotWidth <- 1262 ; plotHeight <- 734
-# Plotting colors (for all plots!), with transparency for values other than Total
+# Plotting colors (for all plots!), with transparency for values other than Total (alpha = 1.0 is transparent)
 plotColors <- c("red","red4","darkorange3","coral","purple")
-plotColors[2:5] <- alpha(plotColors[2:5], 0.5)
+plotColors[2:5] <- alpha(plotColors[2:5], 0.6)
 # Set up relevant cores, and make sure adegenet library is present on cluster
 num_cores <- detectCores() - 16 ; cl <- makeCluster(num_cores)
 clusterEvalQ(cl, library("adegenet"))
@@ -105,8 +105,9 @@ legend(x=140, y=70.13276, inset = 0.05, legend = c("Total","Very common","Common
        col=plotColors, pch = c(20,20,20), cex=1, pt.cex = 2, bty="n", y.intersp = 1)
 # Lines for 95% threshold
 abline(h=95, col="black", lty=3); abline(v=min_95_QUAC.MSAT, col="black")
-# Text for number of individuals to capture 95% threshold
-mtext(text=paste0("Minimum sampling size (95%) = ", min_95_QUAC.MSAT), side=1, line=-1.5, at=70)
+# Text for number of individuals to capture 95% threshold, with position based on variable
+mtext(text=paste0("Minimum sampling size (95%) = ", min_95_QUAC.MSAT), 
+      side=1, line=-1.5, at=min_95_QUAC.MSAT-15)
 # Turn off plotting device
 dev.off()
 
@@ -203,8 +204,9 @@ legend(x=83, y=70.13276, inset = 0.05, legend = c("Total","Very common","Common"
        col=plotColors, pch = c(20,20,20), cex=1, pt.cex = 2, bty="n", y.intersp = 1)
 # Lines for 95% threshold
 abline(h=95, col="black", lty=3); abline(v=min_95_QUAC.SNP.DN.R0, col="black")
-# Text for number of individuals to capture 95% threshold
-mtext(text=paste0("Minimum sampling size (95%) = ", min_95_QUAC.SNP.DN.R0), side=1, line=-1.5, at=67)
+# Text for number of individuals to capture 95% threshold, with position based on variable
+mtext(text=paste0("Minimum sampling size (95%) = ", min_95_QUAC.SNP.DN.R0), 
+      side=1, line=-1.5, at=min_95_QUAC.SNP.DN.R0-15)
 # R80
 # Plots all sets of points onto single graph, as well as 95% threshold line
 plot(total_means, ylim=c(0,110), col=plotColors[1], pch=16,
@@ -218,8 +220,9 @@ legend(x=83, y=70.13276, inset = 0.05, legend = c("Total","Very common","Common"
        col=plotColors, pch = c(20,20,20), cex=1, pt.cex = 2, bty="n", y.intersp = 1)
 # Lines for 95% threshold
 abline(h=95, col="black", lty=3); abline(v=min_95_QUAC.SNP.DN.R80, col="black")
-# Text for number of individuals to capture 95% threshold
-mtext(text=paste0("Minimum sampling size (95%) = ", min_95_QUAC.SNP.DN.R0), side=1, line=-1.5, at=67)
+# Text for number of individuals to capture 95% threshold, with position based on variable
+mtext(text=paste0("Minimum sampling size (95%) = ", min_95_QUAC.SNP.DN.R80), 
+      side=1, line=-1.5, at=min_95_QUAC.SNP.DN.R80-15)
 # Turn off plotting device
 dev.off()
 
@@ -314,8 +317,9 @@ legend(x=83, y=70.13276, inset = 0.05, legend = c("Total","Very common","Common"
        col=plotColors, pch = c(20,20,20), cex=1, pt.cex = 2, bty="n", y.intersp = 1)
 # Lines for 95% threshold
 abline(h=95, col="black", lty=3); abline(v=min_95_QUAC.SNP.REF.R0, col="black")
-# Text for number of individuals to capture 95% threshold
-mtext(text=paste0("Minimum sampling size (95%) = ", min_95_QUAC.SNP.REF.R0), side=1, line=-1.5, at=67)
+# Text for number of individuals to capture 95% threshold, with position based on variable
+mtext(text=paste0("Minimum sampling size (95%) = ", min_95_QUAC.SNP.REF.R0), 
+      side=1, line=-1.5, at=min_95_QUAC.SNP.REF.R0-15)
 # R80
 # Plots all sets of points onto single graph, as well as 95% threshold line
 plot(total_means, ylim=c(0,110), col=plotColors[1], pch=16,
@@ -329,8 +333,9 @@ legend(x=83, y=70.13276, inset = 0.05, legend = c("Total","Very common","Common"
        col=plotColors, pch = c(20,20,20), cex=1, pt.cex = 2, bty="n", y.intersp = 1)
 # Lines for 95% threshold
 abline(h=95, col="black", lty=3); abline(v=min_95_QUAC.SNP.REF.R80, col="black")
-# Text for number of individuals to capture 95% threshold
-mtext(text=paste0("Minimum sampling size (95%) = ", min_95_QUAC.SNP.REF.R80), side=1, line=-1.5, at=67)
+# Text for number of individuals to capture 95% threshold, with position based on variable
+mtext(text=paste0("Minimum sampling size (95%) = ", min_95_QUAC.SNP.REF.R80), 
+      side=1, line=-1.5, at=min_95_QUAC.SNP.REF.R80-15)
 # Turn off plotting device
 dev.off()
 
@@ -440,7 +445,7 @@ png(file = paste0(resamplingDataDir, "QUAC.MSAT.Subset.png"), width = plotWidth,
 # Plots all sets of points onto single graph, as well as 95% threshold line
 plot(total_means, ylim=c(0,110), col=plotColors[1], pch=16,
      xlab="Number of Individuals", ylab="Percent Diversity Capture",
-     main=paste0("QUAC, MSATs (Subset); ", num_reps, " Replicates"))
+     main=paste0("QUAC, Microsatellites (Subset: 97 samples; ", num_reps, " Replicates)"))
 points(v.com_means, col=plotColors[2], pch=16)
 points(com_means, col=plotColors[3], pch=16)
 points(lowfr_means, col=plotColors[4], pch=16)
@@ -449,8 +454,9 @@ legend(x=80, y=70.13276, inset = 0.05, legend = c("Total","Very common","Common"
        col=plotColors, pch = c(20,20,20), cex=1, pt.cex = 2, bty="n", y.intersp = 1)
 # Lines for 95% threshold
 abline(h=95, col="black", lty=3); abline(v=min_95_QUAC.MSAT_subset, col="black")
-# Text for number of individuals to capture 95% threshold
-mtext(text=paste0("Minimum sampling size (95%) = ", min_95_QUAC.MSAT_subset), side=1, line=-1.5, at=49)
+# Text for number of individuals to capture 95% threshold, with position based on variable
+mtext(text=paste0("Minimum sampling size (95%) = ", min_95_QUAC.MSAT_subset), 
+      side=1, line=-1.5, at=min_95_QUAC.MSAT_subset-15)
 # Turn off plotting device
 dev.off()
 
@@ -464,7 +470,7 @@ par(mfcol=c(2,1), oma=rep(0.2,4))
 # Plots all sets of points onto single graph, as well as 95% threshold line
 plot(total_means, ylim=c(0,110), col=plotColors[1], pch=16,
      xlab="Number of Individuals", ylab="Percent Diversity Capture",
-     main=paste0("QUAC, SNPs (Subset); ", num_reps, " Replicates"))
+     main=paste0("QUAC, SNPs: De novo, R0 (Subset: 97 samples; ", num_reps, " Replicates)"))
 points(v.com_means, col=plotColors[2], pch=16)
 points(com_means, col=plotColors[3], pch=16)
 points(lowfr_means, col=plotColors[4], pch=16)
@@ -473,13 +479,14 @@ legend(x=83, y=70.13276, inset = 0.05, legend = c("Total","Very common","Common"
        col=plotColors, pch = c(20,20,20), cex=1, pt.cex = 2, bty="n", y.intersp = 1)
 # Lines for 95% threshold
 abline(h=95, col="black", lty=3); abline(v=min_95_QUAC.SNP.DN.R0_subset, col="black")
-# Text for number of individuals to capture 95% threshold
-mtext(text=paste0("Minimum sampling size (95%) = ", min_95_QUAC.SNP.DN.R0_subset), side=1, line=-1.5, at=67)
+# Text for number of individuals to capture 95% threshold, with position based on variable
+mtext(text=paste0("Minimum sampling size (95%) = ", min_95_QUAC.SNP.DN.R0_subset), 
+      side=1, line=-1.5, at=min_95_QUAC.SNP.DN.R0_subset-15)
 # R80
 # Plots all sets of points onto single graph, as well as 95% threshold line
 plot(total_means, ylim=c(0,110), col=plotColors[1], pch=16,
      xlab="Number of Individuals", ylab="Percent Diversity Capture",
-     main=paste0("QUAC, SNPs (Subset); ", num_reps, " Replicates"))
+     main=paste0("QUAC, SNPs: De novo, R80 (Subset: 97 samples; ", num_reps, " Replicates)"))
 points(v.com_means, col=plotColors[2], pch=16)
 points(com_means, col=plotColors[3], pch=16)
 points(lowfr_means, col=plotColors[4], pch=16)
@@ -488,8 +495,9 @@ legend(x=83, y=70.13276, inset = 0.05, legend = c("Total","Very common","Common"
        col=plotColors, pch = c(20,20,20), cex=1, pt.cex = 2, bty="n", y.intersp = 1)
 # Lines for 95% threshold
 abline(h=95, col="black", lty=3); abline(v=min_95_QUAC.SNP.DN.R80_subset, col="black")
-# Text for number of individuals to capture 95% threshold
-mtext(text=paste0("Minimum sampling size (95%) = ", min_95_QUAC.SNP.DN.R80_subset), side=1, line=-1.5, at=67)
+# Text for number of individuals to capture 95% threshold, with position based on variable
+mtext(text=paste0("Minimum sampling size (95%) = ", min_95_QUAC.SNP.DN.R80_subset), 
+      side=1, line=-1.5, at=min_95_QUAC.SNP.DN.R80_subset-15)
 # Turn off plotting device
 dev.off()
 
@@ -502,7 +510,7 @@ par(mfcol=c(2,1), oma=rep(0.2,4))
 # Plots all sets of points onto single graph, as well as 95% threshold line
 plot(total_means, ylim=c(0,110), col=plotColors[1], pch=16,
      xlab="Number of Individuals", ylab="Percent Diversity Capture",
-     main=paste0("QUAC, SNPs (Subset); ", num_reps, " Replicates"))
+     main=paste0("QUAC, SNPs: Reference, R0 (Subset: 97 samples; ", num_reps, " Replicates)"))
 points(v.com_means, col=plotColors[2], pch=16)
 points(com_means, col=plotColors[3], pch=16)
 points(lowfr_means, col=plotColors[4], pch=16)
@@ -511,13 +519,14 @@ legend(x=83, y=70.13276, inset = 0.05, legend = c("Total","Very common","Common"
        col=plotColors, pch = c(20,20,20), cex=1, pt.cex = 2, bty="n", y.intersp = 1)
 # Lines for 95% threshold
 abline(h=95, col="black", lty=3); abline(v=min_95_QUAC.SNP.REF.R0_subset, col="black")
-# Text for number of individuals to capture 95% threshold
-mtext(text=paste0("Minimum sampling size (95%) = ", min_95_QUAC.SNP.REF.R0_subset), side=1, line=-1.5, at=67)
+# Text for number of individuals to capture 95% threshold, with position based on variable
+mtext(text=paste0("Minimum sampling size (95%) = ", min_95_QUAC.SNP.REF.R0_subset), 
+      side=1, line=-1.5, at=min_95_QUAC.SNP.REF.R0_subset-15)
 # R80
 # Plots all sets of points onto single graph, as well as 95% threshold line
 plot(total_means, ylim=c(0,110), col=plotColors[1], pch=16,
      xlab="Number of Individuals", ylab="Percent Diversity Capture",
-     main=paste0("QUAC, SNPs (Subset); ", num_reps, " Replicates"))
+     main=paste0("QUAC, SNPs: Reference, R80 (Subset: 97 samples; ", num_reps, " Replicates)"))
 points(v.com_means, col=plotColors[2], pch=16)
 points(com_means, col=plotColors[3], pch=16)
 points(lowfr_means, col=plotColors[4], pch=16)
@@ -526,8 +535,9 @@ legend(x=83, y=70.13276, inset = 0.05, legend = c("Total","Very common","Common"
        col=plotColors, pch = c(20,20,20), cex=1, pt.cex = 2, bty="n", y.intersp = 1)
 # Lines for 95% threshold
 abline(h=95, col="black", lty=3); abline(v=min_95_QUAC.SNP.REF.R80_subset, col="black")
-# Text for number of individuals to capture 95% threshold
-mtext(text=paste0("Minimum sampling size (95%) = ", min_95_QUAC.SNP.REF.R80_subset), side=1, line=-1.5, at=67)
+# Text for number of individuals to capture 95% threshold, with position based on variable
+mtext(text=paste0("Minimum sampling size (95%) = ", min_95_QUAC.SNP.REF.R80_subset), 
+      side=1, line=-1.5, at=min_95_QUAC.SNP.REF.R80_subset-15)
 # Turn off plotting device
 dev.off()
 
@@ -583,8 +593,9 @@ legend(x=200, y=86.13276, inset = 0.05, legend = c("Total","Very common","Common
        col=plotColors, pch = c(20,20,20), cex=1, pt.cex = 2, bty="n", y.intersp = 1)
 # Lines for 95% threshold
 abline(h=95, col="black", lty=3); abline(v=min_95_QUBO.MSAT, col="black")
-# Text for number of individuals to capture 95% threshold
-mtext(text=paste0("Minimum sampling size (95%) = ", min_95_QUBO.MSAT), side=1, line=-1.5, at=150)
+# Text for number of individuals to capture 95% threshold, with position based on variable
+mtext(text=paste0("Minimum sampling size (95%) = ", min_95_QUBO.MSAT), 
+      side=1, line=-1.5, at=min_95_QUBO.MSAT-15)
 # Turn off plotting device
 dev.off()
 
@@ -686,7 +697,7 @@ par(mfcol=c(2,1), oma=rep(0.2,4))
 # Plots all sets of points onto single graph, as well as 95% threshold line
 plot(total_means, ylim=c(0,110), col=plotColors[1], pch=16,
      xlab="Number of Individuals", ylab="Percent Diversity Capture",
-     main=paste0("QUBO, SNPs (Complete: 95 samples; ", num_reps, " Replicates)"))
+     main=paste0("QUBO, SNPs: De novo, R0 (Complete: 95 samples; ", num_reps, " Replicates)"))
 points(v.com_means, col=plotColors[2], pch=16)
 points(com_means, col=plotColors[3], pch=16)
 points(lowfr_means, col=plotColors[4], pch=16)
@@ -695,13 +706,14 @@ legend(x=83, y=86.13276, inset = 0.05, legend = c("Total","Very common","Common"
        col=plotColors, pch = c(20,20,20), cex=1, pt.cex = 2, bty="n", y.intersp = 1)
 # Lines for 95% threshold
 abline(h=95, col="black", lty=3); abline(v=min_95_QUBO.SNP.DN.R0, col="black")
-# Text for number of individuals to capture 95% threshold
-mtext(text=paste0("Minimum sampling size (95%) = ", min_95_QUBO.SNP.DN.R0), side=1, line=-1.5, at=61)
+# Text for number of individuals to capture 95% threshold, with position based on variable
+mtext(text=paste0("Minimum sampling size (95%) = ", min_95_QUBO.SNP.DN.R0), 
+      side=1, line=-1.5, at=min_95_QUBO.SNP.DN.R0-15)
 # R80
 # Plots all sets of points onto single graph, as well as 95% threshold line
 plot(total_means, ylim=c(0,110), col=plotColors[1], pch=16,
      xlab="Number of Individuals", ylab="Percent Diversity Capture",
-     main=paste0("QUBO, SNPs (Complete: 95 samples; ", num_reps, " Replicates)"))
+     main=paste0("QUBO, SNPs: De novo, R80 (Complete: 95 samples; ", num_reps, " Replicates)"))
 points(v.com_means, col=plotColors[2], pch=16)
 points(com_means, col=plotColors[3], pch=16)
 points(lowfr_means, col=plotColors[4], pch=16)
@@ -710,8 +722,9 @@ legend(x=83, y=86.13276, inset = 0.05, legend = c("Total","Very common","Common"
        col=plotColors, pch = c(20,20,20), cex=1, pt.cex = 2, bty="n", y.intersp = 1)
 # Lines for 95% threshold
 abline(h=95, col="black", lty=3); abline(v=min_95_QUBO.SNP.DN.R80, col="black")
-# Text for number of individuals to capture 95% threshold
-mtext(text=paste0("Minimum sampling size (95%) = ", min_95_QUBO.SNP.DN.R80), side=1, line=-1.5, at=61)
+# Text for number of individuals to capture 95% threshold, with position based on variable
+mtext(text=paste0("Minimum sampling size (95%) = ", min_95_QUBO.SNP.DN.R80), 
+      side=1, line=-1.5, at=min_95_QUBO.SNP.DN.R80-15)
 # Turn off plotting device
 dev.off()
 
@@ -797,7 +810,7 @@ par(mfcol=c(2,1), oma=rep(0.2,4))
 # Plots all sets of points onto single graph, as well as 95% threshold line
 plot(total_means, ylim=c(0,110), col=plotColors[1], pch=16,
      xlab="Number of Individuals", ylab="Percent Diversity Capture",
-     main=paste0("QUBO, SNPs (Complete: 95 samples; ", num_reps, " Replicates)"))
+     main=paste0("QUBO, SNPs: Reference, R0 (Complete: 95 samples; ", num_reps, " Replicates)"))
 points(v.com_means, col=plotColors[2], pch=16)
 points(com_means, col=plotColors[3], pch=16)
 points(lowfr_means, col=plotColors[4], pch=16)
@@ -806,13 +819,14 @@ legend(x=83, y=86.13276, inset = 0.05, legend = c("Total","Very common","Common"
        col=plotColors, pch = c(20,20,20), cex=1, pt.cex = 2, bty="n", y.intersp = 1)
 # Lines for 95% threshold
 abline(h=95, col="black", lty=3); abline(v=min_95_QUBO.SNP.REF.R0, col="black")
-# Text for number of individuals to capture 95% threshold
-mtext(text=paste0("Minimum sampling size (95%) = ", min_95_QUBO.SNP.REF.R0), side=1, line=-1.5, at=61)
+# Text for number of individuals to capture 95% threshold, with position based on variable
+mtext(text=paste0("Minimum sampling size (95%) = ", min_95_QUBO.SNP.REF.R0), 
+      side=1, line=-1.5, at=min_95_QUBO.SNP.REF.R0-15)
 # R80
 # Plots all sets of points onto single graph, as well as 95% threshold line
 plot(total_means, ylim=c(0,110), col=plotColors[1], pch=16,
      xlab="Number of Individuals", ylab="Percent Diversity Capture",
-     main=paste0("QUBO, SNPs (Complete: 95 samples; ", num_reps, " Replicates)"))
+     main=paste0("QUBO, SNPs: Reference, R80 (Complete: 95 samples; ", num_reps, " Replicates)"))
 points(v.com_means, col=plotColors[2], pch=16)
 points(com_means, col=plotColors[3], pch=16)
 points(lowfr_means, col=plotColors[4], pch=16)
@@ -821,14 +835,15 @@ legend(x=83, y=86.13276, inset = 0.05, legend = c("Total","Very common","Common"
        col=plotColors, pch = c(20,20,20), cex=1, pt.cex = 2, bty="n", y.intersp = 1)
 # Lines for 95% threshold
 abline(h=95, col="black", lty=3); abline(v=min_95_QUBO.SNP.REF.R80, col="black")
-# Text for number of individuals to capture 95% threshold
-mtext(text=paste0("Minimum sampling size (95%) = ", min_95_QUBO.SNP.REF.R80), side=1, line=-1.5, at=61)
+# Text for number of individuals to capture 95% threshold, with position based on variable
+mtext(text=paste0("Minimum sampling size (95%) = ", min_95_QUBO.SNP.REF.R80), 
+      side=1, line=-1.5, at=min_95_QUBO.SNP.REF.R80-15)
 # Turn off plotting device
 dev.off()
 
 # ---- MSATS AND SNPS: SUBSET ----
 # Subset SNP sample names by those that are also seen within the MSAT samples
-QUBO_sharedSamples <- sort(QUBO.SNP.DN.R0.sampleNamess[which(QUBO.SNP.DN.R0.sampleNames %in% QUBO.MSAT.sampleNames)])
+QUBO_sharedSamples <- sort(QUBO.SNP.DN.R0.sampleNames[which(QUBO.SNP.DN.R0.sampleNames %in% QUBO.MSAT.sampleNames)])
 # Subset MSAT and SNP wild matrix objects to strictly shared samples
 QUBO.MSAT_subset.genind <- QUBO.MSAT.genind[QUBO_sharedSamples,, drop=TRUE]
 # De novo
@@ -932,7 +947,7 @@ png(file = paste0(resamplingDataDir, "QUBO.MSAT.Subset.png"), width = plotWidth,
 # Plots all sets of points onto single graph, as well as 95% threshold line
 plot(total_means, ylim=c(0,110), col=plotColors[1], pch=16,
      xlab="Number of Individuals", ylab="Percent Diversity Capture",
-     main=paste0("QUBO, MSATs (Subset); ", num_reps, " Replicates"))
+     main=paste0("QUBO, Microsatellites (Subset: 94 samples; ", num_reps, " Replicates)"))
 points(v.com_means, col=plotColors[2], pch=16)
 points(com_means, col=plotColors[3], pch=16)
 points(lowfr_means, col=plotColors[4], pch=16)
@@ -941,8 +956,9 @@ legend(x=80, y=70.13276, inset = 0.05, legend = c("Total","Very common","Common"
        col=plotColors, pch = c(20,20,20), cex=1, pt.cex = 2, bty="n", y.intersp = 1)
 # Lines for 95% threshold
 abline(h=95, col="black", lty=3); abline(v=min_95_QUBO.MSAT_subset, col="black")
-# Text for number of individuals to capture 95% threshold
-mtext(text=paste0("Minimum sampling size (95%) = ", min_95_QUBO.MSAT_subset), side=1, line=-1.5, at=61)
+# Text for number of individuals to capture 95% threshold, with position based on variable
+mtext(text=paste0("Minimum sampling size (95%) = ", min_95_QUBO.MSAT_subset), 
+      side=1, line=-1.5, at=min_95_QUBO.MSAT_subset-15)
 # Turn off plotting device
 dev.off()
 
@@ -956,7 +972,7 @@ par(mfcol=c(2,1), oma=rep(0.2,4))
 # Plots all sets of points onto single graph, as well as 95% threshold line
 plot(total_means, ylim=c(0,110), col=plotColors[1], pch=16,
      xlab="Number of Individuals", ylab="Percent Diversity Capture",
-     main=paste0("QUBO, SNPs (Subset); ", num_reps, " Replicates"))
+     main=paste0("QUBO, SNPs: De novo, R0 (Subset: 94 samples; ", num_reps, " Replicates)"))
 points(v.com_means, col=plotColors[2], pch=16)
 points(com_means, col=plotColors[3], pch=16)
 points(lowfr_means, col=plotColors[4], pch=16)
@@ -965,13 +981,14 @@ legend(x=83, y=70.13276, inset = 0.05, legend = c("Total","Very common","Common"
        col=plotColors, pch = c(20,20,20), cex=1, pt.cex = 2, bty="n", y.intersp = 1)
 # Lines for 95% threshold
 abline(h=95, col="black", lty=3); abline(v=min_95_QUBO.SNP.DN.R0_subset, col="black")
-# Text for number of individuals to capture 95% threshold
-mtext(text=paste0("Minimum sampling size (95%) = ", min_95_QUBO.SNP.DN.R0_subset), side=1, line=-1.5, at=61)
+# Text for number of individuals to capture 95% threshold, with position based on variable
+mtext(text=paste0("Minimum sampling size (95%) = ", min_95_QUBO.SNP.DN.R0_subset), 
+      side=1, line=-1.5, at=min_95_QUBO.SNP.DN.R0_subset-15)
 # R80
 # Plots all sets of points onto single graph, as well as 95% threshold line
 plot(total_means, ylim=c(0,110), col=plotColors[1], pch=16,
      xlab="Number of Individuals", ylab="Percent Diversity Capture",
-     main=paste0("QUBO, SNPs (Subset); ", num_reps, " Replicates"))
+     main=paste0("QUBO, SNPs: De novo, R80 (Subset: 94 samples; ", num_reps, " Replicates)"))
 points(v.com_means, col=plotColors[2], pch=16)
 points(com_means, col=plotColors[3], pch=16)
 points(lowfr_means, col=plotColors[4], pch=16)
@@ -980,8 +997,9 @@ legend(x=83, y=70.13276, inset = 0.05, legend = c("Total","Very common","Common"
        col=plotColors, pch = c(20,20,20), cex=1, pt.cex = 2, bty="n", y.intersp = 1)
 # Lines for 95% threshold
 abline(h=95, col="black", lty=3); abline(v=min_95_QUBO.SNP.DN.R80_subset, col="black")
-# Text for number of individuals to capture 95% threshold
-mtext(text=paste0("Minimum sampling size (95%) = ", min_95_QUBO.SNP.DN.R80_subset), side=1, line=-1.5, at=61)
+# Text for number of individuals to capture 95% threshold, with position based on variable
+mtext(text=paste0("Minimum sampling size (95%) = ", min_95_QUBO.SNP.DN.R80_subset), 
+      side=1, line=-1.5, at=min_95_QUBO.SNP.DN.R80_subset-15)
 # Turn off plotting device
 dev.off()
 
@@ -994,7 +1012,7 @@ par(mfcol=c(2,1), oma=rep(0.2,4))
 # Plots all sets of points onto single graph, as well as 95% threshold line
 plot(total_means, ylim=c(0,110), col=plotColors[1], pch=16,
      xlab="Number of Individuals", ylab="Percent Diversity Capture",
-     main=paste0("QUBO, SNPs (Subset); ", num_reps, " Replicates"))
+     main=paste0("QUBO, SNPs: Reference, R0 (Subset: 94 samples; ", num_reps, " Replicates)"))
 points(v.com_means, col=plotColors[2], pch=16)
 points(com_means, col=plotColors[3], pch=16)
 points(lowfr_means, col=plotColors[4], pch=16)
@@ -1003,13 +1021,14 @@ legend(x=83, y=70.13276, inset = 0.05, legend = c("Total","Very common","Common"
        col=plotColors, pch = c(20,20,20), cex=1, pt.cex = 2, bty="n", y.intersp = 1)
 # Lines for 95% threshold
 abline(h=95, col="black", lty=3); abline(v=min_95_QUBO.SNP.REF.R0_subset, col="black")
-# Text for number of individuals to capture 95% threshold
-mtext(text=paste0("Minimum sampling size (95%) = ", min_95_QUBO.SNP.REF.R0_subset), side=1, line=-1.5, at=61)
+# Text for number of individuals to capture 95% threshold, with position based on variable
+mtext(text=paste0("Minimum sampling size (95%) = ", min_95_QUBO.SNP.REF.R0_subset), 
+      side=1, line=-1.5, at=min_95_QUBO.SNP.REF.R0_subset-15)
 # R80
 # Plots all sets of points onto single graph, as well as 95% threshold line
 plot(total_means, ylim=c(0,110), col=plotColors[1], pch=16,
      xlab="Number of Individuals", ylab="Percent Diversity Capture",
-     main=paste0("QUBO, SNPs (Subset); ", num_reps, " Replicates"))
+     main=paste0("QUBO, SNPs: Reference, R80 (Subset: 94 samples; ", num_reps, " Replicates)"))
 points(v.com_means, col=plotColors[2], pch=16)
 points(com_means, col=plotColors[3], pch=16)
 points(lowfr_means, col=plotColors[4], pch=16)
@@ -1018,7 +1037,8 @@ legend(x=83, y=70.13276, inset = 0.05, legend = c("Total","Very common","Common"
        col=plotColors, pch = c(20,20,20), cex=1, pt.cex = 2, bty="n", y.intersp = 1)
 # Lines for 95% threshold
 abline(h=95, col="black", lty=3); abline(v=min_95_QUBO.SNP.REF.R80_subset, col="black")
-# Text for number of individuals to capture 95% threshold
-mtext(text=paste0("Minimum sampling size (95%) = ", min_95_QUBO.SNP.REF.R80_subset), side=1, line=-1.5, at=61)
+# Text for number of individuals to capture 95% threshold, with position based on variable
+mtext(text=paste0("Minimum sampling size (95%) = ", min_95_QUBO.SNP.REF.R80_subset), 
+      side=1, line=-1.5, at=min_95_QUBO.SNP.REF.R80_subset-15)
 # Turn off plotting device
 dev.off()
