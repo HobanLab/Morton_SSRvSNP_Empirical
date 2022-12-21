@@ -30,13 +30,15 @@ setwd(SSRvSNP.wd)
 # ---- MSATS ----
 # %%% GARDEN AND WILD ----
 # Read in genind file (GCC_QUAC_ZAIN repo; QUAC_wK_garden_wild_clean.gen)
-QUAC.MSAT.genpop.filePath <- 
-  "~/Documents/peripheralProjects/GCC_QUAC_ZAIN/Data_Files/Adegenet_Files/Garden_Wild/"
-setwd(QUAC.MSAT.genpop.filePath)
-QUAC.MSAT_genind <- read.genepop("QUAC_wK_garden_wild_clean.gen", ncode = 3)
-# Correct popNames: pop1 is Garden, pop2 is Wild
-pop(QUAC.MSAT_genind) <- gsub("pop1", "garden", pop(QUAC.MSAT_genind))
-pop(QUAC.MSAT_genind) <- gsub("pop2", "wild", pop(QUAC.MSAT_genind))
+QUAC.MSAT_filePath <- 
+  "~/Documents/peripheralProjects/GCC_QUAC_ZAIN/Data_Files/Adegenet_Files"
+QUAC.MSAT_genind <- read.genepop(paste0(QUAC.MSAT_filePath, "QUAC_wK_garden_wild_clean.gen"), ncode = 3)
+# Correct popNames: samples with popname patter QAc-G- are garden 
+levels(QUAC.MSAT_genind@pop)[grep(pattern = "QAc-G-", levels(QUAC.MSAT_genind@pop))] <- 
+  rep("garden", length(grep(pattern = "QAc-G-", levels(QUAC.MSAT_genind@pop))))
+# Correct popNames: samples with popname patter QAc-W- are wild
+levels(QUAC.MSAT_genind@pop)[grep(pattern = "QAc-W-", levels(QUAC.MSAT_genind@pop))] <- 
+  rep("wild", length(grep(pattern = "QAc-W-", levels(QUAC.MSAT_genind@pop))))
 
 # Heterozygosity
 QUAC.MSAT_HZ <- Hs(QUAC.MSAT_genind); print(QUAC.MSAT_HZ)
@@ -58,12 +60,12 @@ print(QUAC.MSAT_AR)
 # %%% GARDEN AND WILD ----
 # R0 ----
 # Read in genind file: Optimized de novo assembly; R0, NOMAF, first SNP/locus, 2 populations
-genpop.filePath <- 
+QUAC.SNP.R0_filePath <- 
   "/RAID1/IMLS_GCCO/Analysis/Stacks/denovo_finalAssemblies/QUAC/output/populations_R0_NOMAF_1SNP_2Pops/"
-setwd(genpop.filePath)
-QUAC.SNP.R0_genind <- read.genepop(paste0(genpop.filePath,"populations.snps.gen"))
+QUAC.SNP.R0_genind <- read.genepop(paste0(QUAC.SNP.R0_filePath,"populations.snps.gen"))
 # Correct popNames
-pop(QUAC.SNP.R0_genind) <- factor(read.table("QUAC_popmap_GardenWild", header=FALSE)[,2])
+pop(QUAC.SNP.R0_genind) <- 
+  factor(read.table(paste0(QUAC.SNP.R0_filePath,"QUAC_popmap_GardenWild"), header=FALSE)[,2])
 
 # Heterozygosity
 QUAC.SNP.R0_HZ <- Hs(QUAC.SNP.R0_genind); print(QUAC.SNP.R0_HZ)
@@ -84,12 +86,11 @@ print(QUAC.SNP.R0_AR)
 # R80 ----
 # 1st SNP/locus ----
 # Read in genind file: Optimized de novo assembly; R80, NOMAF, first SNP/locus, 2 populations
-genpop.filePath <- 
+QUAC.SNP.R80_filePath <- 
   "/RAID1/IMLS_GCCO/Analysis/Stacks/denovo_finalAssemblies/QUAC/output/populations_R80_NOMAF_1SNP_2Pops/"
-setwd(genpop.filePath)
-QUAC.SNP.R80_genind <- read.genepop(paste0(genpop.filePath,"populations.snps.gen"))
+QUAC.SNP.R80_genind <- read.genepop(paste0(QUAC.SNP.R80_filePath,"populations.snps.gen"))
 # Correct popNames
-pop(QUAC.SNP.R80_genind) <- factor(read.table("QUAC_popmap_GardenWild", header=FALSE)[,2])
+pop(QUAC.SNP.R80_genind) <- factor(read.table(paste0(QUAC.SNP.R80_filePath,"QUAC_popmap_GardenWild"), header=FALSE)[,2])
 
 # Heterozygosity
 QUAC.SNP.R80_HZ <- Hs(QUAC.SNP.R80_genind); print(QUAC.SNP.R80_HZ)
@@ -109,12 +110,12 @@ print(QUAC.SNP.R80_AR)
 
 # Microhaplotypes ----
 # Read in genind file: Optimized de novo assembly; R80, NOMAF, haplotype-wise SNPs, 2 populations
-genpop.filePath <- 
+QUAC.SNP.R80.HapSNP_filePath <- 
   "/RAID1/IMLS_GCCO/Analysis/Stacks/denovo_finalAssemblies/QUAC/output/populations_R80_NOMAF_HapSNPs_2Pops/"
-setwd(genpop.filePath)
-QUAC.SNP.R80.HapSNP_genind <- read.genepop(paste0(genpop.filePath,"populations.snps.gen"))
+QUAC.SNP.R80.HapSNP_genind <- read.genepop(paste0(QUAC.SNP.R80.HapSNP_filePath,"populations.snps.gen"))
 # Correct popNames
-pop(QUAC.SNP.R80.HapSNP_genind) <- factor(read.table("QUAC_popmap_GardenWild", header=FALSE)[,2])
+pop(QUAC.SNP.R80.HapSNP_genind) <- 
+  factor(read.table(paste0(QUAC.SNP.R80.HapSNP_filePath,"QUAC_popmap_GardenWild"), header=FALSE)[,2])
 
 # Heterozygosity
 QUAC.SNP.R80.HapSNP_HZ <- Hs(QUAC.SNP.R80.HapSNP_genind); print(QUAC.SNP.R80.HapSNP_HZ)
@@ -135,12 +136,11 @@ print(QUAC.SNP.R80.HapSNP_AR)
 # %%% WILD ONLY ----
 # R0 ----
 # Read in genind file: Optimized de novo assembly; R0, NOMAF, first SNP/locus, only wild populations
-genpop.filePath <- 
+QUAC.Wild.SNP.R0_filePath <- 
   "/RAID1/IMLS_GCCO/Analysis/Stacks/denovo_finalAssemblies/QUAC/output/populations_wild_R0_NOMAF_1SNP/"
-setwd(genpop.filePath)
-QUAC.Wild.SNP.R0_genind <- read.genepop(paste0(genpop.filePath,"populations.snps.gen"))
+QUAC.Wild.SNP.R0_genind <- read.genepop(paste0(QUAC.Wild.SNP.R0_filePath,"populations.snps.gen"))
 # Correct popNames
-pop(QUAC.Wild.SNP.R0_genind) <- factor(read.table("QUAC_popmap_wild", header=FALSE)[,2])
+pop(QUAC.Wild.SNP.R0_genind) <- factor(read.table(paste0(QUAC.Wild.SNP.R0_filePath,"QUAC_popmap_wild"), header=FALSE)[,2])
 
 # Heterozygosity
 QUAC.SNP.Wild.R0_HZ <- Hs(QUAC.Wild.SNP.R0_genind); print(QUAC.SNP.Wild.R0_HZ)
@@ -161,12 +161,11 @@ print(QUAC.SNP.Wild.R0_AR)
 
 # R80 ----
 # Read in genind file: Optimized de novo assembly; R80, NOMAF, first SNP/locus, only wild populations
-genpop.filePath <- 
+QUAC.Wild.SNP.R80_filePath <- 
   "/RAID1/IMLS_GCCO/Analysis/Stacks/denovo_finalAssemblies/QUAC/output/populations_wild_R80_NOMAF_1SNP/"
-setwd(genpop.filePath)
-QUAC.Wild.SNP.R80_genind <- read.genepop(paste0(genpop.filePath,"populations.snps.gen"))
+QUAC.Wild.SNP.R80_genind <- read.genepop(paste0(QUAC.Wild.SNP.R80_filePath,"populations.snps.gen"))
 # Correct popNames
-pop(QUAC.Wild.SNP.R80_genind) <- factor(read.table("QUAC_popmap_wild", header=FALSE)[,2])
+pop(QUAC.Wild.SNP.R80_genind) <- factor(read.table(paste0(QUAC.Wild.SNP.R80_filePath,"QUAC_popmap_wild"), header=FALSE)[,2])
 
 # Heterozygosity
 QUAC.SNP.Wild.R80_HZ <- Hs(QUAC.Wild.SNP.R80_genind); print(QUAC.SNP.Wild.R80_HZ)
@@ -246,10 +245,9 @@ print(QUAC.SNP.R80.subset_AR)
 # ---- MSATS ----
 # %%% GARDEN AND WILD ----
 # Read in genind file (Southeast Oaks repo; genetic_data/Qb_total.gen file)
-genpop.filePath <- 
+QUBO.MSAT_filePath <- 
   "~/Documents/peripheralProjects/SE_oaks_genetics/genetic_data/"
-setwd(genpop.filePath)
-QUBO.MSAT_genind <- read.genepop(paste0(genpop.filePath,"Qb_total.gen"), ncode=3)
+QUBO.MSAT_genind <- read.genepop(paste0(QUBO.MSAT_filePath,"Qb_total.gen"), ncode=3)
 # Correct popNames: last population (IMLS4_MP1_IMLS336_C05) is garden; rest (9) are wild
 levels(QUBO.MSAT_genind@pop) <- c(rep("wild",9), "garden") 
 
@@ -273,10 +271,9 @@ print(QUBO.MSAT_AR)
 # %%% GARDEN AND WILD ----
 # R0 ----
 # Read in genind file: GSNAP4 alignment with Quercus robur genome; R0, NOMAF, first SNP/locus, 2 populations 
-genpop.filePath <- 
+QUBO.SNP.R0_filePath <- 
   "/RAID1/IMLS_GCCO/Analysis/Stacks/reference_filteredReads/QUBO/GSNAP4/output/populations_R0_NOMAF_1SNP_2Pops/"
-setwd(genpop.filePath)
-QUBO.SNP.R0_genind <- read.genepop(paste0(genpop.filePath,"populations.snps.gen"))
+QUBO.SNP.R0_genind <- read.genepop(paste0(QUBO.SNP.R0_filePath,"populations.snps.gen"))
 # Correct popNames
 pop(QUBO.SNP.R0_genind) <- factor(read.table("QUBO_popmap_GardenWild", header=FALSE)[,2])
 
@@ -299,10 +296,9 @@ print(QUBO.SNP.R0_AR)
 # R80 ----
 # 1st SNP/locus ----
 # Read in genind file: GSNAP4 alignment with Quercus robur genome; R80, NOMAF, first SNP/locus, 2 populations 
-genpop.filePath <- 
+QUBO.SNP.R80_filePath <- 
   "/RAID1/IMLS_GCCO/Analysis/Stacks/reference_filteredReads/QUBO/GSNAP4/output/populations_R80_NOMAF_1SNP_2Pops/"
-setwd(genpop.filePath)
-QUBO.SNP.R80_genind <- read.genepop(paste0(genpop.filePath,"populations.snps.gen"))
+QUBO.SNP.R80_genind <- read.genepop(paste0(QUBO.SNP.R80_filePath,"populations.snps.gen"))
 # Correct popNames
 pop(QUBO.SNP.R80_genind) <- factor(read.table("QUBO_popmap_GardenWild", header=FALSE)[,2])
 
@@ -324,10 +320,9 @@ print(QUBO.SNP.R80_AR)
 
 # Microhaplotypes ----
 # Read in genind file: GSNAP4 alignment with Quercus robur genome; R80, NOMAF, haplotype-wise SNPs, 2 populations 
-genpop.filePath <- 
+QUBO.SNP.R80.HapSNP_filePath <- 
   "/RAID1/IMLS_GCCO/Analysis/Stacks/reference_filteredReads/QUBO/GSNAP4/output/populations_R80_NOMAF_HapSNPs_2Pops/"
-setwd(genpop.filePath)
-QUBO.SNP.R80.HapSNP_genind <- read.genepop(paste0(genpop.filePath,"populations.snps.gen"))
+QUBO.SNP.R80.HapSNP_genind <- read.genepop(paste0(QUBO.SNP.R80.HapSNP_filePath,"populations.snps.gen"))
 # Correct popNames
 pop(QUBO.SNP.R80.HapSNP_genind) <- factor(read.table("QUBO_popmap_GardenWild", header=FALSE)[,2])
 
@@ -350,12 +345,11 @@ print(QUBO.SNP.R80.HapSNP_AR)
 # %%% WILD ONLY ----
 # R0 ----
 # Read in genind file: GSNAP4 alignment with Quercus robur genome; R0, NOMAF, first SNP/locus, only wild populations
-genpop.filePath <- 
+QUBO.Wild.SNP.R0_filePath <- 
   "/RAID1/IMLS_GCCO/Analysis/Stacks/reference_filteredReads/QUBO/GSNAP4/output/populations_wild_R0_NOMAF_1SNP/"
-setwd(genpop.filePath)
-QUBO.Wild.SNP.R0_genind <- read.genepop(paste0(genpop.filePath,"populations.snps.gen"))
+QUBO.Wild.SNP.R0_genind <- read.genepop(paste0(QUBO.Wild.SNP.R0_filePath,"populations.snps.gen"))
 # Correct popNames
-pop(QUBO.Wild.SNP.R0_genind) <- factor(read.table("QUBO_popmap_wild", header=FALSE)[,2])
+pop(QUBO.Wild.SNP.R0_genind) <- factor(read.table(paste0(QUBO.Wild.SNP.R0_filePath, "QUBO_popmap_wild"), header=FALSE)[,2])
 
 # Heterozygosity
 QUBO.Wild.SNP.R0_HZ <- Hs(QUBO.Wild.SNP.R0_genind); print(QUBO.Wild.SNP.R0_HZ)
@@ -376,12 +370,11 @@ print(QUBO.Wild.SNP.R0_AR)
 
 # R80 ----
 # Read in genind file: GSNAP4 alignment with Quercus robur genome; R80, NOMAF, first SNP/locus, only wild populations
-genpop.filePath <- 
+QUBO.Wild.SNP.R80_filePath <- 
   "/RAID1/IMLS_GCCO/Analysis/Stacks/reference_filteredReads/QUBO/GSNAP4/output/populations_wild_R80_NOMAF_1SNP/"
-setwd(genpop.filePath)
-QUBO.Wild.SNP.R80_genind <- read.genepop(paste0(genpop.filePath,"populations.snps.gen"))
+QUBO.Wild.SNP.R80_genind <- read.genepop(paste0(QUBO.Wild.SNP.R80_filePath,"populations.snps.gen"))
 # Correct popNames
-pop(QUBO.Wild.SNP.R80_genind) <- factor(read.table("QUBO_popmap_wild", header=FALSE)[,2])
+pop(QUBO.Wild.SNP.R80_genind) <- factor(read.table(paste0(QUBO.Wild.SNP.R80_filePath,"QUBO_popmap_wild"), header=FALSE)[,2])
 
 # Heterozygosity
 QUBO.Wild.SNP.R80_HZ <- Hs(QUBO.Wild.SNP.R80_genind); print(QUBO.Wild.SNP.R80_HZ)

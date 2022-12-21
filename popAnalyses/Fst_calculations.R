@@ -10,6 +10,7 @@
 # 1. Fst_Nei_report: uses a genind file, from which a pairwise Fst is calculated using Nei's 1987 method
 # 2. Fst_WC_report: uses a genind file, from which a pairwise Fst is calculated using Weir and Cockham's 1984 method
 # 3. Fst_Stacks_report: reads in the populations.fst_summary.tsv file generated from the Stacks populations module (--fstats flag)
+# For all of these, the mean pairwise Fst value is also calculated
 
 # For both species, this script reads in genind files from optimized de novo assemblies built using Stacks 
 # (QUAC: m 7, M/n 5, gt-alpha 0.01; QUBO: m 7, M/n 5, gt-alpha 0.01)
@@ -60,6 +61,8 @@ Fst_Nei_report <- function(gen.obj, title){
   # The line below gets the matrix into the format needed for plotting (lower triangle values removed)
   fst_mat[lower.tri(fst_mat, diag = TRUE)] <- NA
   
+  # Print mean pairwise Fst value
+  print(paste0("%%% Mean pairwise Fst: ", mean(fst_mat, na.rm=TRUE)))
   # Plot using the Fst_plot command
   Fst_plot(fst_mat, title=title)
   # Return matrix
@@ -78,6 +81,8 @@ Fst_WC_report <- function(gen.obj, title){
   # Round the values in the Fst matrix to the 4th digit, to make it comparable to Nei values
   fst_mat <- round(fst_mat, digits = 4)
   
+  # Print mean pairwise Fst value
+  print(paste0("%%% Mean pairwise Fst: ", mean(fst_mat, na.rm=TRUE)))
   # Plot using the Fst_plot command
   Fst_plot(fst_mat, title=title)
   # Return matrix
@@ -97,6 +102,8 @@ Fst_Stacks_report <- function(filepath.fst_tab, title){
   # Round the values in the Fst matrix to the 4th digit, to make it comparable to Nei values
   fst_mat <- round(fst_mat, digits = 4)
   
+  # Print mean pairwise Fst value
+  print(paste0("%%% Mean pairwise Fst: ", mean(fst_mat, na.rm=TRUE)))
   # Plot using the Fst_plot command
   Fst_plot(fst_mat, title=title)
   # Return matrix
@@ -107,12 +114,55 @@ Fst_Stacks_report <- function(filepath.fst_tab, title){
 # ---- READ IN GENIND FILES ----
 # MICROSATELLITE
 QUAC.MSAT.genpop.filePath <- 
-  "~/Documents/peripheralProjects/GCC_QUAC_ZAIN/Data_Files/Adegenet_Files/Garden_Wild/"
+  "~/Documents/peripheralProjects/GCC_QUAC_ZAIN/Data_Files/Adegenet_Files/"
 setwd(QUAC.MSAT.genpop.filePath)
-QUAC.MSAT.genind <- read.genepop("QUAC_wK_garden_wild_clean.gen", ncode = 3)
-# Correct popNames: pop1 is Garden, pop2 is Wild
-pop(QUAC.MSAT.genind) <- gsub("pop1", "garden", pop(QUAC.MSAT.genind))
-pop(QUAC.MSAT.genind) <- gsub("pop2", "wild", pop(QUAC.MSAT.genind))
+QUAC.MSAT.genind <- read.genepop("QUAC_wK_allpop_clean.gen", ncode = 3)
+# Specify filepath to GCC_QUAC_ZAIN dataframe, containing sample names and population names
+QUAC.MSAT.dataframe_filepath <- 
+  "~/Documents/peripheralProjects/GCC_QUAC_ZAIN/Data_Files/Data_Frames/QUAC_allpop_clean_df.csv"
+# Assign sample name: read in Tissue database names from GCC_QUAC_ZAIN repository
+rownames(QUAC.MSAT.genind@tab) <- unlist(read.csv2(QUAC.MSAT.dataframe_filepath, header = TRUE, sep=",")[1])
+# Correct population names: read in a dataframe containing population values
+levels(QUAC.MSAT.genind@pop) <- unlist(read.csv2(QUAC.MSAT.dataframe_filepath, header = TRUE, sep=",")[2])
+
+# !!! WORKING : CORRECTING POPULATION NAMES !!!
+length(grep(pattern = "QAc-W-", rownames(QUAC.MSAT.genind@tab)))+length(grep(pattern = "QAc-G-", rownames(QUAC.MSAT.genind@tab)))
+
+
+QUAC.MSAT.genind <- QUAC.MSAT.genind[grep(pattern = "QAc-W-", rownames(QUAC.MSAT.genind@tab)),,drop=TRUE]
+rownames(QUAC.MSAT.genind@tab[grep(pattern = "QAc-W-", rownames(QUAC.MSAT.genind@tab)),,drop=TRUE])
+
+TEST.genind <- QUAC.MSAT.genind[1:4,,drop=TRUE]
+levels(TEST.genind@pop)
+
+
+QUAC.MSAT.genind <- QUAC.MSAT.genind[grep(pattern = "QAc-G-", rownames(QUAC.MSAT.genind@tab)),,drop=TRUE]
+rownames(QUAC.MSAT.genind@tab[grep(pattern = "QAc-G-", rownames(QUAC.MSAT.genind@tab)),,drop=TRUE])
+
+TEST <- cbind(rownames(QUAC.MSAT.genind@tab), unlist(read.csv2(QUAC.MSAT.dataframe_filepath, header = TRUE, sep=",")[2]))
+TEST[1:4,]
+
+QUAC.MSAT.genind@pop[grep(pattern = "QAc-W-", rownames(QUAC.MSAT.genind@tab))]
+
+rownames(QUAC.MSAT.genind@tab)[-grep(pattern = "QAc-G-", rownames(QUAC.MSAT.genind@tab))]
+
+# Remove garden samples, and rename MSAT matrix
+QUAC.MSAT.tissueNames <- QUAC.MSAT.tissueNames[-grep(pattern = "QAc-G-", QUAC.MSAT.tissueNames)]
+rownames(QUAC.MSAT.genind@tab) <- QUAC.MSAT.tissueNames
+
+
+# Subset Complete MSAT genind object to just wild populations (last 5 populations)
+QUAC.MSAT.genind <- QUAC.MSAT.genind[18:22,]
+
+
+read.csv2("../Data_Frames/QUAC_allpop_clean_df.csv")[,2]
+
+# Correct popNames: samples with popname patter QAc-G- are garden 
+levels(QUAC.MSAT.genind@pop)[grep(pattern = "QAc-G-", levels(QUAC.MSAT.genind@pop))] <- 
+  rep("garden", length(grep(pattern = "QAc-G-", levels(QUAC.MSAT.genind@pop))))
+# Correct popNames: samples with popname patter QAc-W- are wild
+levels(QUAC.MSAT.genind@pop)[grep(pattern = "QAc-W-", levels(QUAC.MSAT.genind@pop))] <- 
+  rep("wild", length(grep(pattern = "QAc-W-", levels(QUAC.MSAT.genind@pop))))
 # Subset to only wild individuals
 QUAC.MSAT.genind <- QUAC.MSAT.genind[which(pop(QUAC.MSAT.genind)=="wild"),, drop=TRUE]
 
@@ -156,6 +206,18 @@ pop(QUAC.SNP.REF.R80.genind) <- factor(read.table("QUAC_popmap_GardenWild", head
 # Subset to only wild individuals
 QUAC.SNP.REF.R80.genind <- QUAC.SNP.REF.R80.genind[which(pop(QUAC.SNP.REF.R80.genind)=="wild"),, drop=TRUE]
 
+# ---- CALCULATE FST VALUES ----
+# MSAT
+Fst_Nei_report(QUAC.MSAT.genind, title = "QUAC MSAT (Complete): Fst Values")
+
+# Subset SNP
+# De novo
+# Fst_Nei_report(QUAC.SNP.DN.R0.genind, title = "QUAC SNP De novo (Complete, R0): Fst Values")
+Fst_Nei_report(QUAC.SNP.DN.R80.genind, title = "QUAC SNP De novo (Complete, R80): Fst Values")
+# Reference
+# Fst_Nei_report(QUAC.SNP.REF.R0.genind, title = "QUAC SNP De novo (Complete, R0): Fst Values")
+Fst_Nei_report(QUAC.SNP.REF.R80.genind, title = "QUAC SNP De novo (Complete, R80): Fst Values")
+
 # ---- SUBSET GENIND FILES ----
 # MSAT: read in Tissue database names from GCC_QUAC_ZAIN repository
 QUAC.MSAT.tissueNames_filepath <- 
@@ -197,15 +259,15 @@ pop(QUAC.MSAT_subset.genind) <- pop(QUAC.SNP.DN.R0_subset.genind) <- pop(QUAC.SN
 
 # ---- CALCULATE FST VALUES ----
 # Subset MSAT
-Fst_Nei_report(QUAC.MSAT_subset.genind, title = "QUAC MSAT: Fst Values")
+Fst_Nei_report(QUAC.MSAT_subset.genind, title = "QUAC MSAT (Subset): Fst Values")
 
 # Subset SNP
 # De novo
-# Fst_Nei_report(QUAC.SNP.DN.R0_subset.genind, title = "QUAC SNP De novo (R0): Fst Values")
-Fst_Nei_report(QUAC.SNP.DN.R80_subset.genind, title = "QUAC SNP De novo (R80): Fst Values")
+# Fst_Nei_report(QUAC.SNP.DN.R0_subset.genind, title = "QUAC SNP De novo (Subset, R0): Fst Values")
+Fst_Nei_report(QUAC.SNP.DN.R80_subset.genind, title = "QUAC SNP De novo (Subset, R80): Fst Values")
 # Reference
-# Fst_Nei_report(QUAC.SNP.REF.R0_subset.genind, title = "QUAC SNP De novo (R0): Fst Values")
-Fst_Nei_report(QUAC.SNP.REF.R80_subset.genind, title = "QUAC SNP De novo (R80): Fst Values")
+# Fst_Nei_report(QUAC.SNP.REF.R0_subset.genind, title = "QUAC SNP De novo (Subset, R0): Fst Values")
+Fst_Nei_report(QUAC.SNP.REF.R80_subset.genind, title = "QUAC SNP De novo (Subset, R80): Fst Values")
 
 # %%%% QUBO %%%% ----
 # ---- READ IN GENIND FILES ----
@@ -259,6 +321,18 @@ pop(QUBO.SNP.REF.R80.genind) <- factor(read.table("QUBO_popmap_GardenWild", head
 # Subset to only wild individuals
 QUBO.SNP.REF.R80.genind <- QUBO.SNP.REF.R80.genind[which(pop(QUBO.SNP.REF.R80.genind)=="wild"),, drop=TRUE]
 
+# ---- CALCULATE FST VALUES ----
+# MSAT
+Fst_Nei_report(QUBO.MSAT.genind, title = "QUBO MSAT (Complete): Fst Values")
+
+# Subset SNP
+# De novo
+# Fst_Nei_report(QUBO.SNP.DN.R0.genind, title = "QUBO SNP De novo (Complete, R0): Fst Values")
+Fst_Nei_report(QUBO.SNP.DN.R80.genind, title = "QUBO SNP De novo (Complete, R80): Fst Values")
+# Reference
+# Fst_Nei_report(QUBO.SNP.REF.R0.genind, title = "QUBO SNP De novo (Complete, R0): Fst Values")
+Fst_Nei_report(QUBO.SNP.REF.R80.genind, title = "QUBO SNP De novo (Complete, R80): Fst Values")
+
 # ---- SUBSET GENIND FILES ----
 # MSAT: Split sample names on underscore, and return 3rd element. Rename the sample matrix 
 QUBO.MSAT.sampleNames <- unlist(lapply(rownames(QUBO.MSAT.genind@tab), function(x) strsplit(x, "_")[[1]][3]))
@@ -307,12 +381,12 @@ pop(QUBO.MSAT_subset.genind) <- pop(QUBO.SNP.DN.R0_subset.genind) <- pop(QUBO.SN
 
 # ---- CALCULATE FST VALUES ----
 # Subset MSAT
-Fst_Nei_report(QUBO.MSAT_subset.genind, title = "QUBO MSAT: Fst Values")
+Fst_Nei_report(QUBO.MSAT_subset.genind, title = "QUBO MSAT (Subset): Fst Values")
 
 # Subset SNP
 # De novo
-# Fst_Nei_report(QUBO.SNP.DN.R0_subset.genind, title = "QUBO SNP De novo (R0): Fst Values")
-Fst_Nei_report(QUBO.SNP.DN.R80_subset.genind, title = "QUBO SNP De novo (R80): Fst Values")
+# Fst_Nei_report(QUBO.SNP.DN.R0_subset.genind, title = "QUBO SNP De novo (Subset, R0): Fst Values")
+Fst_Nei_report(QUBO.SNP.DN.R80_subset.genind, title = "QUBO SNP De novo (Subset, R80): Fst Values")
 # Reference
-# Fst_Nei_report(QUBO.SNP.REF.R0_subset.genind, title = "QUBO SNP De novo (R0): Fst Values")
-Fst_Nei_report(QUBO.SNP.REF.R80_subset.genind, title = "QUBO SNP De novo (R80): Fst Values")
+# Fst_Nei_report(QUBO.SNP.REF.R0_subset.genind, title = "QUBO SNP De novo (Subset, R0): Fst Values")
+Fst_Nei_report(QUBO.SNP.REF.R80_subset.genind, title = "QUBO SNP De novo (Subset, R80): Fst Values")
