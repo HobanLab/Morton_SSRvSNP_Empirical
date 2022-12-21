@@ -125,6 +125,40 @@ exSitu_Resample_Parallel <- function(gen.obj, cluster, reps, arrayFilepath="~/re
   return(resamplingArray)
 }
 
+# From resampling array, calculate the mean minimum sample size to represent 95% of the total wild diversity
+resample_min95_mean <- function(resamplingArray){
+  # resampling array[,1,]: returns the Total column values for each replicate (3rd array dimension)
+  # apply(resamplingArray[,1,],1,mean): calculates the average across replicates for each row
+  # which(apply(resamplingArray[,1,],1,mean) > 95): returns the rows with averages greater than 95
+  # min(which(apply(resamplingArray[,1,],1,mean) > 95)): the lowest row with an average greater than 95
+  meanValue <- min(which(apply(resamplingArray[,1,],1, mean, na.rm=TRUE) > 95))
+  return(meanValue)
+}
+
+# From resampling array, calculate the standard deviation, at the mean 95% value
+resample_min95_sd <- function(resamplingArray){
+  # Determine the mean value for representing 95% of allelic diversity
+  meanValue <- resample_min95_mean(resamplingArray)
+  # Calculate the standard deviation, at that mean value, and return
+  sdValue <- apply(resamplingArray[,1,],1,sd)[meanValue]
+  return(sdValue)
+}
+
+# From resampling array, calculate the mean values (across replicates) for each allele frequency category
+resample_meanValues <- function(resamplingArray){
+  # Declare a matrix to receive average values
+  meanValue_mat <- matrix(nrow=nrow(resamplingArray), ncol=ncol(resamplingArray))
+  # For each column in the array, average results across replicates (3rd array dimension)
+  meanValue_mat[,1] <- apply(resamplingArray[,1,], 1, mean, na.rm=TRUE)
+  meanValue_mat[,2] <- apply(resamplingArray[,2,], 1, mean, na.rm=TRUE)
+  meanValue_mat[,3] <- apply(resamplingArray[,3,], 1, mean, na.rm=TRUE)
+  meanValue_mat[,4] <- apply(resamplingArray[,4,], 1, mean, na.rm=TRUE)
+  meanValue_mat[,5] <- apply(resamplingArray[,5,], 1, mean, na.rm=TRUE)
+  # Give names to meanValue_mat columns, and return
+  colnames(meanValue_mat) <- c("Total","Very common","Common","Low frequency","Rare")
+  return(meanValue_mat)
+}
+
 # EXPLORATORY FUNCTIONS ----
 # Function for generating a vector of wild allele frequencies from a genind object
 getWildFreqs <- function(gen.obj){
