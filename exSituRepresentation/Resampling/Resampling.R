@@ -107,7 +107,7 @@ legend(x=140, y=70.13276, inset = 0.05, legend = c("Total","Very common","Common
 abline(h=95, col="black", lty=3); abline(v=min_95_QUAC.MSAT, col="black")
 # Text for number of individuals to capture 95% threshold, with position based on variable
 mtext(text=paste0("Minimum sampling size (95%) = ", min_95_QUAC.MSAT), 
-      side=1, line=-1.5, at=min_95_QUAC.MSAT-15)
+      side=1, line=-1.5, at=min_95_QUAC.MSAT-50)
 # Turn off plotting device
 dev.off()
 
@@ -456,7 +456,7 @@ legend(x=80, y=70.13276, inset = 0.05, legend = c("Total","Very common","Common"
 abline(h=95, col="black", lty=3); abline(v=min_95_QUAC.MSAT_subset, col="black")
 # Text for number of individuals to capture 95% threshold, with position based on variable
 mtext(text=paste0("Minimum sampling size (95%) = ", min_95_QUAC.MSAT_subset), 
-      side=1, line=-1.5, at=min_95_QUAC.MSAT_subset-15)
+      side=1, line=-1.5, at=min_95_QUAC.MSAT_subset-50)
 # Turn off plotting device
 dev.off()
 
