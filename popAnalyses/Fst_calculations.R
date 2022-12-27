@@ -120,91 +120,49 @@ QUAC.MSAT.genind <- read.genepop("QUAC_wK_allpop_clean.gen", ncode = 3)
 # Specify filepath to GCC_QUAC_ZAIN dataframe, containing sample names and population names
 QUAC.MSAT.dataframe_filepath <- 
   "~/Documents/peripheralProjects/GCC_QUAC_ZAIN/Data_Files/Data_Frames/QUAC_allpop_clean_df.csv"
-# Assign sample name: read in Tissue database names from GCC_QUAC_ZAIN repository
-rownames(QUAC.MSAT.genind@tab) <- unlist(read.csv2(QUAC.MSAT.dataframe_filepath, header = TRUE, sep=",")[1])
-# Correct population names: read in a dataframe containing population values
-levels(QUAC.MSAT.genind@pop) <- unlist(read.csv2(QUAC.MSAT.dataframe_filepath, header = TRUE, sep=",")[2])
-
-# !!! WORKING : CORRECTING POPULATION NAMES !!!
-length(grep(pattern = "QAc-W-", rownames(QUAC.MSAT.genind@tab)))+length(grep(pattern = "QAc-G-", rownames(QUAC.MSAT.genind@tab)))
-
-
-QUAC.MSAT.genind <- QUAC.MSAT.genind[grep(pattern = "QAc-W-", rownames(QUAC.MSAT.genind@tab)),,drop=TRUE]
-rownames(QUAC.MSAT.genind@tab[grep(pattern = "QAc-W-", rownames(QUAC.MSAT.genind@tab)),,drop=TRUE])
-
-TEST.genind <- QUAC.MSAT.genind[1:4,,drop=TRUE]
-levels(TEST.genind@pop)
-
-
-QUAC.MSAT.genind <- QUAC.MSAT.genind[grep(pattern = "QAc-G-", rownames(QUAC.MSAT.genind@tab)),,drop=TRUE]
-rownames(QUAC.MSAT.genind@tab[grep(pattern = "QAc-G-", rownames(QUAC.MSAT.genind@tab)),,drop=TRUE])
-
-TEST <- cbind(rownames(QUAC.MSAT.genind@tab), unlist(read.csv2(QUAC.MSAT.dataframe_filepath, header = TRUE, sep=",")[2]))
-TEST[1:4,]
-
-QUAC.MSAT.genind@pop[grep(pattern = "QAc-W-", rownames(QUAC.MSAT.genind@tab))]
-
-rownames(QUAC.MSAT.genind@tab)[-grep(pattern = "QAc-G-", rownames(QUAC.MSAT.genind@tab))]
-
-# Remove garden samples, and rename MSAT matrix
-QUAC.MSAT.tissueNames <- QUAC.MSAT.tissueNames[-grep(pattern = "QAc-G-", QUAC.MSAT.tissueNames)]
+# Assign sample names: read in Tissue database names from GCC_QUAC_ZAIN repository
+QUAC.MSAT.tissueNames <- unlist(read.csv2(QUAC.MSAT.dataframe_filepath, header = TRUE, sep=",")[1])
 rownames(QUAC.MSAT.genind@tab) <- QUAC.MSAT.tissueNames
-
-
+# Correct population names: read in a dataframe containing population values
+pop(QUAC.MSAT.genind) <- unlist(read.csv2(QUAC.MSAT.dataframe_filepath, header = TRUE, sep=",")[2])
+# Remove garden samples from tissueNames vector
+QUAC.MSAT.tissueNames <- QUAC.MSAT.tissueNames[-grep(pattern = "QAc-G-", QUAC.MSAT.tissueNames)]
 # Subset Complete MSAT genind object to just wild populations (last 5 populations)
-QUAC.MSAT.genind <- QUAC.MSAT.genind[18:22,]
-
-
-read.csv2("../Data_Frames/QUAC_allpop_clean_df.csv")[,2]
-
-# Correct popNames: samples with popname patter QAc-G- are garden 
-levels(QUAC.MSAT.genind@pop)[grep(pattern = "QAc-G-", levels(QUAC.MSAT.genind@pop))] <- 
-  rep("garden", length(grep(pattern = "QAc-G-", levels(QUAC.MSAT.genind@pop))))
-# Correct popNames: samples with popname patter QAc-W- are wild
-levels(QUAC.MSAT.genind@pop)[grep(pattern = "QAc-W-", levels(QUAC.MSAT.genind@pop))] <- 
-  rep("wild", length(grep(pattern = "QAc-W-", levels(QUAC.MSAT.genind@pop))))
-# Subset to only wild individuals
-QUAC.MSAT.genind <- QUAC.MSAT.genind[which(pop(QUAC.MSAT.genind)=="wild"),, drop=TRUE]
+QUAC.MSAT.genind <- QUAC.MSAT.genind[QUAC.MSAT.tissueNames,,drop=TRUE]
 
 # SNP: DE NOVO, R0
 genpop.filePath <- 
-  "/RAID1/IMLS_GCCO/Analysis/Stacks/denovo_finalAssemblies/QUAC/output/populations_R0_NOMAF_1SNP_2Pops/"
+  "/RAID1/IMLS_GCCO/Analysis/Stacks/denovo_finalAssemblies/QUAC/output/populations_wild_R0_NOMAF_1SNP/"
 setwd(genpop.filePath)
 QUAC.SNP.DN.R0.genind <- read.genepop(paste0(genpop.filePath,"populations.snps.gen"))
 # Correct popNames
-pop(QUAC.SNP.DN.R0.genind) <- factor(read.table("QUAC_popmap_GardenWild", header=FALSE)[,2])
-# Subset to only wild individuals
-QUAC.SNP.DN.R0.genind <- QUAC.SNP.DN.R0.genind[which(pop(QUAC.SNP.DN.R0.genind)=="wild"),, drop=TRUE]
+pop(QUAC.SNP.DN.R0.genind) <- factor(read.table("QUAC_popmap_wild", header=FALSE)[,2])
 
 # SNP: DE NOVO, R80
 genpop.filePath <- 
-  "/RAID1/IMLS_GCCO/Analysis/Stacks/denovo_finalAssemblies/QUAC/output/populations_R80_NOMAF_1SNP_2Pops/"
+  "/RAID1/IMLS_GCCO/Analysis/Stacks/denovo_finalAssemblies/QUAC/output/populations_wild_R80_NOMAF_1SNP/"
 setwd(genpop.filePath)
 QUAC.SNP.DN.R80.genind <- read.genepop(paste0(genpop.filePath,"populations.snps.gen"))
 # Correct popNames
-pop(QUAC.SNP.DN.R80.genind) <- factor(read.table("QUAC_popmap_GardenWild", header=FALSE)[,2])
-# Subset to only wild individuals
-QUAC.SNP.DN.R80.genind <- QUAC.SNP.DN.R80.genind[which(pop(QUAC.SNP.DN.R80.genind)=="wild"),, drop=TRUE]
+pop(QUAC.SNP.DN.R80.genind) <- factor(read.table("QUAC_popmap_wild", header=FALSE)[,2])
 
 # SNP: REFERENCE, R0
-genpop.filePath <- 
-  "/RAID1/IMLS_GCCO/Analysis/Stacks/reference_filteredReads/QUAC/Q_rubra/output/populations_R0_NOMAF_1SNP_2Pops/"
-setwd(genpop.filePath)
-QUAC.SNP.REF.R0.genind <- read.genepop(paste0(genpop.filePath,"populations.snps.gen"))
-# Correct popNames
-pop(QUAC.SNP.REF.R0.genind) <- factor(read.table("QUAC_popmap_GardenWild", header=FALSE)[,2])
-# Subset to only wild individuals
-QUAC.SNP.REF.R0.genind <- QUAC.SNP.REF.R0.genind[which(pop(QUAC.SNP.REF.R0.genind)=="wild"),, drop=TRUE]
+# Error: values cannot be calculated for SNP REF R0 dataset, because Stacks population module
+# is automatically killed
+# genpop.filePath <- 
+#   "/RAID1/IMLS_GCCO/Analysis/Stacks/reference_filteredReads/QUAC/Q_rubra/output/populations_wild_R0_NOMAF_1SNP/"
+# setwd(genpop.filePath)
+# QUAC.SNP.REF.R0.genind <- read.genepop(paste0(genpop.filePath,"populations.snps.gen"))
+# # Correct popNames
+# pop(QUAC.SNP.REF.R0.genind) <- factor(read.table("QUAC_popmap_wild", header=FALSE)[,2])
 
 # SNP: REFERENCE, R80
 genpop.filePath <- 
-  "/RAID1/IMLS_GCCO/Analysis/Stacks/reference_filteredReads/QUAC/Q_rubra/output/populations_R80_NOMAF_1SNP_2Pops/"
+  "/RAID1/IMLS_GCCO/Analysis/Stacks/reference_filteredReads/QUAC/Q_rubra/output/populations_wild_R80_NOMAF_1SNP/"
 setwd(genpop.filePath)
 QUAC.SNP.REF.R80.genind <- read.genepop(paste0(genpop.filePath,"populations.snps.gen"))
 # Correct popNames
-pop(QUAC.SNP.REF.R80.genind) <- factor(read.table("QUAC_popmap_GardenWild", header=FALSE)[,2])
-# Subset to only wild individuals
-QUAC.SNP.REF.R80.genind <- QUAC.SNP.REF.R80.genind[which(pop(QUAC.SNP.REF.R80.genind)=="wild"),, drop=TRUE]
+pop(QUAC.SNP.REF.R80.genind) <- factor(read.table("QUAC_popmap_wild", header=FALSE)[,2])
 
 # ---- CALCULATE FST VALUES ----
 # MSAT
