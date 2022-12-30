@@ -287,7 +287,8 @@ rownames(QUBO.SNP.REF.R80.genind@tab) <- rownames(QUBO.SNP.DN.R80.genind@tab) <-
 
 # ---- CALCULATE FST VALUES: COMPLETE ----
 # MSAT
-Fst_Nei_report(QUBO.MSAT.genind, title = "QUBO MSAT (Complete): Fst Values")
+# Line below commented out, because population assignments for Complete MSAT dataset are unknown
+# Fst_Nei_report(QUBO.MSAT.genind, title = "QUBO MSAT (Complete): Fst Values")
 
 # Subset SNP
 # De novo
