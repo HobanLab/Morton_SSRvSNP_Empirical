@@ -30,6 +30,7 @@ QUAC.MSAT.genpop.filePath <-
 setwd(QUAC.MSAT.genpop.filePath)
 QUAC.MSAT.genind <- read.genepop("QUAC_wK_garden_wild_clean.gen", ncode = 3)
 # Correct popNames: pop1 is Garden, pop2 is Wild
+# THIS NEEDS TO BE CORRECTED: QUAC population names are no longer pop1 or pop2
 pop(QUAC.MSAT.genind) <- gsub("pop1", "garden", pop(QUAC.MSAT.genind))
 pop(QUAC.MSAT.genind) <- gsub("pop2", "wild", pop(QUAC.MSAT.genind))
 # Report representation of wild alleles in gardens
