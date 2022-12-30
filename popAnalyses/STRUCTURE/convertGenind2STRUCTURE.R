@@ -16,6 +16,8 @@ library(adegenet)
 SSRvSNP.wd <- "~/Documents/SSRvSNP/Code/"
 setwd(SSRvSNP.wd)
 source("exSituRepresentation/functions_exSituRepresentation.R")
+# Specify folders to save STRUCTURE files to
+structFilesFolder <- paste0(SSRvSNP.wd, "popAnalyses/STRUCTURE/")
 
 # %%%% FUNCTIONS ----
 # Function for converting genind to STRUCTURE 
@@ -67,14 +69,16 @@ genind2structure <- function(obj, file="", pops=FALSE){
 # ---- READ IN GENIND FILES ----
 # MICROSATELLITE
 QUAC.MSAT.genpop.filePath <- 
-  "~/Documents/peripheralProjects/GCC_QUAC_ZAIN/Data_Files/Adegenet_Files/Garden_Wild/"
+  "~/Documents/peripheralProjects/GCC_QUAC_ZAIN/Data_Files/Adegenet_Files/"
 setwd(QUAC.MSAT.genpop.filePath)
-QUAC.MSAT.genind <- read.genepop("QUAC_wK_garden_wild_clean.gen", ncode = 3)
+QUAC.MSAT.GW.genind <- read.genepop("QUAC_wK_allpop_clean.gen", ncode = 3)
 # Correct popNames: pop1 is Garden, pop2 is Wild
-pop(QUAC.MSAT.genind) <- gsub("pop1", "garden", pop(QUAC.MSAT.genind))
-pop(QUAC.MSAT.genind) <- gsub("pop2", "wild", pop(QUAC.MSAT.genind))
+# THIS NEEDS TO BE CORRECTED: QUAC population names are no longer pop1 or pop2
+pop(QUAC.MSAT.GW.genind) <- gsub("pop1", "garden", pop(QUAC.MSAT.GW.genind))
+pop(QUAC.MSAT.GW.genind) <- gsub("pop2", "wild", pop(QUAC.MSAT.GW.genind))
+# Convert Complete genind object (Garden and Wild individuals) to STRUCTURE
 # Subset to only wild individuals
-QUAC.MSAT.genind <- QUAC.MSAT.genind[which(pop(QUAC.MSAT.genind)=="wild"),, drop=TRUE]
+QUAC.MSAT.W.genind <- QUAC.MSAT.GW.genind[which(pop(QUAC.MSAT.GW.genind)=="wild"),, drop=TRUE]
 
 # SNP: DE NOVO, R80
 genpop.filePath <- 
@@ -103,7 +107,7 @@ QUAC.MSAT.tissueNames_filepath <-
 QUAC.MSAT.tissueNames <- unlist(read.csv2(QUAC.MSAT.tissueNames_filepath, header = TRUE, sep=",")[1])
 # Remove garden samples, and rename MSAT matrix
 QUAC.MSAT.tissueNames <- QUAC.MSAT.tissueNames[-grep(pattern = "QAc-G-", QUAC.MSAT.tissueNames)]
-rownames(QUAC.MSAT.genind@tab) <- QUAC.MSAT.tissueNames
+rownames(QUAC.MSAT.W.genind@tab) <- QUAC.MSAT.tissueNames
 
 # SNP: read in Tissue database names
 # This file was created (by Austin K.), and can be found on the Hoban Lab Drive ("MSATcomparisons_TissueNames")
@@ -117,18 +121,19 @@ rownames(QUAC.SNP.DN.R80.genind@tab) <- rownames(QUAC.SNP.REF.R80.genind@tab) <-
 QUAC_sharedSamples <- sort(QUAC.SNP.tissueNames[which(QUAC.SNP.tissueNames %in% QUAC.MSAT.tissueNames)])
 # Subset MSAT and SNP genind matrices to strictly shared samples, dropping now absent alleles
 # MSAT
-QUAC.MSAT_subset.genind <- QUAC.MSAT.genind[QUAC_sharedSamples,, drop=TRUE]
+QUAC.MSAT.W_subset.genind <- QUAC.MSAT.W.genind[QUAC_sharedSamples,, drop=TRUE]
 # SNP
 QUAC.SNP.DN.R80_subset.genind <- QUAC.SNP.DN.R80.genind[QUAC_sharedSamples,, drop=TRUE]
 QUAC.SNP.REF.R80_subset.genind <- QUAC.SNP.REF.R80.genind[QUAC_sharedSamples,, drop=TRUE]
 
 # ---- CONVERT GENIND TO STRUCTURE ----
-# Save STRUCTURE files to folder on GitHub repo
-setwd(paste0(SSRvSNP.wd, "popAnalyses/STRUCTURE/"))
+# Convert complete MSAT genind objects
+genind2structure(QUAC.MSAT.GW.genind, file = paste0(structFilesFolder, "QUAC.MSAT.GardenAndWild.str"))
+genind2structure(QUAC.MSAT.W.genind, file = paste0(structFilesFolder, "QUAC.MSAT.Wild.str"))
 # Convert subset genind objects
-genind2structure(QUAC.MSAT_subset.genind, file = "QUAC.MSAT_Subset.str")
-genind2structure(QUAC.SNP.DN.R80_subset.genind, file = "QUAC.SNP.DN.R80_Subset.str")
-genind2structure(QUAC.SNP.REF.R80_subset.genind, file = "QUAC.SNP.REF.R80_Subset.str")
+genind2structure(QUAC.MSAT.W_subset.genind, file = paste0(structFilesFolder, "QUAC.MSAT.Wild_Subset.str"))
+genind2structure(QUAC.SNP.DN.R80_subset.genind, file = paste0(structFilesFolder,"QUAC.SNP.DN.R80_Subset.str"))
+genind2structure(QUAC.SNP.REF.R80_subset.genind, file = paste0(structFilesFolder,"QUAC.SNP.REF.R80_Subset.str"))
 
 # %%%% QUBO %%%% ----
 setwd(SSRvSNP.wd)
@@ -137,11 +142,11 @@ setwd(SSRvSNP.wd)
 genpop.filePath <- 
   "~/Documents/peripheralProjects/SE_oaks_genetics/genetic_data/"
 setwd(genpop.filePath)
-QUBO.MSAT.genind <- read.genepop(paste0(genpop.filePath,"Qb_total.gen"), ncode=3)
+QUBO.MSAT.GW.genind <- read.genepop(paste0(genpop.filePath,"Qb_total.gen"), ncode=3)
 # Correct popNames: last population (IMLS4_MP1_IMLS336_C05) is garden; rest (9) are wild
-levels(QUBO.MSAT.genind@pop) <- c(rep("wild",9), "garden") 
+levels(QUBO.MSAT.GW.genind@pop) <- c(rep("wild",9), "garden") 
 # Subset to only wild individuals
-QUBO.MSAT.genind <- QUBO.MSAT.genind[which(pop(QUBO.MSAT.genind)=="wild"),, drop=TRUE]
+QUBO.MSAT.W.genind <- QUBO.MSAT.GW.genind[which(pop(QUBO.MSAT.GW.genind)=="wild"),, drop=TRUE]
 
 # SNP: DE NOVO, R80, WILD
 genpop.filePath <- 
@@ -162,7 +167,7 @@ pop(QUBO.SNP.REF.R80.genind) <- factor(read.table("QUBO_popmap_wild_Subset_Order
 # ---- SUBSET GENIND FILES ----
 # MSAT: Split sample names on underscore, and return 3rd element. Rename the sample matrix 
 QUBO.MSAT.sampleNames <- unlist(lapply(rownames(QUBO.MSAT.genind@tab), function(x) strsplit(x, "_")[[1]][3]))
-rownames(QUBO.MSAT.genind@tab) <- QUBO.MSAT.sampleNames
+rownames(QUBO.MSAT.W.genind@tab) <- QUBO.MSAT.sampleNames
 
 # SNP: Remove QUBO_W_ headers from sample names
 QUBO.SNP.sampleNames <- gsub("QUBO_W_",replacement = "", row.names(QUBO.SNP.REF.R80.genind@tab))
@@ -186,15 +191,16 @@ rownames(QUBO.SNP.REF.R80.genind@tab) <- rownames(QUBO.SNP.DN.R80.genind@tab) <-
 QUBO_sharedSamples <- QUBO.SNP.sampleNames[which(QUBO.SNP.sampleNames %in% QUBO.MSAT.sampleNames)]
 # Subset MSAT and SNP wild matrix objects to strictly shared samples
 # MSAT
-QUBO.MSAT_subset.genind <- QUBO.MSAT.genind[QUBO_sharedSamples,, drop=TRUE]
+QUBO.MSAT.W_subset.genind <- QUBO.MSAT.W.genind[QUBO_sharedSamples,, drop=TRUE]
 # SNP
 QUBO.SNP.DN.R80_subset.genind <- QUBO.SNP.DN.R80.genind[QUBO_sharedSamples,, drop=TRUE]
 QUBO.SNP.REF.R80_subset.genind <- QUBO.SNP.REF.R80.genind[QUBO_sharedSamples,, drop=TRUE]
 
 # ---- CONVERT GENIND TO STRUCTURE ----
-# Save STRUCTURE files to folder on GitHub repo
-setwd(paste0(SSRvSNP.wd, "popAnalyses/STRUCTURE/"))
+# Convert complete MSAT genind objects
+genind2structure(QUBO.MSAT.GW.genind, file = paste0(structFilesFolder, "QUBO.MSAT.GardenAndWild.str"))
+genind2structure(QUBO.MSAT.W.genind, file = paste0(structFilesFolder, "QUBO.MSAT.Wild.str"))
 # Convert subset genind objects
-genind2structure(QUBO.MSAT_subset.genind, file = "QUBO.MSAT_Subset.str")
-genind2structure(QUBO.SNP.DN.R80_subset.genind, file = "QUBO.SNP.DN.R80_Subset.str")
-genind2structure(QUBO.SNP.REF.R80_subset.genind, file = "QUBO.SNP.REF.R80_Subset.str")
+genind2structure(QUBO.MSAT.W_subset.genind, file = paste0(structFilesFolder, "QUBO.MSAT.Wild_Subset.str"))
+genind2structure(QUBO.SNP.DN.R80_subset.genind, file = paste0(structFilesFolder, "QUBO.SNP.DN.R80_Subset.str"))
+genind2structure(QUBO.SNP.REF.R80_subset.genind, file = paste0(structFilesFolder, "QUBO.SNP.REF.R80_Subset.str"))
