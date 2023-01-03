@@ -31,12 +31,12 @@ setwd(SSRvSNP.wd)
 # %%% GARDEN AND WILD ----
 # Read in genind file (GCC_QUAC_ZAIN repo; QUAC_wK_garden_wild_clean.gen)
 QUAC.MSAT_filePath <- 
-  "~/Documents/peripheralProjects/GCC_QUAC_ZAIN/Data_Files/Adegenet_Files"
-QUAC.MSAT_genind <- read.genepop(paste0(QUAC.MSAT_filePath, "QUAC_wK_garden_wild_clean.gen"), ncode = 3)
-# Correct popNames: samples with popname patter QAc-G- are garden 
+  "~/Documents/peripheralProjects/GCC_QUAC_ZAIN/Data_Files/Adegenet_Files/"
+QUAC.MSAT_genind <- read.genepop(paste0(QUAC.MSAT_filePath, "QUAC_wK_allpop_clean.gen"), ncode = 3)
+# Correct popNames: samples with popName pattern QAc-G- are garden 
 levels(QUAC.MSAT_genind@pop)[grep(pattern = "QAc-G-", levels(QUAC.MSAT_genind@pop))] <- 
   rep("garden", length(grep(pattern = "QAc-G-", levels(QUAC.MSAT_genind@pop))))
-# Correct popNames: samples with popname patter QAc-W- are wild
+# Correct popNames: samples with popName pattern QAc-W- are wild
 levels(QUAC.MSAT_genind@pop)[grep(pattern = "QAc-W-", levels(QUAC.MSAT_genind@pop))] <- 
   rep("wild", length(grep(pattern = "QAc-W-", levels(QUAC.MSAT_genind@pop))))
 
