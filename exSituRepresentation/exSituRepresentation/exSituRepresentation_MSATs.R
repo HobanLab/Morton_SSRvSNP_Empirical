@@ -24,15 +24,21 @@ source("exSituRepresentation/functions_exSituRepresentation.R")
 
 # %%%% QUAC %%%% ----
 # ---- MSATS: COMPLETE ----
-# Read in genind file (GCC_QUAC_ZAIN repo; QUAC_wK_garden_wild_clean.gen; includes Kessler population)
-QUAC.MSAT.genpop.filePath <- 
-  "~/Documents/peripheralProjects/GCC_QUAC_ZAIN/Data_Files/Adegenet_Files/Garden_Wild/"
-setwd(QUAC.MSAT.genpop.filePath)
-QUAC.MSAT.genind <- read.genepop("QUAC_wK_garden_wild_clean.gen", ncode = 3)
-# Correct popNames: pop1 is Garden, pop2 is Wild
-# THIS NEEDS TO BE CORRECTED: QUAC population names are no longer pop1 or pop2
-pop(QUAC.MSAT.genind) <- gsub("pop1", "garden", pop(QUAC.MSAT.genind))
-pop(QUAC.MSAT.genind) <- gsub("pop2", "wild", pop(QUAC.MSAT.genind))
+QUAC.MSAT.filePath <- 
+  "~/Documents/peripheralProjects/GCC_QUAC_ZAIN/Data_Files/"
+setwd(QUAC.MSAT.filePath)
+QUAC.MSAT.genind <- 
+  read.genepop(paste0(QUAC.MSAT.filePath, "Adegenet_Files/QUAC_wK_allpop_clean.gen"), ncode = 3)
+# Assign sample names: read in Tissue database names from GCC_QUAC_ZAIN repository
+QUAC.MSAT.tissueNames <- 
+  unlist(read.csv2(paste0(QUAC.MSAT.filePath, "Data_Frames/QUAC_allpop_clean_df.csv"), header = TRUE, sep=",")[1])
+rownames(QUAC.MSAT.genind@tab) <- QUAC.MSAT.tissueNames
+# Correct popNames: samples with popName pattern QAc-G- are garden 
+levels(QUAC.MSAT_genind@pop)[grep(pattern = "QAc-G-", levels(QUAC.MSAT_genind@pop))] <- 
+  rep("garden", length(grep(pattern = "QAc-G-", levels(QUAC.MSAT_genind@pop))))
+# Correct popNames: samples with popName pattern QAc-W- are wild
+levels(QUAC.MSAT_genind@pop)[grep(pattern = "QAc-W-", levels(QUAC.MSAT_genind@pop))] <- 
+  rep("wild", length(grep(pattern = "QAc-W-", levels(QUAC.MSAT_genind@pop))))
 # Report representation of wild alleles in gardens
 exSitu_Rep(QUAC.MSAT.genind)
 # Exploration of total and wild allele frequency proportions
