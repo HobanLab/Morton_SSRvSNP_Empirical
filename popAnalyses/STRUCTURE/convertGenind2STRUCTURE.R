@@ -72,10 +72,12 @@ QUAC.MSAT.genpop.filePath <-
   "~/Documents/peripheralProjects/GCC_QUAC_ZAIN/Data_Files/Adegenet_Files/"
 setwd(QUAC.MSAT.genpop.filePath)
 QUAC.MSAT.GW.genind <- read.genepop("QUAC_wK_allpop_clean.gen", ncode = 3)
-# Correct popNames: pop1 is Garden, pop2 is Wild
-# THIS NEEDS TO BE CORRECTED: QUAC population names are no longer pop1 or pop2
-pop(QUAC.MSAT.GW.genind) <- gsub("pop1", "garden", pop(QUAC.MSAT.GW.genind))
-pop(QUAC.MSAT.GW.genind) <- gsub("pop2", "wild", pop(QUAC.MSAT.GW.genind))
+# Correct popNames: samples with popName pattern QAc-G- are garden 
+levels(QUAC.MSAT_genind@pop)[grep(pattern = "QAc-G-", levels(QUAC.MSAT_genind@pop))] <- 
+  rep("garden", length(grep(pattern = "QAc-G-", levels(QUAC.MSAT_genind@pop))))
+# Correct popNames: samples with popName pattern QAc-W- are wild
+levels(QUAC.MSAT_genind@pop)[grep(pattern = "QAc-W-", levels(QUAC.MSAT_genind@pop))] <- 
+  rep("wild", length(grep(pattern = "QAc-W-", levels(QUAC.MSAT_genind@pop))))
 # Convert Complete genind object (Garden and Wild individuals) to STRUCTURE
 # Subset to only wild individuals
 QUAC.MSAT.W.genind <- QUAC.MSAT.GW.genind[which(pop(QUAC.MSAT.GW.genind)=="wild"),, drop=TRUE]
