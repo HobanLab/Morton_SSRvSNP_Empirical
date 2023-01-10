@@ -313,16 +313,6 @@ QUBO.SNP.REF.R0_subset.genind <- QUBO.SNP.REF.R0.genind[QUBO_sharedSamples,, dro
 QUBO.SNP.DN.R80_subset.genind <- QUBO.SNP.DN.R80.genind[QUBO_sharedSamples,, drop=TRUE]
 QUBO.SNP.REF.R80_subset.genind <- QUBO.SNP.REF.R80.genind[QUBO_sharedSamples,, drop=TRUE]
 
-# ---- RENAME WILD POPULATIONS ----
-# Assign population names to subset QUBO wild samples
-# This file was created (by Austin K.), and can be found on the Hoban Lab Drive ("MSATcomparisons_TissueNames")
-QUBO.wildPopNames_filepath <- paste0(SSRvSNP.wd,"popAnalyses/QUBO_sharedWildPops.csv")
-QUBO.wildPopNames <- unlist(read.csv2(QUBO.wildPopNames_filepath, header = TRUE, sep = ",")[2])
-
-# Rename all subset genind objects (MSAT and SNP)
-pop(QUBO.MSAT_subset.genind) <- pop(QUBO.SNP.DN.R0_subset.genind) <- pop(QUBO.SNP.DN.R80_subset.genind) <-
-  pop(QUBO.SNP.REF.R0_subset.genind) <- pop(QUBO.SNP.REF.R80_subset.genind) <- QUBO.wildPopNames
-
 # ---- CALCULATE FST VALUES: SUBSET ----
 # Subset MSAT
 Fst_Nei_report(QUBO.MSAT_subset.genind, title = "QUBO MSAT (Subset): Fst Values")
