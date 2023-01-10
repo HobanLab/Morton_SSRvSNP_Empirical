@@ -449,7 +449,8 @@ QUBO.SNP.REF.R80_filePath <-
   "/RAID1/IMLS_GCCO/Analysis/Stacks/reference_filteredReads/QUBO/GSNAP4/output/populations_R80_NOMAF_1SNP_2Pops/"
 QUBO.SNP.REF.R80_genind <- read.genepop(paste0(QUBO.SNP.REF.R80_filePath,"populations.snps.gen"))
 # Correct popNames
-pop(QUBO.SNP.REF.R80_genind) <- factor(read.table("QUBO_popmap_GardenWild", header=FALSE)[,2])
+pop(QUBO.SNP.REF.R80_genind) <- 
+  factor(read.table(paste0(QUBO.SNP.REF.R80_filePath,"QUBO_popmap_GardenWild"), header=FALSE)[,2])
 
 # Heterozygosity
 QUBO.SNP.REF.R80_HZ <- Hs(QUBO.SNP.REF.R80_genind); print(QUBO.SNP.REF.R80_HZ)
