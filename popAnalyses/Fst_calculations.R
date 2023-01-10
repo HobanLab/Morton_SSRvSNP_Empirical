@@ -116,7 +116,7 @@ Fst_Stacks_report <- function(filepath.fst_tab, title){
 QUAC.MSAT.genpop.filePath <- 
   "~/Documents/peripheralProjects/GCC_QUAC_ZAIN/Data_Files/Adegenet_Files/"
 setwd(QUAC.MSAT.genpop.filePath)
-QUAC.MSAT.genind <- read.genepop("QUAC_wK_allpop_clean.gen", ncode = 3)
+QUAC.MSAT.genind <- read.genepop(paste0(QUAC.MSAT.genpop.filePath, "QUAC_wK_allpop_clean.gen"), ncode = 3)
 # Specify filepath to GCC_QUAC_ZAIN dataframe, containing sample names and population names
 QUAC.MSAT.dataframe_filepath <- 
   "~/Documents/peripheralProjects/GCC_QUAC_ZAIN/Data_Files/Data_Frames/QUAC_allpop_clean_df.csv"
@@ -219,19 +219,21 @@ Fst_Nei_report(QUAC.SNP.REF.R80_subset.genind, title = "QUAC SNP De novo (Subset
 # %%%% QUBO %%%% ----
 # ---- READ IN GENIND FILES ----
 # MICROSATELLITE ----
+# Read in the genind file from the SE oaks project repo. This genind contains only wild QUBO sampels
 genpop.filePath <- 
   "~/Documents/peripheralProjects/SE_oaks_genetics/genetic_data/"
-setwd(genpop.filePath)
-QUBO.MSAT.genind <- read.genepop(paste0(genpop.filePath,"Qb_total.gen"), ncode=3)
-# Correct popNames: last population (IMLS4_MP1_IMLS336_C05) is garden; rest (9) are wild
-levels(QUBO.MSAT.genind@pop) <- c(rep("wild",9), "garden") 
-# Subset to only wild individuals
-QUBO.MSAT.genind <- QUBO.MSAT.genind[which(pop(QUBO.MSAT.genind)=="wild"),, drop=TRUE]
+QUBO.MSAT.genind <- read.genepop(paste0(genpop.filePath,"Qb_wild_w_ALL.gen"), ncode=3)
+# Correct popNames: read in a dataframe which contains population names, in order of 
+# samples in genind file. This document was created manually by Austin Koontz, and can be 
+# found on the Hoban Lab Drive
+QUBO.MSAT.dataframe_filepath <- 
+  "~/Documents/SSRvSNP/Code/popAnalyses/QUBO_MSAT_Complete_WildPops.csv"
+# Correct population names: read in a dataframe containing population values
+pop(QUBO.MSAT.genind) <- unlist(read.csv2(QUBO.MSAT.dataframe_filepath, header = TRUE, sep=",")[2])
 # Rename MSAT samples (for subsetting later on)
 # Split sample names on underscore, and return 3rd element. Rename the sample matrix 
 QUBO.MSAT.sampleNames <- unlist(lapply(rownames(QUBO.MSAT.genind@tab), function(x) strsplit(x, "_")[[1]][3]))
 rownames(QUBO.MSAT.genind@tab) <- QUBO.MSAT.sampleNames
-# !!! WORKING: NEED TO ASSIGN POPULATION NAMES TO COMPLETE MSAT DATASET, FOR FST CALCULATIONS !!!
 
 # SNP ----
 # DE NOVO, R0
@@ -287,8 +289,7 @@ rownames(QUBO.SNP.REF.R80.genind@tab) <- rownames(QUBO.SNP.DN.R80.genind@tab) <-
 
 # ---- CALCULATE FST VALUES: COMPLETE ----
 # MSAT
-# Line below commented out, because population assignments for Complete MSAT dataset are unknown
-# Fst_Nei_report(QUBO.MSAT.genind, title = "QUBO MSAT (Complete): Fst Values")
+Fst_Nei_report(QUBO.MSAT.genind, title = "QUBO MSAT (Complete): Fst Values")
 
 # Subset SNP
 # De novo
