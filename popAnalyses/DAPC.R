@@ -206,6 +206,11 @@ scatter(QUAC.Subset.W.SNP.REF.dapc1, scree.da=F, bg="white", pch=20, cell=0, cst
         txt.leg = c("Magazine 2", "Pryor", "Sugarloaf", "Porter/Magazine 1/Kessler"))
 mtext("QUAC SNP Reference (R80): Subset Wild (Geographic Clusters)", adj=0.15, line=2.5)
 
+# Show DAPC as a STRUCTURE-like plot
+compoplot(QUAC.Subset.W.SNP.REF.dapc1, posi="bottomright", 
+          txt.leg = c("Porter/Magazine 1/Kessler", "Magazine 2", "Sugarloaf", "Pryor"), lab="",
+          ncol=1, xlab="Individuals")
+
 # %%%% QUBO %%%% ----
 # %%%% COMPLETE: GARDEN & WILD ----
 # %%%% COMPLETE: WILD ONLY ----
