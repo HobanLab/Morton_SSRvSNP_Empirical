@@ -401,8 +401,8 @@ cbind(QUBO.Subset.W.SNP.REF.dapc1$grp, as.character(pop(QUBO.Subset.W.SNP.REF.ge
 scatter(QUBO.Subset.W.SNP.REF.dapc1, scree.da=F, bg="white", pch=20, cell=0, cstar=0, solid=0.6, clab=0, legend=T,
         posi.leg=locator(n=1), cleg=1.0, cex=1.3, inset.solid=1,
         col = c("#66A61E","#E7298A","#7570B3","#2171B5", "#D95F02","#8C510A"),
-        txt.leg = c("Irondale", "Pop11", "EBSCO/BTKC", "Worldsong", "Wattsville", "Hinds/Moss Rock/Oakbrook"))
-mtext("QUBO SNP Reference (R80): Subset Wild (Supported Clusters)", adj=0.5, line=2.5)
+        txt.leg = c("Irondale", "Hinds/Moss Rock/Oakbrook", "Wattsville", "Pop11", "EBSCO/BTKC", "Peavine/Worldsong"))
+mtext("QUBO SNP Reference (R80): Subset Wild (Geographic Clusters)", adj=0.5, line=2.5)
 
 # %%%% SUBSET: GARDEN AND WILD ----
 # To be populated
