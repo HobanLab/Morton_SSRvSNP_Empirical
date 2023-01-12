@@ -42,13 +42,13 @@ QUAC.W.MSAT.genind <- QUAC.MSAT.genind[QUAC.MSAT.tissueNames,,drop=TRUE]
 # MSAT ----
 # Use k-means clustering to find a number of groups which maximizes the variation between groups
 # (after transforming the data using PCA, in order to increase computation times)
-QUAC.W.MSAT.grp <- find.clusters(QUAC.W.MSAT.genind, max.n.clust=20, n.pca = 100, n.clust = 4)
-# Retained PCs (here, there is no cost to retaining a lot of PCs): 100
+QUAC.W.MSAT.grp <- find.clusters(QUAC.W.MSAT.genind, max.n.clust=20, n.pca = 150, n.clust = 4)
+# Retained PCs (here, there is no cost to retaining a lot of PCs, even greater than xlim): 150
 # Clusters (seeking to minimize the Bayesian Information Criterion value): 4
 # Conduct DAPC: transform the data using PCA, then run discriminant analysis on retained principal components,
 # using the inferred groupings from the k-means clustering step above
-QUAC.W.MSAT.dapc1 <- dapc(x=QUAC.W.MSAT.genind, pop=QUAC.W.MSAT.grp$grp, n.pca = 80, n.da = 3)
-# Retained PCs (specifying a large value can lead to overfitting/unstable membership probability): 80
+QUAC.W.MSAT.dapc1 <- dapc(x=QUAC.W.MSAT.genind, pop=QUAC.W.MSAT.grp$grp, n.pca = 40, n.da = 3)
+# Retained PCs (specifying a large value can lead to overfitting/unstable membership probability): 40
 # Discriminant functions to retain (for less than 10 clusters, all eigenvalues can be retained): 3
 # List grouping of each individual (helpful for determining correct coloration)
 cbind(QUAC.W.MSAT.dapc1$grp, as.character(pop(QUAC.W.MSAT.genind)), rownames(QUAC.W.MSAT.genind@tab))
@@ -57,7 +57,7 @@ cbind(QUAC.W.MSAT.dapc1$grp, as.character(pop(QUAC.W.MSAT.genind)), rownames(QUA
 scatter(QUAC.W.MSAT.dapc1, scree.da=F, bg="white", pch=20, cell=0, cstar=0, solid=0.6, clab=0, legend=T,
         posi.leg=locator(n=1), cleg=1.0, cex=2, inset.solid=1,
         col = c("#66A61E","#E7298A","#7570B3","#2171B5"),
-        txt.leg = c("Porter", "Sugarloaf", "Magazine/Kessler", "Pryor"))
+        txt.leg = c("Pryor", "Porter", "Magazine/Kessler", "Sugarloaf"))
 mtext("QUAC MSAT: Complete Wild", adj=0.07)
 
 # %%%% SUBSET: GARDEN & WILD ----
@@ -110,13 +110,13 @@ QUAC.Subset.W.MSAT.genind <- QUAC.MSAT.genind[QUAC_sharedSamples,, drop=TRUE]
 # MSAT ----
 # Use k-means clustering to find a number of groups which maximizes the variation between groups
 # (after transforming the data using PCA, in order to increase computation times)
-QUAC.Subset.W.MSAT.grp <- find.clusters(QUAC.Subset.W.MSAT.genind, max.n.clust=20, n.pca = 100, n.clust = 4)
-# Retained PCs (here, there is no cost to retaining a lot of PCs): 100
+QUAC.Subset.W.MSAT.grp <- find.clusters(QUAC.Subset.W.MSAT.genind, max.n.clust=20, n.pca = 150, n.clust = 4)
+# Retained PCs (here, there is no cost to retaining a lot of PCs, even greater than xlim): 150
 # Clusters (seeking to minimize the Bayesian Information Criterion value): 4
 # Conduct DAPC: transform the data using PCA, then run discriminant analysis on retained principal components,
 # using the inferred groupings from the k-means clustering step above
-QUAC.Subset.W.MSAT.dapc1 <- dapc(x=QUAC.Subset.W.MSAT.genind, pop=QUAC.Subset.W.MSAT.grp$grp, n.pca = 80, n.da = 3)
-# Retained PCs (specifying a large value can lead to overfitting/unstable membership probability): 80
+QUAC.Subset.W.MSAT.dapc1 <- dapc(x=QUAC.Subset.W.MSAT.genind, pop=QUAC.Subset.W.MSAT.grp$grp, n.pca = 40, n.da = 3)
+# Retained PCs (specifying a large value can lead to overfitting/unstable membership probability): 40
 # Discriminant functions to retain (for less than 10 clusters, all eigenvalues can be retained): 3
 # List grouping of each individual (helpful for determining correct coloration)
 cbind(QUAC.Subset.W.MSAT.dapc1$grp, as.character(pop(QUAC.Subset.W.MSAT.genind)), rownames(QUAC.Subset.W.MSAT.genind@tab))
@@ -125,18 +125,18 @@ cbind(QUAC.Subset.W.MSAT.dapc1$grp, as.character(pop(QUAC.Subset.W.MSAT.genind))
 scatter(QUAC.Subset.W.MSAT.dapc1, scree.da=F, bg="white", pch=20, cell=0, cstar=0, solid=0.6, clab=0, legend=T,
         posi.leg=locator(n=1), cleg=1.0, cex=2, inset.solid=1,
         col = c("#66A61E","#E7298A","#7570B3","#2171B5"),
-        txt.leg = c("Sugarloaf", "Pryor", "Magazine", "Porter/Kessler"))
+        txt.leg = c("Magazine", "Sugarloaf", "Pryor", "Porter/Kessler"))
 mtext("QUAC MSAT: Subset Wild", adj=0.07)
 
 # SNP, DE NOVO (R80) ----
 # SUPPORTED CLUSTERS ----
 # K-means clustering step
-QUAC.Subset.W.SNP.DN.grp <- find.clusters(QUAC.Subset.W.SNP.DN.genind, max.n.clust=20, n.pca = 100, n.clust = 2)
-# Retained PCs (here, there is no cost to retaining a lot of PCs): 100
+QUAC.Subset.W.SNP.DN.grp <- find.clusters(QUAC.Subset.W.SNP.DN.genind, max.n.clust=20, n.pca = 150, n.clust = 2)
+# Retained PCs (here, there is no cost to retaining a lot of PCs, even greater than xlim): 150
 # Clusters (seeking to minimize the Bayesian Information Criterion value): 2
 # PCA step
-QUAC.Subset.W.SNP.DN.dapc1 <- dapc(x=QUAC.Subset.W.SNP.DN.genind, pop=QUAC.Subset.W.SNP.DN.grp$grp, n.pca = 80, n.da = 1)
-# Retained PCs (specifying a large value can lead to overfitting/unstable membership probability): 80
+QUAC.Subset.W.SNP.DN.dapc1 <- dapc(x=QUAC.Subset.W.SNP.DN.genind, pop=QUAC.Subset.W.SNP.DN.grp$grp, n.pca = 70, n.da = 1)
+# Retained PCs (specifying a large value can lead to overfitting/unstable membership probability): 70
 # Discriminant functions to retain (for less than 10 clusters, all eigenvalues can be retained): 1
 # List grouping of each individual (helpful for determining correct coloration)
 cbind(QUAC.Subset.W.SNP.DN.dapc1$grp, as.character(pop(QUAC.Subset.W.SNP.DN.genind)), rownames(QUAC.Subset.W.SNP.DN.genind@tab))
@@ -150,12 +150,12 @@ mtext("QUAC SNP De novo (R80): Subset Wild (Supported Clusters)", adj=0.15)
 
 # GEOGRAPHIC CLUSTERS ----
 # K-means clustering step
-QUAC.Subset.W.SNP.DN.grp <- find.clusters(QUAC.Subset.W.SNP.DN.genind, max.n.clust=20, n.pca = 100, n.clust = 4)
-# Retained PCs (here, there is no cost to retaining a lot of PCs): 100
+QUAC.Subset.W.SNP.DN.grp <- find.clusters(QUAC.Subset.W.SNP.DN.genind, max.n.clust=20, n.pca = 150, n.clust = 4)
+# Retained PCs (here, there is no cost to retaining a lot of PCs, even greater than xlim): 150
 # Clusters (seeking to minimize the Bayesian Information Criterion value): 4
 # PCA step
-QUAC.Subset.W.SNP.DN.dapc1 <- dapc(x=QUAC.Subset.W.SNP.DN.genind, pop=QUAC.Subset.W.SNP.DN.grp$grp, n.pca = 80, n.da = 3)
-# Retained PCs (specifying a large value can lead to overfitting/unstable membership probability): 80
+QUAC.Subset.W.SNP.DN.dapc1 <- dapc(x=QUAC.Subset.W.SNP.DN.genind, pop=QUAC.Subset.W.SNP.DN.grp$grp, n.pca = 70, n.da = 3)
+# Retained PCs (specifying a large value can lead to overfitting/unstable membership probability): 70
 # Discriminant functions to retain (for less than 10 clusters, all eigenvalues can be retained): 3
 # List grouping of each individual (helpful for determining correct coloration)
 cbind(QUAC.Subset.W.SNP.DN.dapc1$grp, as.character(pop(QUAC.Subset.W.SNP.DN.genind)), rownames(QUAC.Subset.W.SNP.DN.genind@tab))
@@ -164,18 +164,18 @@ cbind(QUAC.Subset.W.SNP.DN.dapc1$grp, as.character(pop(QUAC.Subset.W.SNP.DN.geni
 scatter(QUAC.Subset.W.SNP.DN.dapc1, scree.da=F, bg="white", pch=20, cell=0, cstar=0, solid=0.6, clab=0, legend=T,
         posi.leg=locator(n=1), cleg=1.0, cex=2, inset.solid=1,
         col = c("#66A61E","#E7298A","#7570B3","#2171B5"),
-        txt.leg = c( "Porter/Magazine 1/Kessler", "Pryor", "Magazine 2", "Sugarloaf"))
+        txt.leg = c("Sugarloaf", "Porter/Magazine 1/Kessler", "Magazine 2", "Pryor"))
 mtext("QUAC SNP De novo (R80): Subset Wild (Geographic Clusters)", adj=0.07, line=2.5)
 
 # SNP, REFERENCE (R80) ----
 # SUPPORTED CLUSTERS ----
 # K-means clustering step
-QUAC.Subset.W.SNP.REF.grp <- find.clusters(QUAC.Subset.W.SNP.REF.genind, max.n.clust=20, n.pca = 100, n.clust = 2)
-# Retained PCs (here, there is no cost to retaining a lot of PCs): 100
+QUAC.Subset.W.SNP.REF.grp <- find.clusters(QUAC.Subset.W.SNP.REF.genind, max.n.clust=20, n.pca = 150, n.clust = 2)
+# Retained PCs (here, there is no cost to retaining a lot of PCs, even greater than xlim): 150
 # Clusters (seeking to minimize the Bayesian Information Criterion value): 2
 # PCA step
-QUAC.Subset.W.SNP.REF.dapc1 <- dapc(x=QUAC.Subset.W.SNP.REF.genind, pop=QUAC.Subset.W.SNP.REF.grp$grp, n.pca = 80, n.da = 1)
-# Retained PCs (specifying a large value can lead to overfitting/unstable membership probability): 80
+QUAC.Subset.W.SNP.REF.dapc1 <- dapc(x=QUAC.Subset.W.SNP.REF.genind, pop=QUAC.Subset.W.SNP.REF.grp$grp, n.pca = 70, n.da = 1)
+# Retained PCs (specifying a large value can lead to overfitting/unstable membership probability): 70
 # Discriminant functions to retain (for less than 10 clusters, all eigenvalues can be retained): 1
 # List grouping of each individual (helpful for determining correct coloration)
 cbind(QUAC.Subset.W.SNP.REF.dapc1$grp, as.character(pop(QUAC.Subset.W.SNP.REF.genind)), rownames(QUAC.Subset.W.SNP.REF.genind@tab))
@@ -189,12 +189,12 @@ mtext("QUAC SNP Reference (R80): Subset Wild (Supported Clusters)", adj=0.15)
 
 # GEOGRAPHIC CLUSTERS ----
 # K-means clustering step
-QUAC.Subset.W.SNP.REF.grp <- find.clusters(QUAC.Subset.W.SNP.REF.genind, max.n.clust=20, n.pca = 100, n.clust = 4)
-# Retained PCs (here, there is no cost to retaining a lot of PCs): 100
+QUAC.Subset.W.SNP.REF.grp <- find.clusters(QUAC.Subset.W.SNP.REF.genind, max.n.clust=20, n.pca = 150, n.clust = 4)
+# Retained PCs (here, there is no cost to retaining a lot of PCs, even greater than xlim): 150
 # Clusters (seeking to minimize the Bayesian Information Criterion value): 4
 # PCA step
-QUAC.Subset.W.SNP.REF.dapc1 <- dapc(x=QUAC.Subset.W.SNP.REF.genind, pop=QUAC.Subset.W.SNP.REF.grp$grp, n.pca = 80, n.da = 3)
-# Retained PCs (specifying a large value can lead to overfitting/unstable membership probability): 80
+QUAC.Subset.W.SNP.REF.dapc1 <- dapc(x=QUAC.Subset.W.SNP.REF.genind, pop=QUAC.Subset.W.SNP.REF.grp$grp, n.pca = 70, n.da = 3)
+# Retained PCs (specifying a large value can lead to overfitting/unstable membership probability): 70
 # Discriminant functions to retain (for less than 10 clusters, all eigenvalues can be retained): 3
 # List grouping of each individual (helpful for determining correct coloration)
 cbind(QUAC.Subset.W.SNP.REF.dapc1$grp, as.character(pop(QUAC.Subset.W.SNP.REF.genind)), rownames(QUAC.Subset.W.SNP.REF.genind@tab))
@@ -203,7 +203,7 @@ cbind(QUAC.Subset.W.SNP.REF.dapc1$grp, as.character(pop(QUAC.Subset.W.SNP.REF.ge
 scatter(QUAC.Subset.W.SNP.REF.dapc1, scree.da=F, bg="white", pch=20, cell=0, cstar=0, solid=0.6, clab=0, legend=T,
         posi.leg=locator(n=1), cleg=1.0, cex=2, inset.solid=1,
         col = c("#66A61E","#E7298A","#7570B3","#2171B5"),
-        txt.leg = c("Sugarloaf", "Porter/Magazine 1/Kessler", "Magazine 2", "Pryor"))
+        txt.leg = c("Magazine 2", "Pryor", "Sugarloaf", "Porter/Magazine 1/Kessler"))
 mtext("QUAC SNP Reference (R80): Subset Wild (Geographic Clusters)", adj=0.15, line=2.5)
 
 # %%%% QUBO %%%% ----
@@ -230,14 +230,14 @@ rownames(QUBO.W.MSAT.genind@tab) <- QUBO.MSAT.sampleNames
 # MSAT ----
 # Use k-means clustering to find a number of groups which maximizes the variation between groups
 # (after transforming the data using PCA, in order to increase computation times)
-QUBO.W.MSAT.grp <- find.clusters(QUBO.W.MSAT.genind, max.n.clust=20, n.pca = 100, n.clust = 6)
-# Retained PCs (here, there is no cost to retaining a lot of PCs): 100
+QUBO.W.MSAT.grp <- find.clusters(QUBO.W.MSAT.genind, max.n.clust=20, n.pca = 150, n.clust = 6)
+# Retained PCs (here, there is no cost to retaining a lot of PCs, even greater than xlim): 150
 # Clusters (seeking to minimize the Bayesian Information Criterion value): 6
 # Conduct DAPC: transform the data using PCA, then run discriminant analysis on retained principal components,
 # using the inferred groupings from the k-means clustering step above
-QUBO.W.MSAT.dapc1 <- dapc(x=QUBO.W.MSAT.genind, pop=QUBO.W.MSAT.grp$grp, n.pca = 80, n.da = 5)
-# Retained PCs (specifying a large value can lead to overfitting/unstable membership probability): 80
-# Discriminant functions to retain (for less than 10 clusters, all eigenvalues can be retained): 3
+QUBO.W.MSAT.dapc1 <- dapc(x=QUBO.W.MSAT.genind, pop=QUBO.W.MSAT.grp$grp, n.pca = 40, n.da = 5)
+# Retained PCs (specifying a large value can lead to overfitting/unstable membership probability): 40
+# Discriminant functions to retain (for less than 10 clusters, all eigenvalues can be retained): 5
 # List grouping of each individual (helpful for determining correct coloration)
 cbind(QUBO.W.MSAT.dapc1$grp, as.character(pop(QUBO.W.MSAT.genind)), rownames(QUBO.W.MSAT.genind@tab))
 
@@ -245,8 +245,8 @@ cbind(QUBO.W.MSAT.dapc1$grp, as.character(pop(QUBO.W.MSAT.genind)), rownames(QUB
 scatter(QUBO.W.MSAT.dapc1, scree.da=F, bg="white", pch=20, cell=0, cstar=0, solid=0.6, clab=0, legend=T,
         posi.leg=locator(n=1), cleg=1.0, cex=1.3, inset.solid=1,
         col = c("#66A61E","#E7298A","#7570B3","#2171B5", "#D95F02","#8C510A"),
-        txt.leg = c("Worldsong/Wattsville/MossRock/EBSCO", "Oakbrook/Worldsong/Wattsville/EBSCO/Hinds", "Worldsong/Irondale/Moss Rock/BTKC", 
-                    "EBSCO/Hinds", "EBSCO/Hinds/Peavine", "EBSCO/Hinds/Peavine/Missing"))
+        txt.leg = c("Worldsong/MossRock/EBSCO/BTKC", "Peavine/EBSCO/Hinds", "Worldsong/Irondale/EBSCO/Hinds", 
+                    "EBSCO/Hinds/Pop11", "EBSCO/Hinds/Peavine", "EBSCO/BTKC/Hinds/Peavine"))
 mtext("QUBO MSAT: Complete Wild", adj=0.15)
 
 # %%%% SUBSET: WILD ONLY ----
@@ -307,13 +307,13 @@ QUBO.Subset.W.MSAT.genind <- QUBO.W.MSAT.genind[QUBO_sharedSamples,, drop=TRUE]
 # MSAT ----
 # Use k-means clustering to find a number of groups which maximizes the variation between groups
 # (after transforming the data using PCA, in order to increase computation times)
-QUBO.Subset.W.MSAT.grp <- find.clusters(QUBO.Subset.W.MSAT.genind, max.n.clust=20, n.pca = 100, n.clust = 3)
-# Retained PCs (here, there is no cost to retaining a lot of PCs): 100
+QUBO.Subset.W.MSAT.grp <- find.clusters(QUBO.Subset.W.MSAT.genind, max.n.clust=20, n.pca = 150, n.clust = 3)
+# Retained PCs (here, there is no cost to retaining a lot of PCs, even greater than xlim): 150
 # Clusters (seeking to minimize the Bayesian Information Criterion value): 3
 # Conduct DAPC: transform the data using PCA, then run discriminant analysis on retained principal components,
 # using the inferred groupings from the k-means clustering step above
-QUBO.Subset.W.MSAT.dapc1 <- dapc(x=QUBO.Subset.W.MSAT.genind, pop=QUBO.Subset.W.MSAT.grp$grp, n.pca = 80, n.da = 2)
-# Retained PCs (specifying a large value can lead to overfitting/unstable membership probability): 80
+QUBO.Subset.W.MSAT.dapc1 <- dapc(x=QUBO.Subset.W.MSAT.genind, pop=QUBO.Subset.W.MSAT.grp$grp, n.pca = 40, n.da = 2)
+# Retained PCs (specifying a large value can lead to overfitting/unstable membership probability): 40
 # Discriminant functions to retain (for less than 10 clusters, all eigenvalues can be retained): 2
 # List grouping of each individual (helpful for determining correct coloration)
 cbind(QUBO.Subset.W.MSAT.dapc1$grp, as.character(pop(QUBO.Subset.W.MSAT.genind)), rownames(QUBO.Subset.W.MSAT.genind@tab))
@@ -322,19 +322,19 @@ cbind(QUBO.Subset.W.MSAT.dapc1$grp, as.character(pop(QUBO.Subset.W.MSAT.genind))
 scatter(QUBO.Subset.W.MSAT.dapc1, scree.da=F, bg="white", pch=20, cell=0, cstar=0, solid=0.6, clab=0, legend=T,
         posi.leg=locator(n=1), cleg=1.0, cex=1.3, inset.solid=1,
         col = c("#66A61E","#E7298A","#7570B3","#2171B5"),
-        txt.leg = c("Irondale/Worldsong/Wattsville/EBSCO/Hinds", "Worldsong/Irondale/Moss Rock/BTKC", 
-                    "EBSCO/Hinds/Peavine/Pop11"))
-mtext("QUBO MSAT: Subset Wild", adj=0.15)
+        txt.leg = c("Worldsong/Irondale/EBSCO/Hinds", "Irondale/Pop11/BTKC/Hinds", 
+                    "EBSCOWattsville/Peavine/Worldsong"))
+mtext("QUBO MSAT: Subset Wild", adj=0.65)
 
 # SNP: DE NOVO (R80) ----
 # SUPPORTED CLUSTERS ----
 # K-means clustering step
-QUBO.Subset.W.SNP.DN.grp <- find.clusters(QUBO.Subset.W.SNP.DN.genind, max.n.clust=20, n.pca = 100, n.clust = 2)1
-# Retained PCs (here, there is no cost to retaining a lot of PCs): 100
+QUBO.Subset.W.SNP.DN.grp <- find.clusters(QUBO.Subset.W.SNP.DN.genind, max.n.clust=20, n.pca = 150, n.clust = 2)
+# Retained PCs (here, there is no cost to retaining a lot of PCs, even greater than xlim): 150
 # Clusters (seeking to minimize the Bayesian Information Criterion value): 2
 # PCA step
-QUBO.Subset.W.SNP.DN.dapc1 <- dapc(x=QUBO.Subset.W.SNP.DN.genind, pop=QUBO.Subset.W.SNP.DN.grp$grp, n.pca = 80, n.da = 1)
-# Retained PCs (specifying a large value can lead to overfitting/unstable membership probability): 80
+QUBO.Subset.W.SNP.DN.dapc1 <- dapc(x=QUBO.Subset.W.SNP.DN.genind, pop=QUBO.Subset.W.SNP.DN.grp$grp, n.pca = 70, n.da = 1)
+# Retained PCs (specifying a large value can lead to overfitting/unstable membership probability): 70
 # Discriminant functions to retain (for less than 10 clusters, all eigenvalues can be retained): 1
 # List grouping of each individual (helpful for determining correct coloration)
 cbind(QUBO.Subset.W.SNP.DN.dapc1$grp, as.character(pop(QUBO.Subset.W.SNP.DN.genind)), rownames(QUBO.Subset.W.SNP.DN.genind@tab))
@@ -348,12 +348,12 @@ mtext("QUBO SNP De novo (R80): Subset Wild (Supported Clusters)", adj=0.15)
 
 # GEOGRAPHIC CLUSTERS (K=6) ----
 # K-means clustering step
-QUBO.Subset.W.SNP.DN.grp <- find.clusters(QUBO.Subset.W.SNP.DN.genind, max.n.clust=20, n.pca = 100, n.clust = 6)
-# Retained PCs (here, there is no cost to retaining a lot of PCs): 100
+QUBO.Subset.W.SNP.DN.grp <- find.clusters(QUBO.Subset.W.SNP.DN.genind, max.n.clust=20, n.pca = 150, n.clust = 6)
+# Retained PCs (here, there is no cost to retaining a lot of PCs, even greater than xlim): 150
 # Clusters (seeking to minimize the Bayesian Information Criterion value): 6
 # PCA step
-QUBO.Subset.W.SNP.DN.dapc1 <- dapc(x=QUBO.Subset.W.SNP.DN.genind, pop=QUBO.Subset.W.SNP.DN.grp$grp, n.pca = 80, n.da = 5)
-# Retained PCs (specifying a large value can lead to overfitting/unstable membership probability): 80
+QUBO.Subset.W.SNP.DN.dapc1 <- dapc(x=QUBO.Subset.W.SNP.DN.genind, pop=QUBO.Subset.W.SNP.DN.grp$grp, n.pca = 70, n.da = 5)
+# Retained PCs (specifying a large value can lead to overfitting/unstable membership probability): 70
 # Discriminant functions to retain (for less than 10 clusters, all eigenvalues can be retained): 5
 # List grouping of each individual (helpful for determining correct coloration)
 cbind(QUBO.Subset.W.SNP.DN.dapc1$grp, as.character(pop(QUBO.Subset.W.SNP.DN.genind)), rownames(QUBO.Subset.W.SNP.DN.genind@tab))
@@ -362,18 +362,18 @@ cbind(QUBO.Subset.W.SNP.DN.dapc1$grp, as.character(pop(QUBO.Subset.W.SNP.DN.geni
 scatter(QUBO.Subset.W.SNP.DN.dapc1, scree.da=F, bg="white", pch=20, cell=0, cstar=0, solid=0.6, clab=0, legend=T,
         posi.leg=locator(n=1), cleg=1.0, cex=1.3, inset.solid=1,
         col = c("#66A61E","#E7298A","#7570B3","#2171B5", "#D95F02","#8C510A"),
-        txt.leg = c("Irondale", "Oakbrook", "Pop11", "EBSCO/BTKC", "EBSCO/Peavine", "Wattsville/Peavine/Worldsong"))
+        txt.leg = c("Hinds/MossRock/Oakbrook", "Worldsong/Wattsville", "Peavine", "EBSCO/BTKC", "Irondale", "Pop11"))
 mtext("QUBO SNP De novo (R80): Subset Wild (Geographic Clusters)", adj=0.15)
 
 # SNP: REFERENCE (R80) ----
 # SUPPORTED CLUSTERS ----
 # K-means clustering step
-QUBO.Subset.W.SNP.REF.grp <- find.clusters(QUBO.Subset.W.SNP.REF.genind, max.n.clust=20, n.pca = 100, n.clust = 2)
-# Retained PCs (here, there is no cost to retaining a lot of PCs): 100
+QUBO.Subset.W.SNP.REF.grp <- find.clusters(QUBO.Subset.W.SNP.REF.genind, max.n.clust=20, n.pca = 150, n.clust = 2)
+# Retained PCs (here, there is no cost to retaining a lot of PCs, even greater than xlim): 150
 # Clusters (seeking to minimize the Bayesian Information Criterion value): 2
 # PCA step
-QUBO.Subset.W.SNP.REF.dapc1 <- dapc(x=QUBO.Subset.W.SNP.REF.genind, pop=QUBO.Subset.W.SNP.REF.grp$grp, n.pca = 80, n.da = 1)
-# Retained PCs (specifying a large value can lead to overfitting/unstable membership probability): 80
+QUBO.Subset.W.SNP.REF.dapc1 <- dapc(x=QUBO.Subset.W.SNP.REF.genind, pop=QUBO.Subset.W.SNP.REF.grp$grp, n.pca = 70, n.da = 1)
+# Retained PCs (specifying a large value can lead to overfitting/unstable membership probability): 70
 # Discriminant functions to retain (for less than 10 clusters, all eigenvalues can be retained): 1
 # List grouping of each individual (helpful for determining correct coloration)
 cbind(QUBO.Subset.W.SNP.REF.dapc1$grp, as.character(pop(QUBO.Subset.W.SNP.REF.genind)), rownames(QUBO.Subset.W.SNP.REF.genind@tab))
@@ -382,17 +382,17 @@ cbind(QUBO.Subset.W.SNP.REF.dapc1$grp, as.character(pop(QUBO.Subset.W.SNP.REF.ge
 scatter(QUBO.Subset.W.SNP.REF.dapc1, scree.da=F, bg="white", pch=20, cell=0, cstar=0, solid=0.6, clab=0, legend=T,
         posi.leg=locator(n=1), cleg=1.0, cex=1.3, inset.solid=1,
         col = c("#66A61E","#E7298A","#7570B3","#2171B5"),
-        txt.leg = c("Oakbrook/Irondale/Hinds/Pop11/Moss Rock", "Worldsong/EBSCO/BTKC/Peavine/Wattsville"))
+        txt.leg = c("Worldsong/EBSCO/BTKC/Peavine/Wattsville", "Oakbrook/Irondale/Hinds/Pop11/Moss Rock"))
 mtext("QUBO SNP Reference (R80): Subset Wild (Geographic Clusters)", adj=0.15)
 
 # GEOGRAPHIC CLUSTERS (K=6) ----
 # K-means clustering step
-QUBO.Subset.W.SNP.REF.grp <- find.clusters(QUBO.Subset.W.SNP.REF.genind, max.n.clust=20, n.pca = 100, n.clust = 6)
-# Retained PCs (here, there is no cost to retaining a lot of PCs): 100
+QUBO.Subset.W.SNP.REF.grp <- find.clusters(QUBO.Subset.W.SNP.REF.genind, max.n.clust=20, n.pca = 150, n.clust = 6)
+# Retained PCs (here, there is no cost to retaining a lot of PCs, even greater than xlim): 150
 # Clusters (seeking to minimize the Bayesian Information Criterion value): 6
 # PCA step
-QUBO.Subset.W.SNP.REF.dapc1 <- dapc(x=QUBO.Subset.W.SNP.REF.genind, pop=QUBO.Subset.W.SNP.REF.grp$grp, n.pca = 80, n.da = 5)
-# Retained PCs (specifying a large value can lead to overfitting/unstable membership probability): 80
+QUBO.Subset.W.SNP.REF.dapc1 <- dapc(x=QUBO.Subset.W.SNP.REF.genind, pop=QUBO.Subset.W.SNP.REF.grp$grp, n.pca = 70, n.da = 5)
+# Retained PCs (specifying a large value can lead to overfitting/unstable membership probability): 70
 # Discriminant functions to retain (for less than 10 clusters, all eigenvalues can be retained): 5
 # List grouping of each individual (helpful for determining correct coloration)
 cbind(QUBO.Subset.W.SNP.REF.dapc1$grp, as.character(pop(QUBO.Subset.W.SNP.REF.genind)), rownames(QUBO.Subset.W.SNP.REF.genind@tab))
@@ -401,7 +401,7 @@ cbind(QUBO.Subset.W.SNP.REF.dapc1$grp, as.character(pop(QUBO.Subset.W.SNP.REF.ge
 scatter(QUBO.Subset.W.SNP.REF.dapc1, scree.da=F, bg="white", pch=20, cell=0, cstar=0, solid=0.6, clab=0, legend=T,
         posi.leg=locator(n=1), cleg=1.0, cex=1.3, inset.solid=1,
         col = c("#66A61E","#E7298A","#7570B3","#2171B5", "#D95F02","#8C510A"),
-        txt.leg = c("Irondale", "Hinds/Moss Rock/Oakbrook", "Wattsville", "Pop11", "EBSCO/BTKC", "Peavine/Worldsong"))
+        txt.leg = c("Pop11", "EBSCO/BTKC", "Worldsong/Peavine", "Wattsville", "Irondale", "EBSCO/BTKC"))
 mtext("QUBO SNP Reference (R80): Subset Wild (Geographic Clusters)", adj=0.5, line=2.5)
 
 # %%%% SUBSET: GARDEN AND WILD ----
