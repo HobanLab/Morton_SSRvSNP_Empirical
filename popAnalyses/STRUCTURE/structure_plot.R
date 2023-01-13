@@ -59,16 +59,23 @@ plot_singleK <- function(kList, kColors, title, popNamesPresent=FALSE, ...){
 }
 
 # Wrapper for plot_singleK, which just calls that function after reading in the CLUMPP files
-Plot_K <- function(clumppPath, K, Colors, sampleNames, popNames, mainTitle, parFlag=1, popNamesPresent=TRUE, ...){
-  # Read in the Q matrices within the specified CLUMPP directory
-  Kclumpp <- read.CLUMPP(paste0(clumppPath, "CLUMPP.files/ClumppIndFile.output"), 
+Plot_K <- function(clumppPath, K, Colors, sampleNames, popNames, mainTitle, 
+                   parFlag=1, majorClust=FALSE, popNamesPresent=TRUE, ...){
+  # Direct to either the MajorCluster folder of the general CLUMPP.files folder, depending on majorClust flag
+  if(majorClust==TRUE){
+    clumppFolder <- "/MajorCluster/CLUMPP.files/"
+  } else{
+    clumppFolder <- "/CLUMPP.files/"
+  }
+  # Read in the Q matrices in the ClumppIndFile.output file within the specified CLUMPP directory
+  Kclumpp <- read.CLUMPP(paste0(clumppPath, clumppFolder, "ClumppIndFile.output"), 
                          sampleNames = sampleNames, popNames = popNames)
   # Plot K value
   plot_singleK(kList = Kclumpp, kValues = K, kColors = Colors, title=mainTitle, parFlag=parFlag, popNamesPresent = TRUE)
 }
 
 # Plotting function for multiple K values
-plot_multipleK <- function(kList, kValues, kColors, popNamesPresent=FALSE, parFlag=1, ...){
+plot_multipleK <- function(kList, kValues, kColors, parFlag=1, popNamesPresent=FALSE, ...){
   # Determine the number of individuals by counting rows of the kList object
   nInds <- nrow(kList[[1]])
   # If parFlag argument is 1, specify graphing parameter values; otherwise, default (global) par values are utilized
@@ -86,7 +93,7 @@ plot_multipleK <- function(kList, kValues, kColors, popNamesPresent=FALSE, parFl
     # Update graphing parameters to allow for extra space at the bottom of the graph, for lines/popNames
     if(parFlag==1){
       if(i == length(kList)){
-        par(mar = c(4.3,1,1,0.75) + 0.1)
+        par(mar = c(4,1,1,0.75) + 0.1)
       }
     }
     # Main plot call, and title call
@@ -99,24 +106,31 @@ plot_multipleK <- function(kList, kValues, kColors, popNamesPresent=FALSE, parFl
 }
 
 # Wrapper for plot_multipleK, which just calls that function after reading in the CLUMPP files
-Plot_AllK <- function(clumppPath, Ks, Colors, sampleNames, popNames, parFlag=1, popNamesPresent=FALSE, ...){
-  # Read in the Q matrices within the specified CLUMPP directory
-  K2filepath <- paste0(clumppPath, "/K2/CLUMPP.files/ClumppIndFile.output")
+Plot_AllK <- function(clumppPath, Ks, Colors, sampleNames, popNames, 
+                      parFlag=1, popNamesPresent=FALSE, majorClust=FALSE, ...){
+  # Direct to either the MajorCluster folder of the general CLUMPP.files folder, depending on majorClust flag
+  if(majorClust==TRUE){
+    clumppFolder <- "/MajorCluster/CLUMPP.files/"
+  } else{
+    clumppFolder <- "/CLUMPP.files/"
+  }
+  # Read in the Q matrices within the specified CLUMPP directory. Hard-coded for K values 2-7!
+  K2filepath <- paste0(clumppPath, "/K2", clumppFolder, "ClumppIndFile.output")
   K2clumpp <- read.CLUMPP(K2filepath, sampleNames = sampleNames, popNames = popNames)
   
-  K3filepath <- paste0(clumppPath, "/K3/CLUMPP.files/ClumppIndFile.output")
+  K3filepath <- paste0(clumppPath, "/K3", clumppFolder, "ClumppIndFile.output")
   K3clumpp <- read.CLUMPP(K3filepath, sampleNames = sampleNames, popNames = popNames)
   
-  K4filepath <- paste0(clumppPath, "/K4/CLUMPP.files/ClumppIndFile.output")
+  K4filepath <- paste0(clumppPath, "/K4", clumppFolder, "ClumppIndFile.output")
   K4clumpp <- read.CLUMPP(K4filepath, sampleNames = sampleNames, popNames = popNames)
   
-  K5filepath <- paste0(clumppPath, "/K5/CLUMPP.files/ClumppIndFile.output")
+  K5filepath <- paste0(clumppPath, "/K5", clumppFolder, "ClumppIndFile.output")
   K5clumpp <- read.CLUMPP(K5filepath, sampleNames = sampleNames, popNames = popNames)
   
-  K6filepath <- paste0(clumppPath, "/K6/CLUMPP.files/ClumppIndFile.output")
+  K6filepath <- paste0(clumppPath, "/K6", clumppFolder, "ClumppIndFile.output")
   K6clumpp <- read.CLUMPP(K6filepath, sampleNames = sampleNames, popNames = popNames)
   
-  K7filepath <- paste0(clumppPath, "/K7/CLUMPP.files/ClumppIndFile.output")
+  K7filepath <- paste0(clumppPath, "/K7", clumppFolder, "ClumppIndFile.output")
   K7clumpp <- read.CLUMPP(K7filepath, sampleNames = sampleNames, popNames = popNames)
   
   # Plot specified K values
@@ -359,19 +373,73 @@ mtext(text = "QUAC Wild Samples (Subset), SNP: Reference", outer=TRUE, cex=1.3)
 # # Add group labels
 # text(x=QUAC.labelPositions, y=-0.063, srt=35, adj=1, xpd=TRUE, labels=QUAC.labelNames, cex=1)
 
-# ---- MULTIPLE DATASETS ----
-# All Ks
+# ---- PLOTTING MULTIPLE DATASETS ----
+# All Ks ----
+# Graphing parameters for all 6 K values (2-7) and all 3 datasets (MSAT, SNP: De novo, SNP: Reference)
 layout(mat = matrix(1:18, nrow = 6, ncol = 3))
-par(mar = c(1.2,1,1.5,0.75) + 0.1, oma = c(0.5,1,4,0), mgp = c(2,1,0))
+par(mar = c(1.2,1,1,0.75) + 0.1, oma = c(0.5,1,4,0), mgp = c(2,1,0))
 
-# 
+# MSAT
 Plot_AllK(clumppPath = QUAC.MSAT.clumppDir, Ks=2:7, Colors = QUAC.colors, popNames = QUAC.popNames, parFlag = 0)
+mtext("QUAC: MSAT (Subset)", side=3, line=30, cex=0.8)
 # SNP: DE NOVO (STACKS)
 Plot_AllK(clumppPath = QUAC.SNP.DN.S.clumppDir, Ks=2:7, Colors = QUAC.colors, popNames = QUAC.popNames, parFlag = 0)
+mtext("QUAC: SNP, De novo (Subset, R80)", side=3, line=30, cex=0.8)
 # SNP: REFERENCE
 Plot_AllK(clumppPath = QUAC.SNP.REF.clumppDir, Ks=2:7, Colors = QUAC.colors, popNames = QUAC.popNames, parFlag = 0)
+mtext("QUAC: SNP, Reference (Subset, R80)", side=3, line=30, cex=0.8)
 
-# Plots for K=4
+# All Ks, MajorCluster results ----
+# Graphing parameters for all 6 K values (2-7) and all 3 datasets (MSAT, SNP: De novo, SNP: Reference)
+layout(mat = matrix(1:18, nrow = 6, ncol = 3))
+par(mar = c(1.2,1,1,0.75) + 0.1, oma = c(0.5,1,4,0), mgp = c(2,1,0))
+
+# MSAT
+Plot_AllK(clumppPath = QUAC.MSAT.clumppDir, Ks=2:7, Colors = QUAC.colors, popNames = QUAC.popNames, 
+          parFlag = 0, majorClust = TRUE)
+mtext("QUAC: MSAT (Subset, MajorCluster)", side=3, line=30, cex=0.8)
+# SNP: DE NOVO (STACKS)
+Plot_AllK(clumppPath = QUAC.SNP.DN.S.clumppDir, Ks=2:7, Colors = QUAC.colors, popNames = QUAC.popNames, 
+          parFlag = 0, majorClust = TRUE)
+mtext("QUAC: SNP, De novo (Subset, MajorCluster, R80)", side=3, line=30, cex=0.8)
+# SNP: REFERENCE
+Plot_AllK(clumppPath = QUAC.SNP.REF.clumppDir, Ks=2:7, Colors = QUAC.colors, popNames = QUAC.popNames, 
+          parFlag = 0, majorClust = TRUE)
+mtext("QUAC: SNP, Reference (Subset, MajorCluster, R80)", side=3, line=30, cex=0.8)
+
+# Geographic K (K=4) ----
+# Graphing parameters for K=4 across all 3 datasets (MSAT, SNP: De novo, SNP: Reference)
+layout(mat = matrix(1:3, nrow = 1, ncol = 3))
+par(mar = c(1.2,1,1,0.75) + 0.1, oma = c(0.5,1,4,0), mgp = c(2,1,0))
+
+# MSAT
+Plot_AllK(clumppPath = QUAC.MSAT.clumppDir, Ks=2:7, Colors = QUAC.colors, popNames = QUAC.popNames, parFlag = 0)
+mtext("QUAC: MSAT (Subset)", side=3, line=30, cex=0.8)
+# SNP: DE NOVO (STACKS)
+Plot_AllK(clumppPath = QUAC.SNP.DN.S.clumppDir, Ks=2:7, Colors = QUAC.colors, popNames = QUAC.popNames, parFlag = 0)
+mtext("QUAC: SNP, De novo (Subset, R80)", side=3, line=30, cex=0.8)
+# SNP: REFERENCE
+Plot_AllK(clumppPath = QUAC.SNP.REF.clumppDir, Ks=2:7, Colors = QUAC.colors, popNames = QUAC.popNames, parFlag = 0)
+mtext("QUAC: SNP, Reference (Subset, R80)", side=3, line=30, cex=0.8)
+
+# All Ks, MajorCluster results ----
+# Graphing parameters for all 6 K values (2-7) and all 3 datasets (MSAT, SNP: De novo, SNP: Reference)
+layout(mat = matrix(1:18, nrow = 6, ncol = 3))
+par(mar = c(1.2,1,1,0.75) + 0.1, oma = c(0.5,1,4,0), mgp = c(2,1,0))
+
+# MSAT
+Plot_AllK(clumppPath = QUAC.MSAT.clumppDir, Ks=2:7, Colors = QUAC.colors, popNames = QUAC.popNames, 
+          parFlag = 0, majorClust = TRUE)
+mtext("QUAC: MSAT (Subset, MajorCluster)", side=3, line=30, cex=0.8)
+# SNP: DE NOVO (STACKS)
+Plot_AllK(clumppPath = QUAC.SNP.DN.S.clumppDir, Ks=2:7, Colors = QUAC.colors, popNames = QUAC.popNames, 
+          parFlag = 0, majorClust = TRUE)
+mtext("QUAC: SNP, De novo (Subset, MajorCluster, R80)", side=3, line=30, cex=0.8)
+# SNP: REFERENCE
+Plot_AllK(clumppPath = QUAC.SNP.REF.clumppDir, Ks=2:7, Colors = QUAC.colors, popNames = QUAC.popNames, 
+          parFlag = 0, majorClust = TRUE)
+mtext("QUAC: SNP, Reference (Subset, MajorCluster, R80)", side=3, line=30, cex=0.8)
+
 
 # %%%% QUBO %%%% ----
 # Colors for different clusters: combinations of RGB components in hexadecimal
