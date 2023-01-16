@@ -377,15 +377,15 @@ par(mar = c(1.2,1,1,0.75) + 0.1, oma = c(0.5,1,4,0), mgp = c(2,1,0))
 # MSAT
 Plot_AllK(clumppPath = QUAC.MSAT.clumppDir, Ks=2:7, Colors = QUAC.colors, 
           popNames = QUAC.popNames, parFlag = FALSE)
-mtext("QUAC: MSAT (Subset)", side=3, line=36, cex=0.8)
+mtext("QUAC: MSAT (Subset)", side=3, line=39, cex=0.8)
 # SNP: DE NOVO (STACKS)
 Plot_AllK(clumppPath = QUAC.SNP.DN.S.clumppDir, Ks=2:7, Colors = QUAC.colors, 
           popNames = QUAC.popNames, parFlag = FALSE)
-mtext("QUAC: SNP, De novo (Subset, R80)", side=3, line=36, cex=0.8)
+mtext("QUAC: SNP, De novo (Subset, R80)", side=3, line=39, cex=0.8)
 # SNP: REFERENCE
 Plot_AllK(clumppPath = QUAC.SNP.REF.clumppDir, Ks=2:7, Colors = QUAC.colors, 
           popNames = QUAC.popNames, parFlag = FALSE)
-mtext("QUAC: SNP, Reference (Subset, R80)", side=3, line=36, cex=0.8)
+mtext("QUAC: SNP, Reference (Subset, R80)", side=3, line=39, cex=0.8)
 
 # All Ks, MajorCluster results ----
 # Graphing parameters for all 6 K values (2-7) and all 3 datasets (MSAT, SNP: De novo, SNP: Reference)
@@ -394,15 +394,15 @@ par(mar = c(1.2,1,1,0.75) + 0.1, oma = c(0.5,1,4,0), mgp = c(2,1,0))
 # MSAT
 Plot_AllK(clumppPath = QUAC.MSAT.clumppDir, Ks=2:7, Colors = QUAC.colors, popNames = QUAC.popNames, 
           parFlag = FALSE, majorClust = TRUE)
-mtext("QUAC: MSAT (Subset, MajorCluster)", side=3, line=36, cex=0.8)
+mtext("QUAC: MSAT (Subset, MajorCluster)", side=3, line=39, cex=0.8)
 # SNP: DE NOVO (STACKS)
 Plot_AllK(clumppPath = QUAC.SNP.DN.S.clumppDir, Ks=2:7, Colors = QUAC.colors, popNames = QUAC.popNames, 
           parFlag = FALSE, majorClust = TRUE)
-mtext("QUAC: SNP, De novo (Subset, MajorCluster, R80)", side=3, line=36, cex=0.8)
+mtext("QUAC: SNP, De novo (Subset, MajorCluster, R80)", side=3, line=39, cex=0.8)
 # SNP: REFERENCE
 Plot_AllK(clumppPath = QUAC.SNP.REF.clumppDir, Ks=2:7, Colors = QUAC.colors, popNames = QUAC.popNames, 
           parFlag = FALSE, majorClust = TRUE)
-mtext("QUAC: SNP, Reference (Subset, MajorCluster, R80)", side=3, line=36, cex=0.8)
+mtext("QUAC: SNP, Reference (Subset, MajorCluster, R80)", side=3, line=39, cex=0.8)
 
 # Geographic K (K=4) ----
 # Graphing parameters for K=4 across all 3 datasets (MSAT, SNP: De novo, SNP: Reference)
@@ -415,10 +415,10 @@ Plot_K(QUAC.MSAT.clumppDir, K=4, Colors = QUAC.colors, QUAC.sampleNames, QUAC.po
       mainTitle = "QUAC MSAT: K4")
 # SNP: DE NOVO (STACKS)
 Plot_K(QUAC.SNP.DN.S.clumppDir, K=4, Colors = QUAC.colors, QUAC.sampleNames, QUAC.popNames, 
-       mainTitle = "QUAC SNP, De novo: K4")
+       mainTitle = "QUAC SNP, De novo (R80): K4")
 # SNP: REFERENCE
 Plot_K(QUAC.SNP.REF.clumppDir, K=4, Colors = QUAC.colors, QUAC.sampleNames, QUAC.popNames, 
-       mainTitle = "QUAC SNP, Reference: K4")
+       mainTitle = "QUAC SNP, Reference (R80): K4")
 # Plot lines
 lines(x = c(0.2,29.5), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
 lines(x = c(30.5,57.5), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
@@ -426,7 +426,7 @@ lines(x = c(58.5,77.6), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA
 lines(x = c(78.8,108.7), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
 lines(x = c(109.7,116.3), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
 # Add group labels
-text(x=QUAC.labelPositions, y=-0.063, srt=35, adj=1, xpd=TRUE, labels=QUAC.labelNames, cex=1)
+text(x=QUAC.labelPositions, y=-0.063, srt=35, adj=1, xpd=TRUE, labels=QUAC.labelNames, cex=1.3)
 
 # Geographic K (K=4), MajorCluster results ----
 # Graphing parameters for K=4 across all 3 datasets (MSAT, SNP: De novo, SNP: Reference)
@@ -436,13 +436,13 @@ lineWidth <- 1.9; lineHeight <- rep(-0.035,2)
 QUAC.labelPositions <- c(15, 44, 68, 93.5, 112)
 # MSAT
 Plot_K(QUAC.MSAT.clumppDir, K=4, Colors = QUAC.colors, QUAC.sampleNames, QUAC.popNames, 
-       mainTitle = "QUAC MSAT: K4 (Major Clusters)", majorClust = TRUE)
+       mainTitle = "QUAC MSAT: K4", majorClust = TRUE)
 # SNP: DE NOVO (STACKS)
 Plot_K(QUAC.SNP.DN.S.clumppDir, K=4, Colors = QUAC.colors, QUAC.sampleNames, QUAC.popNames, 
-       mainTitle = "QUAC SNP, De novo: K4 (Major Clusters)", majorClust = TRUE)
+       mainTitle = "QUAC SNP, De novo (R80): K4", majorClust = TRUE)
 # SNP: REFERENCE
 Plot_K(QUAC.SNP.REF.clumppDir, K=4, Colors = QUAC.colors, QUAC.sampleNames, QUAC.popNames, 
-       mainTitle = "QUAC SNP, Reference: K4 (Major Clusters)", majorClust = TRUE)
+       mainTitle = "QUAC SNP, Reference (R80): K4", majorClust = TRUE)
 # Plot lines
 lines(x = c(0.2,29.5), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
 lines(x = c(30.5,57.5), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
@@ -450,7 +450,7 @@ lines(x = c(58.5,77.6), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA
 lines(x = c(78.8,108.7), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
 lines(x = c(109.7,116.3), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
 # Add group labels
-text(x=QUAC.labelPositions, y=-0.063, srt=35, adj=1, xpd=TRUE, labels=QUAC.labelNames, cex=1)
+text(x=QUAC.labelPositions, y=-0.063, srt=35, adj=1, xpd=TRUE, labels=QUAC.labelNames, cex=1.3)
 
 # %%%% QUBO %%%% ----
 # Colors for different clusters: combinations of RGB components in hexadecimal
@@ -687,15 +687,15 @@ par(mar = c(1.2,1,1,0.75) + 0.1, oma = c(0.5,1,4,0), mgp = c(2,1,0))
 # MSAT
 Plot_AllK(clumppPath = QUBO.MSAT.clumppDir, Ks=2:7, Colors = QUBO.colors, 
           popNames = QUBO.popNames, parFlag = FALSE)
-mtext("QUBO: MSAT (Subset)", side=3, line=36, cex=0.8)
+mtext("QUBO: MSAT (Subset)", side=3, line=39, cex=0.8)
 # SNP: DE NOVO (STACKS)
 Plot_AllK(clumppPath = QUBO.SNP.DN.clumppDir, Ks=2:7, Colors = QUBO.colors, 
           popNames = QUBO.popNames, parFlag = FALSE)
-mtext("QUBO: SNP, De novo (Subset, R80)", side=3, line=36, cex=0.8)
+mtext("QUBO: SNP, De novo (Subset, R80)", side=3, line=39, cex=0.8)
 # SNP: REFERENCE
 Plot_AllK(clumppPath = QUBO.SNP.REF.clumppDir, Ks=2:7, Colors = QUBO.colors, 
           popNames = QUBO.popNames, parFlag = FALSE)
-mtext("QUBO: SNP, Reference (Subset, R80)", side=3, line=36, cex=0.8)
+mtext("QUBO: SNP, Reference (Subset, R80)", side=3, line=39, cex=0.8)
 
 # All Ks, MajorCluster results ----
 # Graphing parameters for all 6 K values (2-7) and all 3 datasets (MSAT, SNP: De novo, SNP: Reference)
@@ -704,15 +704,15 @@ par(mar = c(1.2,1,1,0.75) + 0.1, oma = c(0.5,1,4,0), mgp = c(2,1,0))
 # MSAT
 Plot_AllK(clumppPath = QUBO.MSAT.clumppDir, Ks=2:7, Colors = QUBO.colors, popNames = QUBO.popNames, 
           parFlag = FALSE, majorClust = TRUE)
-mtext("QUBO: MSAT (Subset, MajorCluster)", side=3, line=36, cex=0.8)
+mtext("QUBO: MSAT (Subset, MajorCluster)", side=3, line=39, cex=0.8)
 # SNP: DE NOVO (STACKS)
 Plot_AllK(clumppPath = QUBO.SNP.DN.clumppDir, Ks=2:7, Colors = QUBO.colors, popNames = QUBO.popNames, 
           parFlag = FALSE, majorClust = TRUE)
-mtext("QUBO: SNP, De novo (Subset, MajorCluster, R80)", side=3, line=36, cex=0.8)
+mtext("QUBO: SNP, De novo (Subset, MajorCluster, R80)", side=3, line=39, cex=0.8)
 # SNP: REFERENCE
 Plot_AllK(clumppPath = QUBO.SNP.REF.clumppDir, Ks=2:7, Colors = QUBO.colors, popNames = QUBO.popNames, 
           parFlag = FALSE, majorClust = TRUE)
-mtext("QUBO: SNP, Reference (Subset, MajorCluster, R80)", side=3, line=36, cex=0.8)
+mtext("QUBO: SNP, Reference (Subset, MajorCluster, R80)", side=3, line=39, cex=0.8)
 
 # Geographic K (K=6) ----
 # Graphing parameters for K=6 across all 3 datasets (MSAT, SNP: De novo, SNP: Reference)
@@ -725,10 +725,10 @@ Plot_K(QUBO.MSAT.clumppDir, K=6, Colors = QUBO.colors, QUBO.sampleNames, QUBO.po
        mainTitle = "QUBO MSAT: K6")
 # SNP: DE NOVO (STACKS)
 Plot_K(QUBO.SNP.DN.clumppDir, K=6, Colors = QUBO.colors, QUBO.sampleNames, QUBO.popNames, 
-       mainTitle = "QUBO SNP, De novo: K6")
+       mainTitle = "QUBO SNP, De novo (R80): K6")
 # SNP: REFERENCE
 Plot_K(QUBO.SNP.REF.clumppDir, K=6, Colors = QUBO.colors, QUBO.sampleNames, QUBO.popNames, 
-       mainTitle = "QUBO SNP, Reference: K6")
+       mainTitle = "QUBO SNP, Reference (R80): K6")
 # Plot lines
 lines(x = c(0,2.0), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
 lines(x = c(2.7,10.4), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
@@ -742,23 +742,23 @@ lines(x = c(67.8,81.4), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA
 lines(x = c(82.2,106.4), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
 lines(x = c(107.4,113.2), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
 # Add group labels
-text(x=QUBO.labelPositions, y=-0.05, srt=35, adj=1, xpd=TRUE, labels=QUBO.labelNames, cex=1)
+text(x=QUBO.labelPositions, y=-0.05, srt=35, adj=1, xpd=TRUE, labels=QUBO.labelNames, cex=1.3)
 
-# Geographic K (K=6), MajorCluster results ----
+# Geographic K (K=2), MajorCluster results ----
 # Graphing parameters for K=4 across all 3 datasets (MSAT, SNP: De novo, SNP: Reference)
 par(mfrow=c(3,1), mar = c(4.5,3,1,3), oma=c(1,0,1,0))
 # Variables for lines designating groups beneath K charts. 
 lineWidth <- 1.9; lineHeight <- rep(-0.035,2)
 QUBO.labelPositions <- c(1, 6.6, 15, 24, 34.4, 43.5, 52.4, 62.4, 74.6, 94.3, 110.3) 
 # MSAT
-Plot_K(QUBO.MSAT.clumppDir, K=6, Colors = QUBO.colors, QUBO.sampleNames, QUBO.popNames, 
-       mainTitle = "QUBO MSAT: K6 (Major Clusters)", majorClust = TRUE)
+Plot_K(QUBO.MSAT.clumppDir, K=2, Colors = QUBO.colors, QUBO.sampleNames, QUBO.popNames, 
+       mainTitle = "QUBO MSAT: K2", majorClust = TRUE)
 # SNP: DE NOVO (STACKS)
-Plot_K(QUBO.SNP.DN.clumppDir, K=6, Colors = QUBO.colors, QUBO.sampleNames, QUBO.popNames, 
-       mainTitle = "QUBO SNP, De novo: K6 (Major Clusters)", majorClust = TRUE)
+Plot_K(QUBO.SNP.DN.clumppDir, K=2, Colors = QUBO.colors, QUBO.sampleNames, QUBO.popNames, 
+       mainTitle = "QUBO SNP, De novo (R80): K2", majorClust = TRUE)
 # SNP: REFERENCE
-Plot_K(QUBO.SNP.REF.clumppDir, K=6, Colors = QUBO.colors, QUBO.sampleNames, QUBO.popNames, 
-       mainTitle = "QUBO SNP, Reference: K6 (Major Clusters)", majorClust = TRUE)
+Plot_K(QUBO.SNP.REF.clumppDir, K=2, Colors = QUBO.colors, QUBO.sampleNames, QUBO.popNames, 
+       mainTitle = "QUBO SNP, Reference (R80): K2", majorClust = TRUE)
 # Plot lines
 lines(x = c(0,2.0), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
 lines(x = c(2.7,10.4), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
@@ -772,4 +772,4 @@ lines(x = c(67.8,81.4), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA
 lines(x = c(82.2,106.4), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
 lines(x = c(107.4,113.2), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
 # Add group labels
-text(x=QUBO.labelPositions, y=-0.05, srt=35, adj=1, xpd=TRUE, labels=QUBO.labelNames, cex=1)
+text(x=QUBO.labelPositions, y=-0.05, srt=35, adj=1, xpd=TRUE, labels=QUBO.labelNames, cex=1.2)
