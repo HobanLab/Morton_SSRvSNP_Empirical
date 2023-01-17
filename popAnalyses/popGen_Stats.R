@@ -500,7 +500,7 @@ QUBO.MSAT.sampleNames <- unlist(lapply(rownames(QUBO.MSAT_genind@tab),
 rownames(QUBO.MSAT_genind@tab) <- QUBO.MSAT.sampleNames
 
 # SNP: Remove QUBO_W_ headers from sample names
-QUBO.SNP.sampleNames <- gsub("QUBO_G_",replacement = "", row.names(QUBO.SNP.R0_genind@tab))
+QUBO.SNP.sampleNames <- gsub("QUBO_G_",replacement = "", row.names(QUBO.SNP.DN.R0_genind@tab))
 QUBO.SNP.sampleNames <- gsub("QUBO_W_",replacement = "", QUBO.SNP.sampleNames)
 # Replace SH-Q names in SNP list with IMLS names
 # These were determined by Austin K., and are outlined on the Hoban Lab Drive ("MSATcomparisons_TissueNames")
