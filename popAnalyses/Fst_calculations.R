@@ -156,16 +156,18 @@ pop(QUAC.SNP.DN.R80.genind) <- factor(read.table(paste0(genpop.filePath, "QUAC_p
 rownames(QUAC.SNP.DN.R80.genind@tab) <- QUAC.SNP.tissueNames
 
 # SNP: REFERENCE, R0
-# Error: values cannot be calculated for SNP REF R0 dataset, because Stacks population module
-# is automatically killed
-# genpop.filePath <- 
-#   "/RAID1/IMLS_GCCO/Analysis/Stacks/reference_filteredReads/QUAC/Q_rubra/output/populations_wild_R0_NOMAF_1SNP/"
-# setwd(genpop.filePath)
-# QUAC.SNP.REF.R0.genind <- read.genepop(paste0(genpop.filePath,"populations.snps.gen"))
-# # Correct popNames
-# pop(QUAC.SNP.REF.R0.genind) <- factor(read.table("QUAC_popmap_wild", header=FALSE)[,2])
+# Error: values cannot be calculated for original SNP REF R0 dataset, because Stacks population module
+# is automatically killed (code 5806). Therefore, a set of 5,000 randomly selected "whitelisted" loci
+# are chosen from a incomplete populations.sumstats.tsv file (from a failed run, of the REF R0 dataset), 
+# and these whitelisted loci are passed to the populations module for the successful run.
+genpop.filePath <-
+  "/RAID1/IMLS_GCCO/Analysis/Stacks/reference_filteredReads/QUAC/Q_rubra/output/populations_wild_R0_NOMAF_1SNP_WL/"
+setwd(genpop.filePath)
+QUAC.SNP.REF.R0.genind <- read.genepop(paste0(genpop.filePath,"populations.snps.gen"))
+# Correct popNames
+pop(QUAC.SNP.REF.R0.genind) <- factor(read.table("QUAC_popmap_wild", header=FALSE)[,2])
 # Correct sample names
-# rownames(QUAC.SNP.REF.R0.genind@tab) <- QUAC.SNP.tissueNames
+rownames(QUAC.SNP.REF.R0.genind@tab) <- QUAC.SNP.tissueNames
 
 # SNP: REFERENCE, R80
 genpop.filePath <- 
