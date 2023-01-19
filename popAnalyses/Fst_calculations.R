@@ -62,6 +62,7 @@ Fst_Nei_report <- function(gen.obj, title){
   fst_mat[lower.tri(fst_mat, diag = TRUE)] <- NA
   
   # Print mean pairwise Fst value
+  print(paste0("%%% ", title, " %%%"))
   print(paste0("%%% Mean pairwise Fst: ", mean(fst_mat, na.rm=TRUE)))
   # Plot using the Fst_plot command
   Fst_plot(fst_mat, title=title)
@@ -180,15 +181,15 @@ rownames(QUAC.SNP.REF.R80.genind@tab) <- QUAC.SNP.tissueNames
 
 # ---- CALCULATE FST VALUES: COMPLETE ----
 # MSAT
-Fst_Nei_report(QUAC.MSAT.genind, title = "QUAC MSAT (Complete): Fst Values")
+Fst_Nei_report(QUAC.MSAT.genind, title = "QUAC MSAT (Complete)")
 
 # Subset SNP
 # De novo
-# Fst_Nei_report(QUAC.SNP.DN.R0.genind, title = "QUAC SNP De novo (Complete, R0): Fst Values")
-Fst_Nei_report(QUAC.SNP.DN.R80.genind, title = "QUAC SNP De novo (Complete, R80): Fst Values")
+Fst_Nei_report(QUAC.SNP.DN.R0.genind, title = "QUAC SNP De novo (Complete, R0)")
+Fst_Nei_report(QUAC.SNP.DN.R80.genind, title = "QUAC SNP De novo (Complete, R80)")
 # Reference
-# Fst_Nei_report(QUAC.SNP.REF.R0.genind, title = "QUAC SNP De novo (Complete, R0): Fst Values")
-Fst_Nei_report(QUAC.SNP.REF.R80.genind, title = "QUAC SNP De novo (Complete, R80): Fst Values")
+Fst_Nei_report(QUAC.SNP.REF.R0.genind, title = "QUAC SNP De novo (Complete, R0)")
+Fst_Nei_report(QUAC.SNP.REF.R80.genind, title = "QUAC SNP De novo (Complete, R80)")
 
 # ---- SUBSET GENIND FILES ----
 # Subset SNP sample names by those that are also seen within the MSAT samples 
@@ -197,22 +198,22 @@ QUAC_sharedSamples <- sort(QUAC.SNP.tissueNames[which(QUAC.SNP.tissueNames %in% 
 QUAC.MSAT_subset.genind <- QUAC.MSAT.genind[QUAC_sharedSamples,, drop=TRUE]
 # R0
 QUAC.SNP.DN.R0_subset.genind <- QUAC.SNP.DN.R0.genind[QUAC_sharedSamples,, drop=TRUE]
-# QUAC.SNP.REF.R0_subset.genind <- QUAC.SNP.REF.R0.genind[QUAC_sharedSamples,, drop=TRUE]
+QUAC.SNP.REF.R0_subset.genind <- QUAC.SNP.REF.R0.genind[QUAC_sharedSamples,, drop=TRUE]
 # R80
 QUAC.SNP.DN.R80_subset.genind <- QUAC.SNP.DN.R80.genind[QUAC_sharedSamples,, drop=TRUE]
 QUAC.SNP.REF.R80_subset.genind <- QUAC.SNP.REF.R80.genind[QUAC_sharedSamples,, drop=TRUE]
 
 # ---- CALCULATE FST VALUES: SUBSET ----
 # Subset MSAT
-Fst_Nei_report(QUAC.MSAT_subset.genind, title = "QUAC MSAT (Subset): Fst Values")
+Fst_Nei_report(QUAC.MSAT_subset.genind, title = "QUAC MSAT (Subset)")
 
 # Subset SNP
 # De novo
-# Fst_Nei_report(QUAC.SNP.DN.R0_subset.genind, title = "QUAC SNP De novo (Subset, R0): Fst Values")
-Fst_Nei_report(QUAC.SNP.DN.R80_subset.genind, title = "QUAC SNP De novo (Subset, R80): Fst Values")
+Fst_Nei_report(QUAC.SNP.DN.R0_subset.genind, title = "QUAC SNP De novo (Subset, R0)")
+Fst_Nei_report(QUAC.SNP.DN.R80_subset.genind, title = "QUAC SNP De novo (Subset, R80)")
 # Reference
-# Fst_Nei_report(QUAC.SNP.REF.R0_subset.genind, title = "QUAC SNP De novo (Subset, R0): Fst Values")
-Fst_Nei_report(QUAC.SNP.REF.R80_subset.genind, title = "QUAC SNP De novo (Subset, R80): Fst Values")
+Fst_Nei_report(QUAC.SNP.REF.R0_subset.genind, title = "QUAC SNP De novo (Subset, R0)")
+Fst_Nei_report(QUAC.SNP.REF.R80_subset.genind, title = "QUAC SNP De novo (Subset, R80)")
 
 # %%%% QUBO %%%% ----
 # ---- READ IN GENIND FILES ----
@@ -283,15 +284,15 @@ rownames(QUBO.SNP.REF.R80.genind@tab) <- rownames(QUBO.SNP.DN.R80.genind@tab) <-
 
 # ---- CALCULATE FST VALUES: COMPLETE ----
 # MSAT
-Fst_Nei_report(QUBO.MSAT.genind, title = "QUBO MSAT (Complete): Fst Values")
+Fst_Nei_report(QUBO.MSAT.genind, title = "QUBO MSAT (Complete)")
 
 # Subset SNP
 # De novo
-# Fst_Nei_report(QUBO.SNP.DN.R0.genind, title = "QUBO SNP De novo (Complete, R0): Fst Values")
-Fst_Nei_report(QUBO.SNP.DN.R80.genind, title = "QUBO SNP De novo (Complete, R80): Fst Values")
+Fst_Nei_report(QUBO.SNP.DN.R0.genind, title = "QUBO SNP De novo (Complete, R0)")
+Fst_Nei_report(QUBO.SNP.DN.R80.genind, title = "QUBO SNP De novo (Complete, R80)")
 # Reference
-# Fst_Nei_report(QUBO.SNP.REF.R0.genind, title = "QUBO SNP De novo (Complete, R0): Fst Values")
-Fst_Nei_report(QUBO.SNP.REF.R80.genind, title = "QUBO SNP De novo (Complete, R80): Fst Values")
+Fst_Nei_report(QUBO.SNP.REF.R0.genind, title = "QUBO SNP De novo (Complete, R0)")
+Fst_Nei_report(QUBO.SNP.REF.R80.genind, title = "QUBO SNP De novo (Complete, R80)")
 
 # ---- SUBSET GENIND FILES ----
 # Subset SNP sample names by those that are also seen within the MSAT samples
@@ -309,12 +310,12 @@ QUBO.SNP.REF.R80_subset.genind <- QUBO.SNP.REF.R80.genind[QUBO_sharedSamples,, d
 
 # ---- CALCULATE FST VALUES: SUBSET ----
 # Subset MSAT
-Fst_Nei_report(QUBO.MSAT_subset.genind, title = "QUBO MSAT (Subset): Fst Values")
+Fst_Nei_report(QUBO.MSAT_subset.genind, title = "QUBO MSAT (Subset)")
 
 # Subset SNP
 # De novo
-# Fst_Nei_report(QUBO.SNP.DN.R0_subset.genind, title = "QUBO SNP De novo (Subset, R0): Fst Values")
-Fst_Nei_report(QUBO.SNP.DN.R80_subset.genind, title = "QUBO SNP De novo (Subset, R80): Fst Values")
+Fst_Nei_report(QUBO.SNP.DN.R0_subset.genind, title = "QUBO SNP De novo (Subset, R0)")
+Fst_Nei_report(QUBO.SNP.DN.R80_subset.genind, title = "QUBO SNP De novo (Subset, R80)")
 # Reference
-# Fst_Nei_report(QUBO.SNP.REF.R0_subset.genind, title = "QUBO SNP De novo (Subset, R0): Fst Values")
-Fst_Nei_report(QUBO.SNP.REF.R80_subset.genind, title = "QUBO SNP De novo (Subset, R80): Fst Values")
+Fst_Nei_report(QUBO.SNP.REF.R0_subset.genind, title = "QUBO SNP De novo (Subset, R0)")
+Fst_Nei_report(QUBO.SNP.REF.R80_subset.genind, title = "QUBO SNP De novo (Subset, R80)")
