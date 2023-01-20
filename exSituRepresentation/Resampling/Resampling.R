@@ -63,11 +63,11 @@ QUAC.MSAT.tissueNames <-
   unlist(read.csv2(paste0(QUAC.MSAT.filePath, "Data_Frames/QUAC_allpop_clean_df.csv"), header = TRUE, sep=",")[1])
 rownames(QUAC.MSAT.genind@tab) <- QUAC.MSAT.tissueNames
 # Correct popNames: samples with popName pattern QAc-G- are garden 
-levels(QUAC.MSAT_genind@pop)[grep(pattern = "QAc-G-", levels(QUAC.MSAT_genind@pop))] <- 
-  rep("garden", length(grep(pattern = "QAc-G-", levels(QUAC.MSAT_genind@pop))))
+levels(QUAC.MSAT.genind@pop)[grep(pattern = "QAc-G-", levels(QUAC.MSAT.genind@pop))] <- 
+  rep("garden", length(grep(pattern = "QAc-G-", levels(QUAC.MSAT.genind@pop))))
 # Correct popNames: samples with popName pattern QAc-W- are wild
-levels(QUAC.MSAT_genind@pop)[grep(pattern = "QAc-W-", levels(QUAC.MSAT_genind@pop))] <- 
-  rep("wild", length(grep(pattern = "QAc-W-", levels(QUAC.MSAT_genind@pop))))
+levels(QUAC.MSAT.genind@pop)[grep(pattern = "QAc-W-", levels(QUAC.MSAT.genind@pop))] <- 
+  rep("wild", length(grep(pattern = "QAc-W-", levels(QUAC.MSAT.genind@pop))))
 
 # CREATE RESAMPLING ARRAY AND CALCULATE SUMMARY STATISTICS
 # Export relevant functions and variables
