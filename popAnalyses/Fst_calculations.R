@@ -188,8 +188,8 @@ Fst_Nei_report(QUAC.MSAT.genind, title = "QUAC MSAT (Complete)")
 Fst_Nei_report(QUAC.SNP.DN.R0.genind, title = "QUAC SNP De novo (Complete, R0)")
 Fst_Nei_report(QUAC.SNP.DN.R80.genind, title = "QUAC SNP De novo (Complete, R80)")
 # Reference
-Fst_Nei_report(QUAC.SNP.REF.R0.genind, title = "QUAC SNP De novo (Complete, R0)")
-Fst_Nei_report(QUAC.SNP.REF.R80.genind, title = "QUAC SNP De novo (Complete, R80)")
+Fst_Nei_report(QUAC.SNP.REF.R0.genind, title = "QUAC SNP Reference (Complete, R0)")
+Fst_Nei_report(QUAC.SNP.REF.R80.genind, title = "QUAC SNP Reference (Complete, R80)")
 
 # ---- SUBSET GENIND FILES ----
 # Subset SNP sample names by those that are also seen within the MSAT samples 
@@ -212,8 +212,8 @@ Fst_Nei_report(QUAC.MSAT_subset.genind, title = "QUAC MSAT (Subset)")
 Fst_Nei_report(QUAC.SNP.DN.R0_subset.genind, title = "QUAC SNP De novo (Subset, R0)")
 Fst_Nei_report(QUAC.SNP.DN.R80_subset.genind, title = "QUAC SNP De novo (Subset, R80)")
 # Reference
-Fst_Nei_report(QUAC.SNP.REF.R0_subset.genind, title = "QUAC SNP De novo (Subset, R0)")
-Fst_Nei_report(QUAC.SNP.REF.R80_subset.genind, title = "QUAC SNP De novo (Subset, R80)")
+Fst_Nei_report(QUAC.SNP.REF.R0_subset.genind, title = "QUAC SNP Reference (Subset, R0)")
+Fst_Nei_report(QUAC.SNP.REF.R80_subset.genind, title = "QUAC SNP Reference (Subset, R80)")
 
 # %%%% QUBO %%%% ----
 # ---- READ IN GENIND FILES ----
@@ -291,8 +291,8 @@ Fst_Nei_report(QUBO.MSAT.genind, title = "QUBO MSAT (Complete)")
 Fst_Nei_report(QUBO.SNP.DN.R0.genind, title = "QUBO SNP De novo (Complete, R0)")
 Fst_Nei_report(QUBO.SNP.DN.R80.genind, title = "QUBO SNP De novo (Complete, R80)")
 # Reference
-Fst_Nei_report(QUBO.SNP.REF.R0.genind, title = "QUBO SNP De novo (Complete, R0)")
-Fst_Nei_report(QUBO.SNP.REF.R80.genind, title = "QUBO SNP De novo (Complete, R80)")
+Fst_Nei_report(QUBO.SNP.REF.R0.genind, title = "QUBO SNP Reference (Complete, R0)")
+Fst_Nei_report(QUBO.SNP.REF.R80.genind, title = "QUBO SNP Reference (Complete, R80)")
 
 # ---- SUBSET GENIND FILES ----
 # Subset SNP sample names by those that are also seen within the MSAT samples
@@ -317,5 +317,5 @@ Fst_Nei_report(QUBO.MSAT_subset.genind, title = "QUBO MSAT (Subset)")
 Fst_Nei_report(QUBO.SNP.DN.R0_subset.genind, title = "QUBO SNP De novo (Subset, R0)")
 Fst_Nei_report(QUBO.SNP.DN.R80_subset.genind, title = "QUBO SNP De novo (Subset, R80)")
 # Reference
-Fst_Nei_report(QUBO.SNP.REF.R0_subset.genind, title = "QUBO SNP De novo (Subset, R0)")
-Fst_Nei_report(QUBO.SNP.REF.R80_subset.genind, title = "QUBO SNP De novo (Subset, R80)")
+Fst_Nei_report(QUBO.SNP.REF.R0_subset.genind, title = "QUBO SNP Reference (Subset, R0)")
+Fst_Nei_report(QUBO.SNP.REF.R80_subset.genind, title = "QUBO SNP Reference (Subset, R80)")
