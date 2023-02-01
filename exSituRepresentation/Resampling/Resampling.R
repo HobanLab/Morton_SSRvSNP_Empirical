@@ -49,18 +49,19 @@ num_cores <- detectCores() - 16 ; cl <- makeCluster(num_cores)
 clusterEvalQ(cl, library("adegenet"))
 # Specify number of replicates. This value is used uniformly, for ALL datasets (QUAC and QUBO)
 num_reps <- 5000
+# Export relevant functions and variables
+clusterExport(cl, varlist = c("getAlleleCategories", "exSitu_Sample", "exSitu_Resample", "num_reps"))
 
 # %%%% QUAC %%%% ----
 # ---- MSATS (COMPLETE) ----
-# READ IN GENIND FILE (GCC_QUAC_ZAIN repo; QUAC_wK_garden_wild_clean.gen)
+# READ IN GENIND FILE (GCC_QUAC_ZAIN repo; QUAC_woK_garden_wild_clean.gen)
 QUAC.MSAT.filePath <- 
   "~/Documents/peripheralProjects/GCC_QUAC_ZAIN/Data_Files/"
-setwd(QUAC.MSAT.filePath)
 QUAC.MSAT.genind <- 
-  read.genepop(paste0(QUAC.MSAT.filePath, "Adegenet_Files/QUAC_wK_allpop_clean.gen"), ncode = 3)
+  read.genepop(paste0(QUAC.MSAT.filePath, "Adegenet_Files/QUAC_woK_allpop_clean.gen"), ncode = 3)
 # Assign sample names: read in Tissue database names from GCC_QUAC_ZAIN repository
 QUAC.MSAT.tissueNames <- 
-  unlist(read.csv2(paste0(QUAC.MSAT.filePath, "Data_Frames/QUAC_allpop_clean_df.csv"), header = TRUE, sep=",")[1])
+  unlist(read.csv2(paste0(QUAC.MSAT.filePath, "Data_Frames/QUAC_woK_allpop_clean_df.csv"), header = TRUE, sep=",")[1])
 rownames(QUAC.MSAT.genind@tab) <- QUAC.MSAT.tissueNames
 # Correct popNames: samples with popName pattern QAc-G- are garden 
 levels(QUAC.MSAT.genind@pop)[grep(pattern = "QAc-G-", levels(QUAC.MSAT.genind@pop))] <- 
@@ -70,9 +71,8 @@ levels(QUAC.MSAT.genind@pop)[grep(pattern = "QAc-W-", levels(QUAC.MSAT.genind@po
   rep("wild", length(grep(pattern = "QAc-W-", levels(QUAC.MSAT.genind@pop))))
 
 # CREATE RESAMPLING ARRAY AND CALCULATE SUMMARY STATISTICS
-# Export relevant functions and variables
-clusterExport(cl, varlist = c("getAlleleCategories", "exSitu_Sample", "exSitu_Resample", 
-                              "num_reps", "QUAC.MSAT.genind"))
+# Export genind object
+clusterExport(cl, varlist = "QUAC.MSAT.genind")
 # Run resampling in parallel, to generate an array that's saved to disc
 samplingResults_QUAC.MSAT <- 
   exSitu_Resample_Parallel(QUAC.MSAT.genind, cluster = cl, reps = num_reps,
@@ -120,22 +120,21 @@ dev.off()
 # R0 ----
 # READ IN GENIND FILE (QUAC DNFA; R0, min-maf=0; first SNP per locus; 2 populations, garden and wild)
 genpop.filePath <- 
-  "/RAID1/IMLS_GCCO/Analysis/Stacks/denovo_finalAssemblies/QUAC/output/populations_R0_NOMAF_1SNP_2Pops/"
+  "/RAID1/IMLS_GCCO/Analysis/Stacks/denovo_finalAssemblies/QUAC/output/populations_R0_NOMAF_1SNP_2Pops_NoK/"
 QUAC.SNP.DN.R0.genind <- read.genepop(paste0(genpop.filePath,"populations.snps.gen"))
 # Correct popNames
 pop(QUAC.SNP.DN.R0.genind) <- 
-  factor(read.table(paste0(genpop.filePath, "QUAC_popmap_GardenWild"), header=FALSE)[,2])
+  factor(read.table(paste0(genpop.filePath, "QUAC_popmap_GardenWild_NoK"), header=FALSE)[,2])
 # Get QUAC SNP Tissue sample names, and rename SNP genind matrix
 # File was created (by Austin K.), and can be found on Hoban Lab Drive ("MSATcomparisons_TissueNames")
 QUAC.SNP.DN.R0.tissueNames_filepath <- 
-  paste0(SSRvSNP.wd,"exSituRepresentation/Resampling/QUAC_SNP_TissueNames.csv")
+  paste0(SSRvSNP.wd,"exSituRepresentation/QUAC_SNP_TissueNames.csv")
 QUAC.SNP.DN.R0.tissueNames <- unlist(read.csv2(QUAC.SNP.DN.R0.tissueNames_filepath, header = TRUE, sep = ",")[3])
 rownames(QUAC.SNP.DN.R0.genind@tab) <- QUAC.SNP.DN.R0.tissueNames
 
 # CREATE RESAMPLING ARRAY AND CALCULATE SUMMARY STATISTICS
-# Export relevant functions and variables
-clusterExport(cl, varlist = c("getAlleleCategories", "exSitu_Sample", "exSitu_Resample", 
-                              "num_reps", "QUAC.SNP.DN.R0.genind"))
+# Export genind object
+clusterExport(cl, varlist = "QUAC.SNP.DN.R0.genind")
 # Run resampling in parallel, to generate an array that's saved to disc
 samplingResults_QUAC.SNP.DN.R0 <- 
   exSitu_Resample_Parallel(QUAC.SNP.DN.R0.genind, cluster = cl, reps = num_reps,
@@ -157,21 +156,20 @@ rare_means <- apply(samplingResults_QUAC.SNP.DN.R0[,5,], 1, mean)
 # R80 ----
 # READ IN GENIND FILE (QUAC DNFA; R80, min-maf=0; first SNP per locus; 2 populations, garden and wild)
 genpop.filePath <- 
-  "/RAID1/IMLS_GCCO/Analysis/Stacks/denovo_finalAssemblies/QUAC/output/populations_R80_NOMAF_1SNP_2Pops/"
+  "/RAID1/IMLS_GCCO/Analysis/Stacks/denovo_finalAssemblies/QUAC/output/populations_R80_NOMAF_1SNP_2Pops_NoK/"
 QUAC.SNP.DN.R80.genind <- read.genepop(paste0(genpop.filePath,"populations.snps.gen"))
 # Correct popNames
 pop(QUAC.SNP.DN.R80.genind) <- 
-  factor(read.table(paste0(genpop.filePath, "QUAC_popmap_GardenWild"), header=FALSE)[,2])
+  factor(read.table(paste0(genpop.filePath, "QUAC_popmap_GardenWild_NoK"), header=FALSE)[,2])
 # Get QUAC SNP Tissue sample names, and rename SNP genind matrix
 # File was created (by Austin K.), and can be found on Hoban Lab Drive ("MSATcomparisons_TissueNames")
-QUAC.SNP.DN.R80.tissueNames_filepath <- paste0(SSRvSNP.wd,"exSituRepresentation/Resampling/QUAC_SNP_TissueNames.csv")
+QUAC.SNP.DN.R80.tissueNames_filepath <- paste0(SSRvSNP.wd,"exSituRepresentation/QUAC_SNP_TissueNames.csv")
 QUAC.SNP.DN.R80.tissueNames <- unlist(read.csv2(QUAC.SNP.DN.R80.tissueNames_filepath, header = TRUE, sep = ",")[3])
 rownames(QUAC.SNP.DN.R80.genind@tab) <- QUAC.SNP.DN.R80.tissueNames
 
 # CREATE RESAMPLING ARRAY AND CALCULATE SUMMARY STATISTICS
-# Export relevant functions and variables
-clusterExport(cl, varlist = c("getAlleleCategories", "exSitu_Sample", "exSitu_Resample", 
-                              "num_reps", "QUAC.SNP.DN.R80.genind"))
+# Export genind object
+clusterExport(cl, varlist = "QUAC.SNP.DN.R80.genind")
 # Run resampling in parallel, to generate an array that's saved to disc
 samplingResults_QUAC.SNP.DN.R80 <- 
   exSitu_Resample_Parallel(QUAC.SNP.DN.R80.genind, cluster = cl, reps = num_reps,
@@ -234,11 +232,11 @@ dev.off()
 # R0 ----
 # READ IN GENIND FILE: QUAC GSNAP4 alignment; R0, min-maf=0, first SNP/locus, 2 populations (garden and wild)
 genpop.filePath <- 
-  "/RAID1/IMLS_GCCO/Analysis/Stacks/reference_filteredReads/QUAC/Q_rubra/output/populations_R0_NOMAF_1SNP_2Pops/"
+  "/RAID1/IMLS_GCCO/Analysis/Stacks/reference_filteredReads/QUAC/Q_rubra/output/populations_R0_NOMAF_1SNP_2Pops_NoK/"
 QUAC.SNP.REF.R0.genind <- read.genepop(paste0(genpop.filePath,"populations.snps.gen"))
 # Correct popNames
 pop(QUAC.SNP.REF.R0.genind) <- 
-  factor(read.table(paste0(genpop.filePath, "QUAC_popmap_GardenWild"), header=FALSE)[,2])
+  factor(read.table(paste0(genpop.filePath, "QUAC_popmap_GardenWild_NoK"), header=FALSE)[,2])
 # Get QUAC SNP Tissue sample names, and rename SNP genind matrix
 # File was created (by Austin K.), and can be found on Hoban Lab Drive ("MSATcomparisons_TissueNames")
 QUAC.SNP.REF.R0.tissueNames_filepath <- paste0(SSRvSNP.wd,"exSituRepresentation/Resampling/QUAC_SNP_TissueNames.csv")
@@ -246,9 +244,8 @@ QUAC.SNP.REF.R0.tissueNames <- unlist(read.csv2(QUAC.SNP.REF.R0.tissueNames_file
 rownames(QUAC.SNP.REF.R0.genind@tab) <- QUAC.SNP.REF.R0.tissueNames
 
 # CREATE RESAMPLING ARRAY AND CALCULATE SUMMARY STATISTICS
-# Export relevant functions and variables
-clusterExport(cl, varlist = c("getAlleleCategories", "exSitu_Sample", "exSitu_Resample", 
-                              "num_reps", "QUAC.SNP.REF.R0.genind"))
+# Export genind object
+clusterExport(cl, varlist = "QUAC.SNP.REF.R0.genind")
 # Run resampling in parallel, to generate an array that's saved to disc
 samplingResults_QUAC.SNP.REF.R0 <- 
   exSitu_Resample_Parallel(QUAC.SNP.REF.R0.genind, cluster = cl, reps = num_reps,
@@ -270,11 +267,11 @@ rare_means <- apply(samplingResults_QUAC.SNP.REF.R0[,5,], 1, mean)
 # R80 ----
 # READ IN GENIND FILE: QUAC GSNAP4 alignment; R80, min-maf=0, first SNP/locus, 2 populations (garden and wild)
 genpop.filePath <- 
-  "/RAID1/IMLS_GCCO/Analysis/Stacks/reference_filteredReads/QUAC/Q_rubra/output/populations_R80_NOMAF_1SNP_2Pops/"
+  "/RAID1/IMLS_GCCO/Analysis/Stacks/reference_filteredReads/QUAC/Q_rubra/output/populations_R80_NOMAF_1SNP_2Pops_NoK/"
 QUAC.SNP.REF.R80.genind <- read.genepop(paste0(genpop.filePath,"populations.snps.gen"))
 # Correct popNames
 pop(QUAC.SNP.REF.R80.genind) <- 
-  factor(read.table(paste0(genpop.filePath, "QUAC_popmap_GardenWild"), header=FALSE)[,2])
+  factor(read.table(paste0(genpop.filePath, "QUAC_popmap_GardenWild_NoK"), header=FALSE)[,2])
 # Get QUAC SNP Tissue sample names, and rename SNP genind matrix
 # File was created (by Austin K.), and can be found on Hoban Lab Drive ("MSATcomparisons_TissueNames")
 QUAC.SNP.REF.R80.tissueNames_filepath <- paste0(SSRvSNP.wd,"exSituRepresentation/Resampling/QUAC_SNP_TissueNames.csv")
@@ -282,9 +279,8 @@ QUAC.SNP.REF.R80.tissueNames <- unlist(read.csv2(QUAC.SNP.REF.R80.tissueNames_fi
 rownames(QUAC.SNP.REF.R80.genind@tab) <- QUAC.SNP.REF.R80.tissueNames
 
 # CREATE RESAMPLING ARRAY AND CALCULATE SUMMARY STATISTICS
-# Export relevant functions and variables
-clusterExport(cl, varlist = c("getAlleleCategories", "exSitu_Sample", "exSitu_Resample", 
-                              "num_reps", "QUAC.SNP.REF.R80.genind"))
+# Export genind object
+clusterExport(cl, varlist = "QUAC.SNP.REF.R80.genind")
 # Run resampling in parallel, to generate an array that's saved to disc
 samplingResults_QUAC.SNP.REF.R80 <- 
   exSitu_Resample_Parallel(QUAC.SNP.REF.R80.genind, cluster = cl, reps = num_reps,
@@ -356,9 +352,8 @@ QUAC.SNP.REF.R0_subset.genind <- QUAC.SNP.REF.R0.genind[QUAC_sharedSamples,, dro
 QUAC.SNP.REF.R80_subset.genind <- QUAC.SNP.REF.R80.genind[QUAC_sharedSamples,, drop=TRUE]
 
 # CREATE RESAMPLING ARRAY AND CALCULATE SUMMARY STATISTICS
-# Export relevant functions and variables
-clusterExport(cl, varlist = c("getAlleleCategories", "exSitu_Sample", "exSitu_Resample", 
-                              "num_reps", "QUAC.MSAT_subset.genind", "QUAC.SNP.DN.R0_subset.genind",
+# Export genind objects
+clusterExport(cl, varlist = c("QUAC.MSAT_subset.genind", "QUAC.SNP.DN.R0_subset.genind",
                               "QUAC.SNP.DN.R80_subset.genind", "QUAC.SNP.REF.R0_subset.genind", 
                               "QUAC.SNP.REF.R80_subset.genind"))
 # Run resampling in parallel, to generate arrays
@@ -558,9 +553,8 @@ QUBO.MSAT.sampleNames <- unlist(lapply(rownames(QUBO.MSAT.genind@tab),function(x
 rownames(QUBO.MSAT.genind@tab) <- QUBO.MSAT.sampleNames
 
 # CREATE RESAMPLING ARRAY AND CALCULATE SUMMARY STATISTICS
-# Export relevant functions and variables
-clusterExport(cl, varlist = c("getAlleleCategories", "exSitu_Sample", "exSitu_Resample", 
-                              "num_reps", "QUBO.MSAT.genind"))
+# Export genind object
+clusterExport(cl, varlist = "QUBO.MSAT.genind")
 # Run resampling in parallel, to generate an array that's saved to disc
 samplingResults_QUBO.MSAT <- 
   exSitu_Resample_Parallel(QUBO.MSAT.genind, cluster = cl, reps = num_reps,
@@ -632,9 +626,8 @@ QUBO.SNP.DN.R0.sampleNames <- gsub("SH_Q2186",replacement = "IMLS017", QUBO.SNP.
 rownames(QUBO.SNP.DN.R0.genind@tab) <- QUBO.SNP.DN.R0.sampleNames
 
 # CREATE RESAMPLING ARRAY AND CALCULATE SUMMARY STATISTICS
-# Export relevant functions and variables
-clusterExport(cl, varlist = c("getAlleleCategories", "exSitu_Sample", "exSitu_Resample", 
-                              "num_reps", "QUBO.SNP.DN.R0.genind"))
+# Export genind object
+clusterExport(cl, varlist = "QUBO.SNP.DN.R0.genind")
 # Run resampling in parallel, to generate an array that's saved to disc
 samplingResults_QUBO.SNP.DN.R0 <- 
   exSitu_Resample_Parallel(QUBO.SNP.DN.R0.genind, cluster = cl, reps = num_reps,
@@ -668,9 +661,8 @@ pop(QUBO.SNP.DN.R80.genind) <-
 rownames(QUBO.SNP.DN.R80.genind@tab) <- QUBO.SNP.DN.R0.sampleNames
 
 # CREATE RESAMPLING ARRAY AND CALCULATE SUMMARY STATISTICS
-# Export relevant functions and variables
-clusterExport(cl, varlist = c("getAlleleCategories", "exSitu_Sample", "exSitu_Resample", 
-                              "num_reps", "QUBO.SNP.DN.R80.genind"))
+# Export genind object
+clusterExport(cl, varlist = "QUBO.SNP.DN.R80.genind")
 # Run resampling in parallel, to generate an array that's saved to disc
 samplingResults_QUBO.SNP.DN.R80 <- 
   exSitu_Resample_Parallel(QUBO.SNP.DN.R80.genind, cluster = cl, reps = num_reps,
@@ -745,9 +737,8 @@ pop(QUBO.SNP.REF.R0.genind) <-
 rownames(QUBO.SNP.REF.R0.genind@tab) <- QUBO.SNP.DN.R0.sampleNames
 
 # CREATE RESAMPLING ARRAY AND CALCULATE SUMMARY STATISTICS
-# Export relevant functions and variables
-clusterExport(cl, varlist = c("getAlleleCategories", "exSitu_Sample", "exSitu_Resample", 
-                              "num_reps", "QUBO.SNP.REF.R0.genind"))
+# Export genind object
+clusterExport(cl, varlist = "QUBO.SNP.REF.R0.genind")
 # Run resampling in parallel, to generate an array that's saved to disc
 samplingResults_QUBO.SNP.REF.R0 <- 
   exSitu_Resample_Parallel(QUBO.SNP.REF.R0.genind, cluster = cl, reps = num_reps,
@@ -781,9 +772,8 @@ pop(QUBO.SNP.REF.R80.genind) <-
 rownames(QUBO.SNP.REF.R80.genind@tab) <- QUBO.SNP.DN.R0.sampleNames
 
 # CREATE RESAMPLING ARRAY AND CALCULATE SUMMARY STATISTICS
-# Export relevant functions and variables
-clusterExport(cl, varlist = c("getAlleleCategories", "exSitu_Sample", "exSitu_Resample", 
-                              "num_reps", "QUBO.SNP.REF.R80.genind"))
+# Export genind object
+clusterExport(cl, varlist = "QUBO.SNP.REF.R80.genind")
 # Run resampling in parallel, to generate an array that's saved to disc
 samplingResults_QUBO.SNP.REF.R80 <- 
   exSitu_Resample_Parallel(QUBO.SNP.REF.R80.genind, cluster = cl, reps = num_reps,
@@ -858,9 +848,8 @@ QUBO.SNP.REF.R0_subset.genind <- QUBO.SNP.REF.R0.genind[QUBO_sharedSamples,, dro
 QUBO.SNP.REF.R80_subset.genind <- QUBO.SNP.REF.R80.genind[QUBO_sharedSamples,, drop=TRUE]
 
 # CREATE RESAMPLING ARRAY AND CALCULATE SUMMARY STATISTICS
-# Export relevant functions and variables
-clusterExport(cl, varlist = c("getAlleleCategories", "exSitu_Sample", "exSitu_Resample", 
-                              "num_reps", "QUBO.MSAT_subset.genind", "QUBO.SNP.DN.R0_subset.genind",
+# Export genind objects
+clusterExport(cl, varlist = c("QUBO.MSAT_subset.genind", "QUBO.SNP.DN.R0_subset.genind",
                               "QUBO.SNP.DN.R80_subset.genind", "QUBO.SNP.REF.R0_subset.genind",
                               "QUBO.SNP.REF.R80_subset.genind"))
 # Run resampling in parallel, to generate arrays
