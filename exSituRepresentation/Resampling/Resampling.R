@@ -127,8 +127,7 @@ pop(QUAC.SNP.DN.R0.genind) <-
   factor(read.table(paste0(genpop.filePath, "QUAC_popmap_GardenWild_NoK"), header=FALSE)[,2])
 # Get QUAC SNP Tissue sample names, and rename SNP genind matrix
 # File was created (by Austin K.), and can be found on Hoban Lab Drive ("MSATcomparisons_TissueNames")
-QUAC.SNP.DN.R0.tissueNames_filepath <- 
-  paste0(SSRvSNP.wd,"exSituRepresentation/QUAC_SNP_TissueNames.csv")
+QUAC.SNP.DN.R0.tissueNames_filepath <- paste0(SSRvSNP.wd,"exSituRepresentation/QUAC_SNP_TissueNames.csv")
 QUAC.SNP.DN.R0.tissueNames <- unlist(read.csv2(QUAC.SNP.DN.R0.tissueNames_filepath, header = TRUE, sep = ",")[3])
 rownames(QUAC.SNP.DN.R0.genind@tab) <- QUAC.SNP.DN.R0.tissueNames
 
@@ -239,7 +238,7 @@ pop(QUAC.SNP.REF.R0.genind) <-
   factor(read.table(paste0(genpop.filePath, "QUAC_popmap_GardenWild_NoK"), header=FALSE)[,2])
 # Get QUAC SNP Tissue sample names, and rename SNP genind matrix
 # File was created (by Austin K.), and can be found on Hoban Lab Drive ("MSATcomparisons_TissueNames")
-QUAC.SNP.REF.R0.tissueNames_filepath <- paste0(SSRvSNP.wd,"exSituRepresentation/Resampling/QUAC_SNP_TissueNames.csv")
+QUAC.SNP.REF.R0.tissueNames_filepath <- paste0(SSRvSNP.wd,"exSituRepresentation/QUAC_SNP_TissueNames.csv")
 QUAC.SNP.REF.R0.tissueNames <- unlist(read.csv2(QUAC.SNP.REF.R0.tissueNames_filepath, header = TRUE, sep = ",")[3])
 rownames(QUAC.SNP.REF.R0.genind@tab) <- QUAC.SNP.REF.R0.tissueNames
 
@@ -274,7 +273,7 @@ pop(QUAC.SNP.REF.R80.genind) <-
   factor(read.table(paste0(genpop.filePath, "QUAC_popmap_GardenWild_NoK"), header=FALSE)[,2])
 # Get QUAC SNP Tissue sample names, and rename SNP genind matrix
 # File was created (by Austin K.), and can be found on Hoban Lab Drive ("MSATcomparisons_TissueNames")
-QUAC.SNP.REF.R80.tissueNames_filepath <- paste0(SSRvSNP.wd,"exSituRepresentation/Resampling/QUAC_SNP_TissueNames.csv")
+QUAC.SNP.REF.R80.tissueNames_filepath <- paste0(SSRvSNP.wd,"exSituRepresentation/QUAC_SNP_TissueNames.csv")
 QUAC.SNP.REF.R80.tissueNames <- unlist(read.csv2(QUAC.SNP.REF.R80.tissueNames_filepath, header = TRUE, sep = ",")[3])
 rownames(QUAC.SNP.REF.R80.genind@tab) <- QUAC.SNP.REF.R80.tissueNames
 
