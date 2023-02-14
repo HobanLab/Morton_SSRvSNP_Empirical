@@ -25,5 +25,3 @@ This R script measures the number of loci lost or gained when duplicate samples 
 The quantification of duplicate loci was used to examine the quality of our different loci datasets.
 
 
-
-
