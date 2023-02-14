@@ -24,6 +24,6 @@ _de novo_ assemblies were aligned to reference genomes.
 This R script measures the number of loci lost or gained when duplicate samples are removed from the dataset. 
 The quantification of duplicate loci was used to examine the quality of our different loci datasets.
 
-#### TEST
+
 
 
