@@ -105,12 +105,6 @@ getWildAlleleFreqProportions(QUAC.SNP.REF.R80.genind)
 getTotalAlleleFreqProportions(QUAC.SNP.REF.R80.genind)
 
 # ---- MSATS AND SNPS: SUBSET ----
-# MSAT: read in Tissue database names from GCC_QUAC_ZAIN repository, and rename MSAT genind matrix
-QUAC.MSAT.tissueNames_filepath <- 
-  "/home/akoontz/Documents/peripheralProjects/GCC_QUAC_ZAIN/Data_Files/Data_Frames/QUAC_woK_allpop_clean_df.csv"
-QUAC.MSAT.tissueNames <- unlist(read.csv2(QUAC.MSAT.tissueNames_filepath, header = TRUE, sep=",")[1])
-rownames(QUAC.MSAT.genind@tab) <- QUAC.MSAT.tissueNames
-
 # SNP: read in Tissue database names, and rename SNP genind matrix
 # Austin Koontz created this file, and it lives on the Hoban Lab Drive 
 # ("MSATcomparisons_TissueNames:QUAC_NextRAD_TissueDatabaseNames")
