@@ -15,6 +15,8 @@
 # in the popmap file). Using Stacks to subset samples, rather than subsetting the genind objects here in R,
 # retains more loci. The SNP genind2structure commands are kept in this script nevertheless, but are relic code.
 
+# For QUAC: MSAT samples use "Tissue name" format, while SNP samples use "DNA name" format. To subset
+
 library(adegenet)
 
 # Set the working directory, in order to properly read in tissue and population names
@@ -92,6 +94,8 @@ genpop.filePath <-
 QUAC.SNP.DN.R80.genind <- read.genepop(paste0(genpop.filePath,"populations.snps.gen"))
 # Correct popNames
 pop(QUAC.SNP.DN.R80.genind) <- factor(read.table(paste0(genpop.filePath, "QUAC_popmap_wild_NoK"), header=FALSE)[,2])
+# Capture sample names, to give the samples in the final Subset MSAT file names identical to SNP names (rather than "Tissue" names)
+QUAC.SNP.sampleNames <- factor(read.table(paste0(genpop.filePath, "QUAC_popmap_wild_NoK"), header=FALSE)[,1])
 
 # SNP: REFERENCE, R80
 genpop.filePath <- 
@@ -167,9 +171,8 @@ pop(QUBO.SNP.REF.R80.genind) <- factor(read.table(paste0(genpop.filePath,"QUBO_p
 QUBO.MSAT.sampleNames <- unlist(lapply(rownames(QUBO.MSAT.W.genind@tab), function(x) strsplit(x, "_")[[1]][3]))
 rownames(QUBO.MSAT.W.genind@tab) <- QUBO.MSAT.sampleNames
 
-# SNP: Remove QUBO_W_ headers from sample names
-QUBO.SNP.sampleNames <- gsub("QUBO_W_",replacement = "", row.names(QUBO.SNP.REF.R80.genind@tab))
-QUBO.SNP.sampleNames <- gsub("QUBO_W_",replacement = "", row.names(QUBO.SNP.DN.R80.genind@tab))
+# SNP: to standardize sample names across MSAT and SNP objects, create a vector of sample names, that will be altered
+QUBO.SNP.sampleNames <- row.names(QUBO.SNP.DN.R80.genind@tab)
 # Replace SH-Q names in SNP list with IMLS names
 # These were determined by Austin K., and are outlined on the Hoban Lab Drive ("MSATcomparisons_TissueNames")
 # Only 1 of the 11 SH_Q garden samples has an IMLS sample name (SHQ2177); others are unshared 
