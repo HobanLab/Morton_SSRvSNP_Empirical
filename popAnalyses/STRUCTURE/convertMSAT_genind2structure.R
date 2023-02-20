@@ -15,7 +15,9 @@
 # in the popmap file). Using Stacks to subset samples, rather than subsetting the genind objects here in R,
 # retains more loci. The SNP genind2structure commands are kept in this script nevertheless, but are relic code.
 
-# For QUAC: MSAT samples use "Tissue name" format, while SNP samples use "DNA name" format. To subset
+# For QUAC: MSAT samples use "Tissue name" format, while SNP samples use "DNA name" format. To subset,
+# SNP sample names are converted to Tissue name format, but after Subset samples have been determined,
+# MSAT sample names are converted to DNA format (for documentation/ease of interpretation)
 
 library(adegenet)
 
@@ -126,6 +128,8 @@ QUAC_sharedSamples <- sort(QUAC.SNP.tissueNames[which(QUAC.SNP.tissueNames %in% 
 # Subset MSAT and SNP genind matrices to strictly shared samples, dropping now absent alleles
 # MSAT
 QUAC.MSAT.W_subset.genind <- QUAC.MSAT.W.genind[QUAC_sharedSamples,, drop=TRUE]
+# Rename samples in MSAT genind file, to match sample names in SNP geninds
+indNames(QUAC.MSAT.W_subset.genind) <- QUAC.SNP.sampleNames
 # SNP
 QUAC.SNP.DN.R80_subset.genind <- QUAC.SNP.DN.R80.genind[QUAC_sharedSamples,, drop=TRUE]
 QUAC.SNP.REF.R80_subset.genind <- QUAC.SNP.REF.R80.genind[QUAC_sharedSamples,, drop=TRUE]
@@ -171,8 +175,9 @@ pop(QUBO.SNP.REF.R80.genind) <- factor(read.table(paste0(genpop.filePath,"QUBO_p
 QUBO.MSAT.sampleNames <- unlist(lapply(rownames(QUBO.MSAT.W.genind@tab), function(x) strsplit(x, "_")[[1]][3]))
 rownames(QUBO.MSAT.W.genind@tab) <- QUBO.MSAT.sampleNames
 
-# SNP: to standardize sample names across MSAT and SNP objects, create a vector of sample names, that will be altered
-QUBO.SNP.sampleNames <- row.names(QUBO.SNP.DN.R80.genind@tab)
+# SNP: Remove QUBO_W_ headers from sample names
+QUBO.SNP.sampleNames <- gsub("QUBO_W_",replacement = "", row.names(QUBO.SNP.REF.R80.genind@tab))
+QUBO.SNP.sampleNames <- gsub("QUBO_W_",replacement = "", row.names(QUBO.SNP.DN.R80.genind@tab))
 # Replace SH-Q names in SNP list with IMLS names
 # These were determined by Austin K., and are outlined on the Hoban Lab Drive ("MSATcomparisons_TissueNames")
 # Only 1 of the 11 SH_Q garden samples has an IMLS sample name (SHQ2177); others are unshared 
