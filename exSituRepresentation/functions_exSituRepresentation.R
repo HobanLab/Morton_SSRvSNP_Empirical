@@ -125,7 +125,7 @@ exSitu_Resample_Parallel <- function(gen.obj, cluster, reps, arrayFilepath="~/re
   return(resamplingArray)
 }
 
-# From resampling array, calculate the mean minimum sample size to represent 95% of the total wild diversity
+# From resampling array, calculate the mean minimum sample size to represent 95% of the Total wild diversity
 resample_min95_mean <- function(resamplingArray){
   # resampling array[,1,]: returns the Total column values for each replicate (3rd array dimension)
   # apply(resamplingArray[,1,],1,mean): calculates the average across replicates for each row
