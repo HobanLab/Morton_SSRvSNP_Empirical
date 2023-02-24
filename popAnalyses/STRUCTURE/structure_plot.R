@@ -183,7 +183,7 @@ mtext(text = "QUAC Wild Samples (Subset), MSAT", outer=TRUE, cex=1.3)
 par(mfrow=c(2,1), mar = c(4.5,3,1,3), oma=c(1,0,1,0))
 # Variables for lines designating groups beneath K charts. 
 lineWidth <- 1.9; lineHeight <- rep(-0.035,2)
-QUAC.labelPositions <- c(15, 44, 68, 93.5, 112) 
+QUAC.labelPositions <- c(15, 44, 68, 93.5) 
 # Plot QUAC K=5 values (Evanno Best K)
 Plot_K(QUAC.MSAT.clumppDir, K=5, Colors = QUAC.colors, QUAC.sampleNames, QUAC.popNames, 
        mainTitle = "QUAC Wild Samples (Subset), MSAT: K5 (Evanno)")
@@ -216,7 +216,7 @@ Plot_AllK(clumppPath = QUAC.SNP.DN.S.clumppDir, Ks=2:7, Colors = QUAC.colors,
           sampleNames = QUAC.sampleNames, popNames = QUAC.popNames)
 # Variables for lines designating groups beneath K charts. 
 lineWidth <- 1.9; lineHeight <- rep(-0.05,2)
-QUAC.labelPositions <- c(13, 38, 59, 79, 100) 
+QUAC.labelPositions <- c(13, 38, 59, 79) 
 # Plot lines
 lines(x = c(0.2,26), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
 lines(x = c(26.7,50.1), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
@@ -225,7 +225,7 @@ lines(x = c(68.7,95.4), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA
 # Add group labels
 text(x=QUAC.labelPositions, y=-0.2, srt=35, adj=1, xpd=TRUE, labels=QUAC.labelNames, cex=1.2)
 # Title
-mtext(text = "QUAC Wild Samples (Subset), SNP: De novo, Stacks", outer=TRUE, cex=1.3)
+mtext(text = "QUAC Wild Samples (Subset), SNP: De novo", outer=TRUE, cex=1.3)
 
 # Best K ----
 # Plot two charts per window (one for each Best K metric)
@@ -236,7 +236,7 @@ QUAC.labelPositions <- c(15, 44, 68, 93.5)
 
 # Plot QUAC K=5 values (Evanno Best K)
 Plot_K(QUAC.SNP.DN.S.clumppDir, K=5, Colors = QUAC.colors, QUAC.sampleNames, QUAC.popNames, 
-       mainTitle = "QUAC Wild Samples (Subset), SNP: De novo, Stacks: K5 (Evanno)")
+       mainTitle = "QUAC Wild Samples (Subset), SNP: De novo: K5 (Evanno)")
 # Plot lines
 lines(x = c(0.2,29.5), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
 lines(x = c(30.5,57.5), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
@@ -247,7 +247,7 @@ text(x=QUAC.labelPositions, y=-0.063, srt=35, adj=1, xpd=TRUE, labels=QUAC.label
 
 # Plot QUAC K=4 values (Max Probability Best K)
 Plot_K(QUAC.SNP.DN.S.clumppDir, K=4, Colors = QUAC.colors, QUAC.sampleNames, QUAC.popNames, 
-       mainTitle = "QUAC Wild Samples (Subset), SNP: De novo, Stacks: K4 (Max Probability)")
+       mainTitle = "QUAC Wild Samples (Subset), SNP: De novo: K4 (Max Probability)")
 # Plot lines
 lines(x = c(0.2,29.5), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
 lines(x = c(30.5,57.5), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
