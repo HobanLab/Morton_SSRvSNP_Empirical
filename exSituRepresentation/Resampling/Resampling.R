@@ -225,11 +225,11 @@ QUAC.SNP.REF.R0.resamplingResults <-
 # stopCluster(cl)
 
 # Average results across replicates (slices) of the resampling array
-QUAC.REF.DN.R0.meanValuesMat <- resample_meanValues(QUAC.REF.DN.R0.resamplingResults)
+QUAC.SNP.REF.R0.meanValuesMat <- resample_meanValues(QUAC.SNP.REF.R0.resamplingResults)
 # Calculate and report mean minimum 95% sample size (and standard deviation)
-QUAC.REF.DN.R0.min95_mean <- resample_min95_mean(QUAC.REF.DN.R0.resamplingResults)
-QUAC.REF.DN.R0.min95_sd <- resample_min95_sd(QUAC.REF.DN.R0.resamplingResults)
-print(c(QUAC.REF.DN.R0.min95_mean, QUAC.REF.DN.R0.min95_sd))
+QUAC.SNP.REF.R0.min95_mean <- resample_min95_mean(QUAC.SNP.REF.R0.resamplingResults)
+QUAC.SNP.REF.R0.min95_sd <- resample_min95_sd(QUAC.SNP.REF.R0.resamplingResults)
+print(c(QUAC.SNP.REF.R0.min95_mean, QUAC.SNP.REF.R0.min95_sd))
 
 # R80 ----
 # READ IN GENIND FILE: QUAC GSNAP4 alignment; R80, min-maf=0, first SNP/locus, 2 populations (garden and wild)
@@ -256,11 +256,11 @@ QUAC.SNP.REF.R80.resamplingResults <-
 # stopCluster(cl)
 
 # Average results across replicates (slices) of the resampling array
-QUAC.REF.DN.R80.meanValuesMat <- resample_meanValues(QUAC.REF.DN.R80.resamplingResults)
+QUAC.SNP.REF.R80.meanValuesMat <- resample_meanValues(QUAC.SNP.REF.R80.resamplingResults)
 # Calculate and report mean minimum 95% sample size (and standard deviation)
-QUAC.REF.DN.R80.min95_mean <- resample_min95_mean(QUAC.REF.DN.R80.resamplingResults)
-QUAC.REF.DN.R80.min95_sd <- resample_min95_sd(QUAC.REF.DN.R80.resamplingResults)
-print(c(QUAC.REF.DN.R80.min95_mean, QUAC.REF.DN.R80.min95_sd))
+QUAC.SNP.REF.R80.min95_mean <- resample_min95_mean(QUAC.SNP.REF.R80.resamplingResults)
+QUAC.SNP.REF.R80.min95_sd <- resample_min95_sd(QUAC.SNP.REF.R80.resamplingResults)
+print(c(QUAC.SNP.REF.R80.min95_mean, QUAC.SNP.REF.R80.min95_sd))
 
 # *** PLOTTING ----
 # Call png command, to save resampling plots to disk
