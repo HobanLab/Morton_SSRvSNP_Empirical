@@ -645,7 +645,7 @@ mtext(text=paste0("Minimum sampling size (95%) = ", QUBO.SNP.DN.R0.min95_mean),
 # Plots all sets of points onto single graph, as well as 95% threshold line
 matplot(QUBO.SNP.DN.R80.meanValuesMat, ylim=c(0,110), col=plotColors, pch=16,
         xlab="Number of Individuals", ylab="Percent Diversity Representation",
-        main=aste0("QUBO, SNPs: De novo, R80 (Complete: 95 samples; ", num_reps, " Replicates)"))
+        main=paste0("QUBO, SNPs: De novo, R80 (Complete: 95 samples; ", num_reps, " Replicates)"))
 legend(x=83, y=86.13276, inset = 0.05, legend = c("Total","Very common","Common","Low frequency", "Rare"),
        col=plotColors, pch = c(20,20,20), cex=1, pt.cex = 2, bty="n", y.intersp = 1)
 # Lines for 95% threshold
@@ -734,7 +734,7 @@ mtext(text=paste0("Minimum sampling size (95%) = ", QUBO.SNP.REF.R0.min95_mean),
 # Plots all sets of points onto single graph, as well as 95% threshold line
 matplot(QUBO.SNP.REF.R80.meanValuesMat, ylim=c(0,110), col=plotColors, pch=16,
         xlab="Number of Individuals", ylab="Percent Diversity Representation",
-        main=aste0("QUBO, SNPs: Reference, R80 (Complete: 95 samples; ", num_reps, " Replicates)"))
+        main=paste0("QUBO, SNPs: Reference, R80 (Complete: 95 samples; ", num_reps, " Replicates)"))
 legend(x=83, y=86.13276, inset = 0.05, legend = c("Total","Very common","Common","Low frequency", "Rare"),
        col=plotColors, pch = c(20,20,20), cex=1, pt.cex = 2, bty="n", y.intersp = 1)
 # Lines for 95% threshold
