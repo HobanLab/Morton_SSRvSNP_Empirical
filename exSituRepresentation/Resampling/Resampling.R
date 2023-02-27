@@ -462,45 +462,55 @@ dev.off()
 
 # ALL 3 SUBSET DATASETS (MSAT, SNP DE NOVO R80, SNP REFERENCE R80)
 # Call png command, to save resampling plots to disk
-png(file = paste0(resamplingDataDir, "QUAC.MSAT.SNP_R80.Subset.png"), width = plotWidth, height = plotHeight)
+png(file = paste0(resamplingDataDir, "QUAC.MSAT.SNP_R80.Subset.png"), width = 1100, height = 586)
 # Set plotting window to stack 3 graphs vertically
-par(mfcol=c(3,1), oma=rep(0.2,4))
+# Margin values are changed prior to each plot, in order to allow for sufficient margins at the top/bottom
+par(mfcol=c(3,1), oma=rep(0.2,4), mar=c(2,4.5,4,1.5)+0.1)
 # MSAT
 # Plots all sets of points onto single graph, as well as 95% threshold line
-matplot(QUAC.MSAT.Subset.meanValuesMat, ylim=c(0,110), col=plotColors, pch=16,
-        xlab="Number of Individuals", ylab="Percent Diversity Representation",
-        main=paste0("QUAC, Microsatellites (Subset: 91 samples; ", num_reps, " Replicates)"))
-legend(x=80, y=70.13276, inset = 0.05, legend = c("Total","Very common","Common","Low frequency", "Rare"),
-       col=plotColors, pch = c(20,20,20), cex=1, pt.cex = 2, bty="n", y.intersp = 1)
+matplot(QUAC.MSAT.Subset.meanValuesMat, ylim=c(0,110), col=plotColors, pch=19,
+        xlab="", ylab="")
+title("Microsatellites", line=0.15, cex=2)
+legend(x=75, y=70.13276, inset = 0.05, legend = c("Total","Very common","Common","Low frequency", "Rare"),
+       col=plotColors, pch = c(20,20,20), cex=1.5, pt.cex = 2, bty="n", y.intersp = 0.7)
 # Lines for 95% threshold
 abline(h=95, col="black", lty=3); abline(v=QUAC.MSAT.Subset.min95_mean, col="black")
 # Text for number of individuals to capture 95% threshold, with position based on variable
 mtext(text=paste0("Minimum sampling size (95%) = ", QUAC.MSAT.Subset.min95_mean), 
-      side=1, line=-1.5, at=QUAC.MSAT.Subset.min95_mean-15)
+      side=1, line=-1.5, at=QUAC.MSAT.Subset.min95_mean-10)
+# Graph title 
+mtext(text="QUAC: Subset Datasets (91 Samples; 5,000 Replicates; R80 SNP Loci)", 
+      side=3, line=2, cex=2)
 # SNP DN R80
+par(mar=c(3,4.5,3,1.5)+0.1)
 # Plots all sets of points onto single graph, as well as 95% threshold line
-matplot(QUAC.SNP.DN.R80.Subset.meanValuesMat, ylim=c(0,110), col=plotColors, pch=16,
-        xlab="Number of Individuals", ylab="Percent Diversity Representation",
-        main=paste0("QUAC, SNPs: De novo, R80 (Subset: 91 samples; ", num_reps, " Replicates)"))
-legend(x=83, y=70.13276, inset = 0.05, legend = c("Total","Very common","Common","Low frequency", "Rare"),
-       col=plotColors, pch = c(20,20,20), cex=1, pt.cex = 2, bty="n", y.intersp = 1)
+matplot(QUAC.SNP.DN.R80.Subset.meanValuesMat, ylim=c(0,110), col=plotColors, pch=19,
+        xlab="", ylab="")
+title("SNPs: De novo", line=0.15, cex=2)
+legend(x=75, y=70.13276, inset = 0.05, legend = c("Total","Very common","Common","Low frequency", "Rare"),
+       col=plotColors, pch = c(20,20,20), cex=1.5, pt.cex = 2, bty="n", y.intersp = 0.7)
 # Lines for 95% threshold
 abline(h=95, col="black", lty=3); abline(v=QUAC.SNP.DN.R80.Subset.min95_mean, col="black")
 # Text for number of individuals to capture 95% threshold, with position based on variable
 mtext(text=paste0("Minimum sampling size (95%) = ", QUAC.SNP.DN.R80.Subset.min95_mean), 
       side=1, line=-1.5, at=QUAC.SNP.DN.R80.Subset.min95_mean-10)
+# Y-axis
+mtext(text="Wild allelic diversity (%)", side=2, line=3, cex=1.2, srt=90)
 # SNP REF R80
+par(mar=c(4,4.5,2,1.5)+0.1)
 # Plots all sets of points onto single graph, as well as 95% threshold line
-matplot(QUAC.SNP.REF.R80.Subset.meanValuesMat, ylim=c(0,110), col=plotColors, pch=16,
-        xlab="Number of Individuals", ylab="Percent Diversity Representation",
-        main=paste0("QUAC, SNPs: Reference, R80 (Subset: 91 samples; ", num_reps, " Replicates)"))
-legend(x=83, y=70.13276, inset = 0.05, legend = c("Total","Very common","Common","Low frequency", "Rare"),
-       col=plotColors, pch = c(20,20,20), cex=1, pt.cex = 2, bty="n", y.intersp = 1)
+matplot(QUAC.SNP.REF.R80.Subset.meanValuesMat, ylim=c(0,110), col=plotColors, pch=19,
+        xlab="", ylab="")
+title("SNPs: Reference", line=0.15, cex=2)
+legend(x=75, y=70.13276, inset = 0.05, legend = c("Total","Very common","Common","Low frequency", "Rare"),
+       col=plotColors, pch = c(20,20,20), cex=1.5, pt.cex = 2, bty="n", y.intersp = 0.7)
 # Lines for 95% threshold
 abline(h=95, col="black", lty=3); abline(v=QUAC.SNP.REF.R80.Subset.min95_mean, col="black")
 # Text for number of individuals to capture 95% threshold, with position based on variable
 mtext(text=paste0("Minimum sampling size (95%) = ", QUAC.SNP.REF.R80.Subset.min95_mean), 
       side=1, line=-1.5, at=QUAC.SNP.REF.R80.Subset.min95_mean-10)
+# X-axis
+mtext(text="Number of individuals", side=1, line=2.5, cex=1.2)
 # Turn off plotting device
 dev.off()
 
@@ -913,44 +923,54 @@ dev.off()
 
 # ALL 3 SUBSET DATASETS (MSAT, SNP DE NOVO R80, SNP REFERENCE R80)
 # Call png command, to save resampling plots to disk
-png(file = paste0(resamplingDataDir, "QUBO.MSAT.SNP_R80.Subset.png"), width = plotWidth, height = plotHeight)
+png(file = paste0(resamplingDataDir, "QUBO.MSAT.SNP_R80.Subset.png"), width = 1100, height = 586)
 # Set plotting window to stack 3 graphs vertically
-par(mfcol=c(3,1), oma=rep(0.2,4))
+# Margin values are changed prior to each plot, in order to allow for sufficient margins at the top/bottom
+par(mfcol=c(3,1), oma=rep(0.2,4), mar=c(2,4.5,4,1.5)+0.1)
 # MSAT
 # Plots all sets of points onto single graph, as well as 95% threshold line
-matplot(QUBO.MSAT.Subset.meanValuesMat, ylim=c(0,110), col=plotColors, pch=16,
-        xlab="Number of Individuals", ylab="Percent Diversity Representation",
-        main=paste0("QUBO, Microsatellites (Subset: 94 samples; ", num_reps, " Replicates)"))
+matplot(QUBO.MSAT.Subset.meanValuesMat, ylim=c(0,110), col=plotColors, pch=19,
+        xlab="", ylab="")
+title("Microsatellites", line=0.15, cex=2)
 legend(x=80, y=70.13276, inset = 0.05, legend = c("Total","Very common","Common","Low frequency", "Rare"),
-       col=plotColors, pch = c(20,20,20), cex=1, pt.cex = 2, bty="n", y.intersp = 1)
+       col=plotColors, pch = c(20,20,20), cex=1.5, pt.cex = 2, bty="n", y.intersp = 0.7)
 # Lines for 95% threshold
 abline(h=95, col="black", lty=3); abline(v=QUBO.MSAT.Subset.min95_mean, col="black")
 # Text for number of individuals to capture 95% threshold, with position based on variable
 mtext(text=paste0("Minimum sampling size (95%) = ", QUBO.MSAT.Subset.min95_mean), 
       side=1, line=-1.5, at=QUBO.MSAT.Subset.min95_mean-10)
+# Graph title 
+mtext(text="QUBO: Subset Datasets (94 Samples; 5,000 Replicates; R80 SNP Loci)", 
+      side=3, line=2, cex=2)
 # SNP DN R80
+par(mar=c(3,4.5,3,1.5)+0.1)
 # Plots all sets of points onto single graph, as well as 95% threshold line
-matplot(QUBO.SNP.DN.R80.Subset.meanValuesMat, ylim=c(0,110), col=plotColors, pch=16,
-        xlab="Number of Individuals", ylab="Percent Diversity Representation",
-        main=paste0("QUBO, SNPs: De novo, R80 (Subset: 94 samples; ", num_reps, " Replicates)"))
+matplot(QUBO.SNP.DN.R80.Subset.meanValuesMat, ylim=c(0,110), col=plotColors, pch=19,
+        xlab="", ylab="")
+title("SNPs: De novo", line=0.15, cex=1.5)
 legend(x=83, y=70.13276, inset = 0.05, legend = c("Total","Very common","Common","Low frequency", "Rare"),
-       col=plotColors, pch = c(20,20,20), cex=1, pt.cex = 2, bty="n", y.intersp = 1)
+       col=plotColors, pch = c(20,20,20), cex=1.5, pt.cex = 2, bty="n", y.intersp = 0.7)
 # Lines for 95% threshold
 abline(h=95, col="black", lty=3); abline(v=QUBO.SNP.DN.R80.Subset.min95_mean, col="black")
 # Text for number of individuals to capture 95% threshold, with position based on variable
 mtext(text=paste0("Minimum sampling size (95%) = ", QUBO.SNP.DN.R80.Subset.min95_mean), 
       side=1, line=-1.5, at=QUBO.SNP.DN.R80.Subset.min95_mean-10)
+# Y-axis
+mtext(text="Wild allelic diversity (%)", side=2, line=3, cex=1.2, srt=90)
 # SNP REF R80
+par(mar=c(4,4.5,2,1.5)+0.1)
 # Plots all sets of points onto single graph, as well as 95% threshold line
-matplot(QUBO.SNP.REF.R80.Subset.meanValuesMat, ylim=c(0,110), col=plotColors, pch=16,
-        xlab="Number of Individuals", ylab="Percent Diversity Representation",
-        main=paste0("QUBO, SNPs: Reference, R80 (Subset: 94 samples; ", num_reps, " Replicates)"))
+matplot(QUBO.SNP.REF.R80.Subset.meanValuesMat, ylim=c(0,110), col=plotColors, pch=19,
+        xlab="", ylab="")
+title("SNPs: Reference", line=0.15, cex=2)
 legend(x=83, y=70.13276, inset = 0.05, legend = c("Total","Very common","Common","Low frequency", "Rare"),
-       col=plotColors, pch = c(20,20,20), cex=1, pt.cex = 2, bty="n", y.intersp = 1)
+       col=plotColors, pch = c(20,20,20), cex=1.5, pt.cex = 2, bty="n", y.intersp = 0.7)
 # Lines for 95% threshold
 abline(h=95, col="black", lty=3); abline(v=QUBO.SNP.REF.R80.Subset.min95_mean, col="black")
 # Text for number of individuals to capture 95% threshold, with position based on variable
 mtext(text=paste0("Minimum sampling size (95%) = ", QUBO.SNP.REF.R80.Subset.min95_mean), 
       side=1, line=-1.5, at=QUBO.SNP.REF.R80.Subset.min95_mean-10)
+# X-axis
+mtext(text="Number of individuals", side=1, line=2.5, cex=1.2)
 # Turn off plotting device
 dev.off()
