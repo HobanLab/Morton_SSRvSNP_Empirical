@@ -283,10 +283,10 @@ rownames(QUBO.SNP.REF.R0.genind@tab) <- rownames(QUBO.SNP.DN.R0.genind@tab) <- Q
 rownames(QUBO.SNP.REF.R80.genind@tab) <- rownames(QUBO.SNP.DN.R80.genind@tab) <- QUBO.SNP.sampleNames
 
 # ---- CALCULATE FST VALUES: COMPLETE ----
-# MSAT
+# Complete MSAT
 Fst_Nei_report(QUBO.MSAT.genind, title = "QUBO MSAT (Complete)")
 
-# Subset SNP
+# Complete SNP
 # De novo
 Fst_Nei_report(QUBO.SNP.DN.R0.genind, title = "QUBO SNP De novo (Complete, R0)")
 Fst_Nei_report(QUBO.SNP.DN.R80.genind, title = "QUBO SNP De novo (Complete, R80)")
