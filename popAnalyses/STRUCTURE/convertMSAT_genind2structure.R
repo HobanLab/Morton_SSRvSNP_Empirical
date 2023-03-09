@@ -91,12 +91,12 @@ QUAC.MSAT.W.genind <- QUAC.MSAT.GW.genind[which(pop(QUAC.MSAT.GW.genind)=="wild"
 
 # SNP: DE NOVO, R80, GARDEN AND WILD
 genpop.filePath <-
-  "/RAID1/IMLS_GCCO/Analysis/Stacks/denovo_finalAssemblies/QUAC/output/populations_R80_NOMAF_1SNP_2Pops_Subset_NoK/"
+  "/RAID1/IMLS_GCCO/Analysis/Stacks/denovo_finalAssemblies/QUAC/output/populations_R80_gardenProv/"
 QUAC.SNP.DN.GW.R80.genind <- read.genepop(paste0(genpop.filePath,"populations.snps.gen"))
 # Correct popNames
-pop(QUAC.SNP.DN.GW.R80.genind) <- factor(read.table(paste0(genpop.filePath, "QUAC_popmap_GardenWild_Subset_NoK"), header=FALSE)[,2])
+pop(QUAC.SNP.DN.GW.R80.genind) <- factor(read.table(paste0(genpop.filePath, "QUAC_popmap_gardenProv"), header=FALSE)[,2])
 # Capture sample names, to give the samples in the final Subset MSAT file names identical to SNP names (rather than "Tissue" names)
-QUAC.SNP.GW.Subset.sampleNames <- factor(read.table(paste0(genpop.filePath, "QUAC_popmap_GardenWild_Subset_NoK"), header=FALSE)[,1])
+QUAC.SNP.GW.Subset.sampleNames <- factor(read.table(paste0(genpop.filePath, "QUAC_popmap_gardenProv"), header=FALSE)[,1])
 
 # SNP: DE NOVO, R80, WILD
 genpop.filePath <-
