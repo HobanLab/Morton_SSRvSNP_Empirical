@@ -40,10 +40,10 @@ setwd(SSRvSNP.wd)
 # %%%% QUAC %%%% ----
 # %%% GARDEN AND WILD ----
 # ---- MSATS ----
-# Read in genind file (GCC_QUAC_ZAIN repo; QUAC_wK_garden_wild_clean.gen)
+# Read in genind file (GCC_QUAC_ZAIN repo; garden and wild individuals WITHOUT Kessler)
 QUAC.MSAT_filePath <- 
   "~/Documents/peripheralProjects/GCC_QUAC_ZAIN/Data_Files/Adegenet_Files/"
-QUAC.MSAT_genind <- read.genepop(paste0(QUAC.MSAT_filePath, "QUAC_wK_allpop_clean.gen"), ncode = 3)
+QUAC.MSAT_genind <- read.genepop(paste0(QUAC.MSAT_filePath, "QUAC_woK_allpop_clean.gen"), ncode = 3)
 # Correct popNames: samples with popName pattern QAc-G- are garden 
 levels(QUAC.MSAT_genind@pop)[grep(pattern = "QAc-G-", levels(QUAC.MSAT_genind@pop))] <- 
   rep("garden", length(grep(pattern = "QAc-G-", levels(QUAC.MSAT_genind@pop))))
@@ -77,11 +77,11 @@ print(paste0("Allelic richness: ", QUAC.MSAT_AR))
 # R0 ----
 # Read in genind file: Optimized de novo assembly; R0, NOMAF, first SNP/locus, 2 populations
 QUAC.SNP.DN.R0_filePath <- 
-  "/RAID1/IMLS_GCCO/Analysis/Stacks/denovo_finalAssemblies/QUAC/output/populations_R0_NOMAF_1SNP_2Pops/"
+  "/RAID1/IMLS_GCCO/Analysis/Stacks/denovo_finalAssemblies/QUAC/output/populations_R0_NOMAF_1SNP_2Pops_NoK/"
 QUAC.SNP.DN.R0_genind <- read.genepop(paste0(QUAC.SNP.DN.R0_filePath,"populations.snps.gen"))
 # Correct popNames
 pop(QUAC.SNP.DN.R0_genind) <- 
-  factor(read.table(paste0(QUAC.SNP.DN.R0_filePath,"QUAC_popmap_GardenWild"), header=FALSE)[,2])
+  factor(read.table(paste0(QUAC.SNP.DN.R0_filePath,"QUAC_popmap_GardenWild_NoK"), header=FALSE)[,2])
 
 # Heterozygosity
 QUAC.SNP.DN.R0_HZ <- Hs(QUAC.SNP.DN.R0_genind)
@@ -108,10 +108,10 @@ print(paste0("Allelic richness: ", QUAC.SNP.DN.R0_AR))
 # 1st SNP/locus ----
 # Read in genind file: Optimized de novo assembly; R80, NOMAF, first SNP/locus, 2 populations
 QUAC.SNP.DN.R80_filePath <- 
-  "/RAID1/IMLS_GCCO/Analysis/Stacks/denovo_finalAssemblies/QUAC/output/populations_R80_NOMAF_1SNP_2Pops/"
+  "/RAID1/IMLS_GCCO/Analysis/Stacks/denovo_finalAssemblies/QUAC/output/populations_R80_NOMAF_1SNP_2Pops_NoK/"
 QUAC.SNP.DN.R80_genind <- read.genepop(paste0(QUAC.SNP.DN.R80_filePath,"populations.snps.gen"))
 # Correct popNames
-pop(QUAC.SNP.DN.R80_genind) <- factor(read.table(paste0(QUAC.SNP.DN.R80_filePath,"QUAC_popmap_GardenWild"), header=FALSE)[,2])
+pop(QUAC.SNP.DN.R80_genind) <- factor(read.table(paste0(QUAC.SNP.DN.R80_filePath,"QUAC_popmap_GardenWild_NoK"), header=FALSE)[,2])
 
 # Heterozygosity
 QUAC.SNP.DN.R80_HZ <- Hs(QUAC.SNP.DN.R80_genind)
@@ -169,11 +169,11 @@ print(paste0("Allelic richness: ", QUAC.SNP.DN.R80_AR))
 # R0 ----
 # Read in genind file: GSNAP4 alignment with Quercus rubra genome; R0, NOMAF, first SNP/locus, 2 populations
 QUAC.SNP.REF.R0_filePath <- 
-  "/RAID1/IMLS_GCCO/Analysis/Stacks/reference_filteredReads/QUAC/Q_rubra/output/populations_R0_NOMAF_1SNP_2Pops/"
+  "/RAID1/IMLS_GCCO/Analysis/Stacks/reference_filteredReads/QUAC/Q_rubra/output/populations_R0_NOMAF_1SNP_2Pops_NoK/"
 QUAC.SNP.REF.R0_genind <- read.genepop(paste0(QUAC.SNP.REF.R0_filePath,"populations.snps.gen"))
 # Correct popNames
 pop(QUAC.SNP.REF.R0_genind) <- 
-  factor(read.table(paste0(QUAC.SNP.REF.R0_filePath,"QUAC_popmap_GardenWild"), header=FALSE)[,2])
+  factor(read.table(paste0(QUAC.SNP.REF.R0_filePath,"QUAC_popmap_GardenWild_NoK"), header=FALSE)[,2])
 
 # Heterozygosity
 QUAC.SNP.REF.R0_HZ <- Hs(QUAC.SNP.REF.R0_genind)
@@ -199,10 +199,10 @@ print(paste0("Allelic richness: ", QUAC.SNP.REF.R0_AR))
 # R80 ----
 # Read in genind file: GSNAP4 alignment with Quercus rubra genome; R80, NOMAF, first SNP/locus, 2 populations
 QUAC.SNP.REF.R80_filePath <- 
-  "/RAID1/IMLS_GCCO/Analysis/Stacks/reference_filteredReads/QUAC/Q_rubra/output/populations_R80_NOMAF_1SNP_2Pops/"
+  "/RAID1/IMLS_GCCO/Analysis/Stacks/reference_filteredReads/QUAC/Q_rubra/output/populations_R80_NOMAF_1SNP_2Pops_NoK/"
 QUAC.SNP.REF.R80_genind <- read.genepop(paste0(QUAC.SNP.REF.R80_filePath,"populations.snps.gen"))
 # Correct popNames
-pop(QUAC.SNP.REF.R80_genind) <- factor(read.table(paste0(QUAC.SNP.REF.R80_filePath,"QUAC_popmap_GardenWild"), header=FALSE)[,2])
+pop(QUAC.SNP.REF.R80_genind) <- factor(read.table(paste0(QUAC.SNP.REF.R80_filePath,"QUAC_popmap_GardenWild_NoK"), header=FALSE)[,2])
 
 # Heterozygosity
 QUAC.SNP.REF.R80_HZ <- Hs(QUAC.SNP.REF.R80_genind)
@@ -227,13 +227,13 @@ print(paste0("Allelic richness: ", QUAC.SNP.REF.R80_AR))
 
 # ---- SUBSET ----
 # MSAT: read in Tissue database names from GCC_QUAC_ZAIN repository, and rename MSAT genind matrix
-QUAC.MSAT.tissueNames_filepath <- "~/Documents/peripheralProjects/GCC_QUAC_ZAIN/Data_Files/Data_Frames/QUAC_allpop_clean_df.csv"
+QUAC.MSAT.tissueNames_filepath <- "~/Documents/peripheralProjects/GCC_QUAC_ZAIN/Data_Files/Data_Frames/QUAC_woK_allpop_clean_df.csv"
 QUAC.MSAT.tissueNames <- unlist(read.csv2(QUAC.MSAT.tissueNames_filepath, header = TRUE, sep=",")[1])
 rownames(QUAC.MSAT_genind@tab) <- QUAC.MSAT.tissueNames
 
 # SNP: read in Tissue database names, and rename SNP genind matrices (both R0 and R80)
 # This file was created (by Austin K.), and can be found on the Hoban Lab Drive ("MSATcomparisons_TissueNames")
-QUAC.SNP.tissueNames_filepath <- paste0(SSRvSNP.wd,"exSituRepresentation/Resampling/QUAC_SNP_TissueNames.csv")
+QUAC.SNP.tissueNames_filepath <- paste0(SSRvSNP.wd,"exSituRepresentation/QUAC_SNP_TissueNames.csv")
 QUAC.SNP.tissueNames <- unlist(read.csv2(QUAC.SNP.tissueNames_filepath, header = TRUE, sep = ",")[3])
 rownames(QUAC.SNP.DN.R0_genind@tab) <- rownames(QUAC.SNP.DN.R80_genind@tab) <- QUAC.SNP.tissueNames
 rownames(QUAC.SNP.REF.R0_genind@tab) <- rownames(QUAC.SNP.REF.R80_genind@tab) <- QUAC.SNP.tissueNames
