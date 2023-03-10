@@ -1,3 +1,4 @@
+# This file is used for the Discriminant Analysis of Principal Components (DAPC) script, to assign MSAT samples to populations.
 MSAT Samples (DNA Database Name),Populations,,
 IMLS001,Oakbrook,,1IMLS001
 IMLS002,Oakbrook,,2IMLS002
