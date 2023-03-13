@@ -8,24 +8,18 @@
 # (aligned to the Q. robur reference genome) NextRAD datasets
 
 # The script performs these calculations with different sets of samples and loci
-# For each species, analyses are divided by using garden and wild samples and using only wild samples, as outlined below:
-# GARDEN AND WILD SAMPLES
+# For each species, analyses are run separately on garden and wild groups, as outlined below:
 # 1. Microsatellites (Complete)
 # 2. SNPs, De novo, R0 (Complete)
 # 3. SNPs, De novo, R80 (Complete)
-# 4. SNPs, De novo, R80 (Complete)
-# 5. SNPs, Reference, R0, 1st SNP/locus (Complete)
+# 4. SNPs, Reference, R0 (Complete)
+# 5. SNPs, Reference, R80 (Complete)
 # 6. SNPs, Reference, R80, microhaplotype-wise SNPs (Complete)
 # 7. Microsatellites (Subset)
 # 8. SNPs, De novo, R0 (Subset)
 # 9. SNPs, De novo, R80 (Subset)
 # 10. SNPs, Reference, R0 (Subset)
 # 11. SNPs, Reference, R80 (Subset)
-# WILD SAMPLES
-# 1. QUAC: SNPs, De novo, R0 (Complete)
-# 2. QUAC: SNPs, De novo, R80 (Complete)
-# 3. QUBO: SNPs, Reference, R0 (Complete)
-# 4. QUBO: SNPs, Reference, R80 (Complete)
 # Each of the garden and wild scenarios is explored for both species. 
 # However, for QUBO, microhaplotype SNPs are analyzed for de novo datasets, rather than reference datasets
 # Complete: all samples originally included in analysis, for specified marker type
@@ -352,70 +346,6 @@ print(paste0("Loci count: ", QUAC.SNP.REF.R80.subset_LC))
 print(paste0("Allele count: ", QUAC.SNP.REF.R80.subset_AC))
 print(paste0("Allelic richness: ", QUAC.SNP.REF.R80.subset_AR))
 
-# %%% WILD ONLY ----
-# SNP, DE NOVO ----
-# R0 ----
-# # Read in genind file: Optimized de novo assembly; R0, NOMAF, first SNP/locus, only wild populations
-# QUAC.Wild.SNP.DN.R0_filePath <-
-#   "/RAID1/IMLS_GCCO/Analysis/Stacks/denovo_finalAssemblies/QUAC/output/populations_wild_R0_NOMAF_1SNP/"
-# QUAC.Wild.SNP.DN.R0_genind <- read.genepop(paste0(QUAC.Wild.SNP.DN.R0_filePath,"populations.snps.gen"))
-# # Correct popNames
-# pop(QUAC.Wild.SNP.DN.R0_genind) <- factor(read.table(paste0(QUAC.Wild.SNP.DN.R0_filePath,"QUAC_popmap_wild"), header=FALSE)[,2])
-# 
-# # Heterozygosity
-# QUAC.Wild.SNP.DN.R0_HZ <- Hs(QUAC.Wild.SNP.DN.R0_genind)
-# # Barplot for expected heterozygosity, SNP markers
-# barplot(QUAC.Wild.SNP.DN.R0_HZ, beside = TRUE,
-#         ylim = c(0,0.75), col = c("darkseagreen1", rep("darkgreen", 5)),
-#         names = c("Porter Mt.", "Magazine Mt.", "Pryor Mt.", "Sugarloaf",
-#                   "Kessler"),
-#         main = "QUAC Wild Heterozygosity: SNPs, De novo (Complete), R0",
-#         xlab = "Wild population", ylab = "Expected Heterozygosity")
-# abline(h = 0, lwd=2)
-# 
-# # Loci count, allele count
-# QUAC.Wild.SNP.DN.R0_LC <- nLoc(QUAC.Wild.SNP.DN.R0_genind)
-# QUAC.Wild.SNP.DN.R0_AC <- ncol(QUAC.Wild.SNP.DN.R0_genind@tab)
-# # Allelic richness: values per population
-# QUAC.Wild.SNP.DN.R0_AR <- apply(allelic.richness(QUAC.Wild.SNP.DN.R0_genind)$Ar, 2, mean, na.rm=TRUE)
-# # Print pop. gen. results
-# print("%%% QUAC SNP (DE NOVO, R0), WILD (COMPLETE) %%%")
-# print(paste0("Heterozygosity: ", QUAC.Wild.SNP.DN.R0_HZ))
-# print(paste0("Loci count: ", QUAC.Wild.SNP.DN.R0_LC))
-# print(paste0("Allele count: ", QUAC.Wild.SNP.DN.R0_AC))
-# print(paste0("Allelic richness: ", QUAC.Wild.SNP.DN.R0_AR))
-# 
-# # R80 ----
-# # Read in genind file: Optimized de novo assembly; R80, NOMAF, first SNP/locus, only wild populations
-# QUAC.Wild.SNP.DN.R80_filePath <-
-#   "/RAID1/IMLS_GCCO/Analysis/Stacks/denovo_finalAssemblies/QUAC/output/populations_wild_R80_NOMAF_1SNP/"
-# QUAC.Wild.SNP.DN.R80_genind <- read.genepop(paste0(QUAC.Wild.SNP.DN.R80_filePath,"populations.snps.gen"))
-# # Correct popNames
-# pop(QUAC.Wild.SNP.DN.R80_genind) <- factor(read.table(paste0(QUAC.Wild.SNP.DN.R80_filePath,"QUAC_popmap_wild"), header=FALSE)[,2])
-# 
-# # Heterozygosity
-# QUAC.Wild.SNP.DN.R80_HZ <- Hs(QUAC.Wild.SNP.DN.R80_genind)
-# # Barplot for expected heterozygosity, SNP markers
-# barplot(QUAC.Wild.SNP.DN.R80_HZ, beside = TRUE,
-#         ylim = c(0,0.75), col = c("darkseagreen1", rep("darkgreen", 5)),
-#         names = c("Porter Mt.", "Magazine Mt.", "Pryor Mt.", "Sugarloaf",
-#                   "Kessler"),
-#         main = "QUAC Wild Heterozygosity: SNPs, De novo (Complete), R80",
-#         xlab = "Wild population", ylab = "Expected Heterozygosity")
-# abline(h = 0, lwd=2)
-# 
-# # Loci count, allele count
-# QUAC.Wild.SNP.DN.R80_LC <- nLoc(QUAC.Wild.SNP.DN.R80_genind)
-# QUAC.Wild.SNP.DN.R80_AC <- ncol(QUAC.Wild.SNP.DN.R80_genind@tab)
-# # Allelic richness: values per population
-# QUAC.Wild.SNP.DN.R80_AR <- apply(allelic.richness(QUAC.Wild.SNP.DN.R80_genind)$Ar, 2, mean, na.rm=TRUE)
-# # Print pop. gen. results
-# print("%%% QUAC SNP (DE NOVO, R80), WILD (COMPLETE) %%%")
-# print(paste0("Heterozygosity: ", QUAC.Wild.SNP.DN.R80_HZ))
-# print(paste0("Loci count: ", QUAC.Wild.SNP.DN.R80_LC))
-# print(paste0("Allele count: ", QUAC.Wild.SNP.DN.R80_AC))
-# print(paste0("Allelic richness: ", QUAC.Wild.SNP.DN.R80_AR))
-
 # %%%% QUBO %%%% ----
 # %%% GARDEN AND WILD ----
 # ---- MSATS ----
@@ -740,67 +670,3 @@ print(paste0("Heterozygosity: ", QUBO.SNP.REF.R80.subset_HZ))
 print(paste0("Loci count: ", QUBO.SNP.REF.R80.subset_LC))
 print(paste0("Allele count: ", QUBO.SNP.REF.R80.subset_AC))
 print(paste0("Allelic richness: ", QUBO.SNP.REF.R80.subset_AR))
-
-# %%% WILD ONLY ----
-# SNP, REFERENCE ----
-# R0 ----
-# # Read in genind file: GSNAP4 alignment with Quercus robur genome; R0, NOMAF, first SNP/locus, only wild populations
-# QUBO.Wild.SNP.DN.R0_filePath <-
-#   "/RAID1/IMLS_GCCO/Analysis/Stacks/reference_filteredReads/QUBO/GSNAP4/output/populations_wild_R0_NOMAF_1SNP/"
-# QUBO.Wild.SNP.DN.R0_genind <- read.genepop(paste0(QUBO.Wild.SNP.DN.R0_filePath,"populations.snps.gen"))
-# # Correct popNames
-# pop(QUBO.Wild.SNP.DN.R0_genind) <- factor(read.table(paste0(QUBO.Wild.SNP.DN.R0_filePath, "QUBO_popmap_wild"), header=FALSE)[,2])
-# 
-# # Heterozygosity
-# QUBO.Wild.SNP.DN.R0_HZ <- Hs(QUBO.Wild.SNP.DN.R0_genind)
-# # Barplot for expected heterozygosity, SNP markers
-# barplot(QUBO.Wild.SNP.DN.R0_HZ, beside = TRUE,
-#         ylim = c(0,0.75), col = c("darkseagreen1", rep("darkgreen", 5)),
-#         names = c("Porter Mt.", "Magazine Mt.", "Pryor Mt.", "Sugarloaf",
-#                   "Kessler"),
-#         main = "QUBO Wild Heterozygosity: SNPs (Complete), R0",
-#         xlab = "Wild source", ylab = "Expected Heterozygosity")
-# abline(h = 0, lwd=2)
-# 
-# # Loci count, allele count
-# QUBO.Wild.SNP.DN.R0_LC <- nLoc(QUBO.Wild.SNP.DN.R0_genind)
-# QUBO.Wild.SNP.DN.R0_AC <- ncol(QUBO.Wild.SNP.DN.R0_genind@tab)
-# # Allelic richness: values per population
-# QUBO.Wild.SNP.DN.R0_AR <- apply(allelic.richness(QUBO.Wild.SNP.DN.R0_genind)$Ar, 2, mean, na.rm=TRUE)
-# # Print pop. gen. results
-# print("%%% QUBO SNP (DE NOVO, R0), WILD (COMPLETE) %%%")
-# print(paste0("Heterozygosity: ", QUBO.Wild.SNP.DN.R0_HZ))
-# print(paste0("Loci count: ", QUBO.Wild.SNP.DN.R0_LC))
-# print(paste0("Allele count: ", QUBO.Wild.SNP.DN.R0_AC))
-# print(paste0("Allelic richness: ", QUBO.Wild.SNP.DN.R0_AR))
-# 
-# # R80 ----
-# # Read in genind file: GSNAP4 alignment with Quercus robur genome; R80, NOMAF, first SNP/locus, only wild populations
-# QUBO.Wild.SNP.DN.R80_filePath <-
-#   "/RAID1/IMLS_GCCO/Analysis/Stacks/reference_filteredReads/QUBO/GSNAP4/output/populations_wild_R80_NOMAF_1SNP/"
-# QUBO.Wild.SNP.DN.R80_genind <- read.genepop(paste0(QUBO.Wild.SNP.DN.R80_filePath,"populations.snps.gen"))
-# # Correct popNames
-# pop(QUBO.Wild.SNP.DN.R80_genind) <- factor(read.table(paste0(QUBO.Wild.SNP.DN.R80_filePath,"QUBO_popmap_wild"), header=FALSE)[,2])
-# 
-# # Heterozygosity
-# QUBO.Wild.SNP.DN.R80_HZ <- Hs(QUBO.Wild.SNP.DN.R80_genind)
-# # Barplot for expected heterozygosity, SNP markers
-# barplot(QUBO.Wild.SNP.DN.R80_HZ, beside = TRUE,
-#         ylim = c(0,0.75), col = c("darkseagreen1", rep("darkgreen", 5)),
-#         names = c("Porter Mt.", "Magazine Mt.", "Pryor Mt.", "Sugarloaf",
-#                   "Kessler"),
-#         main = "QUBO Wild Heterozygosity: SNPs (Complete), R80",
-#         xlab = "Wild source", ylab = "Expected Heterozygosity")
-# abline(h = 0, lwd=2)
-# 
-# # Loci count, allele count
-# QUBO.Wild.SNP.DN.R80_LC <- nLoc(QUBO.Wild.SNP.DN.R80_genind)
-# QUBO.Wild.SNP.DN.R80_AC <- ncol(QUBO.Wild.SNP.DN.R80_genind@tab)
-# # Allelic richness: values per population
-# QUBO.Wild.SNP.DN.R80_AR <- apply(allelic.richness(QUBO.Wild.SNP.DN.R80_genind)$Ar, 2, mean, na.rm=TRUE)
-# # Print pop. gen. results
-# print("%%% QUBO SNP (DE NOVO, R80), WILD (COMPLETE) %%%")
-# print(paste0("Heterozygosity: ", QUBO.Wild.SNP.DN.R80_HZ))
-# print(paste0("Loci count: ", QUBO.Wild.SNP.DN.R80_LC))
-# print(paste0("Allele count: ", QUBO.Wild.SNP.DN.R80_AC))
-# print(paste0("Allelic richness: ", QUBO.Wild.SNP.DN.R80_AR))
