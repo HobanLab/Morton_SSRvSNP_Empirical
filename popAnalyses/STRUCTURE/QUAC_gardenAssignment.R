@@ -39,7 +39,6 @@ read.CLUMPP <- function(clumpp.outputFile, sampleNames=NULL, popNames=NULL){
 
 # Plotting function for single K value
 plot_singleK <- function(kList, kColors, title=NULL, popNamesPresent=FALSE, xBuffer=NULL, ...){
-  # browser()
   # If population names are present (first column of matrix), remove these prior to plotting
   if(popNamesPresent){
     kList <- kList[,-1]
@@ -82,10 +81,10 @@ Plot_K <- function(clumppPath, K, Colors, sampleNames, popNames, mainTitle,
 }
 
 # Plotting function for multiple K values
-plot_multipleK <- function(kList, kValues, kColors, parFlag=TRUE, popNamesPresent=FALSE, titleFlag=TRUE, ...){
+plot_multipleK <- function(kList, kValues, kColors, tickMarks, parFlag=TRUE, popNamesPresent=FALSE, titleFlag=TRUE, ...){
   # Determine the number of individuals by counting rows of the kList object
   nInds <- nrow(kList[[1]])
-  # If parFlag argument is 1, specify graphing parameter values; otherwise, default (global) par values are utilized
+  # If parFlag argument is TRUE, specify graphing parameter values; otherwise, default (global) par values are utilized
   # parFlag variable allows for function to be used in different contexts (showing one marker, or all 3 markers)
   if(parFlag==TRUE){
     # Set graphing parameters to allow for multiple rows (for each K value).
@@ -98,7 +97,7 @@ plot_multipleK <- function(kList, kValues, kColors, parFlag=TRUE, popNamesPresen
       kList[[i]] <- kList[[i]][,-1]
     }
     # Update graphing parameters to allow for extra space at the bottom of the graph, for lines/popNames
-    if(parFlag==1){
+    if(parFlag==TRUE){
       if(i == length(kList)){
         par(mar = c(4,1,1,0.75) + 0.1)
       }
@@ -109,12 +108,16 @@ plot_multipleK <- function(kList, kValues, kColors, parFlag=TRUE, popNamesPresen
     title(main = paste("K =", kValues[i], sep = ' '), line=0.2, cex.main=1.6)
     # y axis
     axis(2, at = c(0, 0.25, 0.5, 0.75, 1), cex.axis = 1, las = 2, pos = -0.02)
+    # For all but the last plot call, show tick marks
+    if(i != length(kList)){
+      axis(1, at=tickMarks, labels = FALSE, lwd.ticks = 2, tck=-0.2)
+    }
   }
 }
 
 # Wrapper for plot_multipleK, which just calls that function after reading in the CLUMPP files
 Plot_AllK <- function(clumppPath, Ks, Colors, sampleNames, popNames, 
-                      parFlag=1, popNamesPresent=FALSE, majorClust=TRUE, ...){
+                      parFlag=TRUE, tickMarks, popNamesPresent=FALSE, majorClust=TRUE, ...){
   # Direct to either the MajorCluster folder of the general CLUMPP.files folder, depending on majorClust flag
   if(majorClust==TRUE){
     clumppFolder <- "/MajorCluster/CLUMPP.files/"
@@ -142,7 +145,8 @@ Plot_AllK <- function(clumppPath, Ks, Colors, sampleNames, popNames,
   
   # Plot specified K values
   clumppList <- list(K2clumpp, K3clumpp, K4clumpp, K5clumpp, K6clumpp, K7clumpp)
-  plot_multipleK(kList = clumppList, kValues = Ks, kColors = Colors, parFlag=parFlag, popNamesPresent = TRUE)
+  plot_multipleK(kList = clumppList, kValues = Ks, kColors = Colors, tickMarks=tickMarks, 
+                 parFlag=parFlag, popNamesPresent = TRUE)
 }
 
 # %%%% QUAC %%%%
@@ -152,7 +156,12 @@ QUAC.colors <- c('#A8FFFD','#B862D3', '#A39D9D','#FFFF00',
 # Population labels
 QUAC.labelNames <- c("Magazine_W","Magazine_G","Porter_W","Porter_G", "Pryor_W","Pryor_G",
                      "Sugarloaf_W", "Sugarloaf_G", "Unknown")
-
+# Label positions (All Ks and K=4)
+QUAC.labelPositions_AllKs <- c(14, 48, 78, 103, 119, 140, 170, 183, 190)
+QUAC.labelPositions_K4 <- c(15, 57, 90, 116, 136, 160, 191, 209, 216)
+# Tick mark positions (All Ks and K=4)
+QUAC.tickMarks_AllKs <- c(0,24.1,64.2,90.1,108,126,152.3,179.8,184)
+QUAC.tickMarks_K4 <- c(0,27.8,73.2,103.2,122.7,143,174.2,205.3,210)
 # Variable file path: popmap file used by Stacks, which contains sample and population names
 QUAC.popMap <- 
   "/RAID1/IMLS_GCCO/Analysis/Stacks/denovo_finalAssemblies/QUAC/output/populations_R80_gardenProv/QUAC_popmap_gardenProv"
@@ -165,89 +174,80 @@ QUAC.popNames <- as.character(factor(read.table(QUAC.popMap, header=FALSE)[,2]))
 QUAC.MSAT.clumppDir <- 
   "/RAID1/IMLS_GCCO/Analysis/STRUCTURE/MSAT/QUAC/Subset_GardenAndWild_NoK/Output/CLUMPAK/Output/mainPipeline/QUAC.MSAT.Subset.GW.NoK_K2-7/"
 
-# All Ks (QUAC wild samples, K=2-7) ----
-Plot_AllK(clumppPath = QUAC.MSAT.clumppDir, Ks=2:7, Colors = QUAC.colors, popNames = QUAC.popNames)
-# Variables for lines designating groups beneath K charts. 
-# lineWidth <- 1.9; lineHeight <- rep(-0.05,2)
-# QUAC.labelPositions <- c(13, 38, 59, 81, 90, 110, 123, 134, 177) 
-QUAC.labelPositions <- c(15, 57, 90, 116, 136, 160, 191, 209, 216)
-# Plot lines
-# lines(x = c(0.2,26), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
-# lines(x = c(26.7,50.1), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
-# lines(x = c(50.7,68), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
-# lines(x = c(68.7,95.4), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
-# Plot tick marks
-axis(1, at=c(0,27.8,73.2,103.2,122.7,143,174.2,205.3,210), labels = FALSE, lwd.ticks = 1.4)
+# All Ks (K=2-7) ----
+Plot_AllK(clumppPath = QUAC.MSAT.clumppDir, Ks=2:7, Colors = QUAC.colors, tickMarks = QUAC.tickMarks_AllKs,
+          sampleNames = QUAC.sampleNames, popNames = QUAC.popNames)
+# Plot tick marks (along bottom)
+axis(1, at=QUAC.tickMarks_AllKs, labels = FALSE, lwd.ticks = 2, tck=-0.7)
 # Add group labels
-text(x=QUAC.labelPositions, y=-0.2, srt=35, adj=1, xpd=TRUE, labels=QUAC.labelNames, cex=1.2)
+text(x=QUAC.labelPositions_AllKs, y=-0.2, srt=35, adj=1, xpd=TRUE, labels=QUAC.labelNames, cex=1.2)
 # Title
 mtext(text = "QUAC Garden and Wild Samples (Subset), MSAT", outer=TRUE, cex=1.3)
 
 # K=4 ----
 # Altering margins
-par(mar = c(5,3,2,2), oma=c(1,0,1,0))
-# Variables for designating groups beneath K charts. 
-QUAC.labelPositions <- c(15, 57, 90, 116, 136, 160, 191, 209, 216)
+par(mar = c(5,3,2,2), oma=c(1,0,1,0), mfrow = c(1,1))
 # Plot QUAC K=4 values 
 Plot_K(QUAC.MSAT.clumppDir, K=4, Colors = QUAC.colors, QUAC.sampleNames, QUAC.popNames, 
        mainTitle = "QUAC Garden and Wild Samples (Subset), MSAT: K4")
 # Plot tick marks
-axis(1, at=c(0,27.8,73.2,103.2,122.7,143,174.2,205.3,210), labels = FALSE, lwd.ticks = 1.4)
+axis(1, at=QUAC.tickMarks_K4, labels = FALSE, lwd.ticks = 2, tck=-0.08)
 # Add group labels
-text(x=QUAC.labelPositions, y=-0.07, srt=35, adj=1, xpd=TRUE, labels=QUAC.labelNames, cex=1)
+text(x=QUAC.labelPositions_K4, y=-0.07, srt=35, adj=1, xpd=TRUE, labels=QUAC.labelNames, cex=1)
+
 # %%% SNP ----
 # ---- DE NOVO ----
 # Variable file path: directory containing all CLUMPPs output to read in
-QUAC.SNP.DN.S.clumppDir <- 
+QUAC.SNP.DN.clumppDir <- 
   "/RAID1/IMLS_GCCO/Analysis/STRUCTURE/denovo_finalAssemblies/QUAC/Subset/GardenAndWild_NoK/Output/CLUMPAK/Output/mainPipeline/QUAC.SNP.DN.Subset.GW.NoK_K2-7/"
-# All Ks (QUAC wild samples, K=2-7) ----
-Plot_AllK(clumppPath = QUAC.SNP.DN.S.clumppDir, Ks=2:7, Colors = QUAC.colors, 
+
+# All Ks (K=2-7) ----
+Plot_AllK(clumppPath = QUAC.SNP.DN.clumppDir, Ks=2:7, Colors = QUAC.colors, tickMarks = QUAC.tickMarks_AllKs, 
           sampleNames = QUAC.sampleNames, popNames = QUAC.popNames)
-# Variables for lines designating groups beneath K charts. 
-lineWidth <- 1.9; lineHeight <- rep(-0.05,2)
-QUAC.labelPositions <- c(13, 38, 59, 79) 
-# Plot lines
-lines(x = c(0.2,26), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
-lines(x = c(26.7,50.1), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
-lines(x = c(50.7,68), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
-lines(x = c(68.7,95.4), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
+# Plot tick marks (along bottom)
+axis(1, at=QUAC.tickMarks_AllKs, labels = FALSE, lwd.ticks = 2, tck=-0.7)
 # Add group labels
-text(x=QUAC.labelPositions, y=-0.2, srt=35, adj=1, xpd=TRUE, labels=QUAC.labelNames, cex=1.2)
+text(x=QUAC.labelPositions_AllKs, y=-0.2, srt=35, adj=1, xpd=TRUE, labels=QUAC.labelNames, cex=1.2)
 # Title
 mtext(text = "QUAC Garden and Wild Samples (Subset), SNP: De novo (R80)", outer=TRUE, cex=1.3)
 
 # K=4 ----
 # Altering margins
-par(mar = c(5,3,2,2), oma=c(1,0,1,0))
-# Variables for designating groups beneath K charts. 
-QUAC.labelPositions <- c(15, 57, 90, 116, 136, 160, 191, 209, 216)
+par(mar = c(5,3,2,2), oma=c(1,0,1,0), mfrow = c(1,1))
 # Plot QUAC K=4 values 
-Plot_K(QUAC.MSAT.clumppDir, K=4, Colors = QUAC.colors, QUAC.sampleNames, QUAC.popNames, 
-       mainTitle = "QUAC Wild Samples (Subset), SNP: De novo (R80): K4")
+Plot_K(QUAC.SNP.DN.clumppDir, K=4, Colors = QUAC.colors, QUAC.sampleNames, QUAC.popNames, 
+       mainTitle = "QUAC Garden and Wild Samples (Subset), SNP: De novo (R80): K4")
 # Plot tick marks
-axis(1, at=c(0,27.8,73.2,103.2,122.7,143,174.2,205.3,210), labels = FALSE, lwd.ticks = 1.4)
+axis(1, at=QUAC.tickMarks_K4, labels = FALSE, lwd.ticks = 2, tck=-0.08)
 # Add group labels
-text(x=QUAC.labelPositions, y=-0.07, srt=35, adj=1, xpd=TRUE, labels=QUAC.labelNames, cex=1)
+text(x=QUAC.labelPositions_K4, y=-0.07, srt=35, adj=1, xpd=TRUE, labels=QUAC.labelNames, cex=1)
+
 # ---- REFERENCE ----
 # For QUAC Reference analyses, Stacks populations module was run using 5,000 randomly selected "whitelisted" loci,
 # in order to ease STRUCTURE computations
 QUAC.SNP.REF.clumppDir <- 
   "/RAID1/IMLS_GCCO/Analysis/STRUCTURE/reference_filteredReads/QUAC/Subset/GardenAndWild_NoK_WL/Output/CLUMPAK/Output/mainPipeline/QUAC.Subset.GW.NoK.WL_K2-7/"
-# All Ks (QUAC wild samples, K=2-7) ----
-Plot_AllK(clumppPath = QUAC.SNP.REF.clumppDir, Ks=2:7, Colors = QUAC.colors, 
+
+# All Ks (K=2-7) ----
+Plot_AllK(clumppPath = QUAC.SNP.REF.clumppDir, Ks=2:7, Colors = QUAC.colors, tickMarks = QUAC.tickMarks_AllKs,
           sampleNames = QUAC.sampleNames, popNames = QUAC.popNames)
-# Variables for lines designating groups beneath K charts. 
-lineWidth <- 1.9; lineHeight <- rep(-0.05,2)
-QUAC.labelPositions <- c(13, 38, 59, 81) 
-# Plot lines
-lines(x = c(0.2,26), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
-lines(x = c(26.7,50.1), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
-lines(x = c(50.7,68), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
-lines(x = c(68.7,95.4), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
+# Plot tick marks (along bottom)
+axis(1, at=QUAC.tickMarks_AllKs, labels = FALSE, lwd.ticks = 2, tck=-0.7)
 # Add group labels
-text(x=QUAC.labelPositions, y=-0.2, srt=35, adj=1, xpd=TRUE, labels=QUAC.labelNames, cex=1.2)
+text(x=QUAC.labelPositions_AllKs, y=-0.2, srt=35, adj=1, xpd=TRUE, labels=QUAC.labelNames, cex=1.2)
 # Title
-mtext(text = "QUAC Garden and Wild Samples (Subset), SNP: Reference", outer=TRUE, cex=1.3)
+mtext(text = "QUAC Garden and Wild Samples (Subset), SNP: Reference (R80)", outer=TRUE, cex=1.3)
+
+# K=4 ----
+# Altering margins
+par(mar = c(5,3,2,2), oma=c(1,0,1,0), mfrow = c(1,1))
+# Plot QUAC K=4 values 
+Plot_K(QUAC.SNP.REF.clumppDir, K=4, Colors = QUAC.colors, QUAC.sampleNames, QUAC.popNames, 
+       mainTitle = "QUAC Garden and Wild Samples (Subset), SNP: Reference (R80): K4")
+# Plot tick marks
+axis(1, at=QUAC.tickMarks_K4, labels = FALSE, lwd.ticks = 2, tck=-0.08)
+# Add group labels
+text(x=QUAC.labelPositions_K4, y=-0.07, srt=35, adj=1, xpd=TRUE, labels=QUAC.labelNames, cex=1)
 
 # ---- PLOTTING MULTIPLE DATASETS ----
 # All Ks, MajorCluster results ----
@@ -255,60 +255,55 @@ mtext(text = "QUAC Garden and Wild Samples (Subset), SNP: Reference", outer=TRUE
 layout(mat = matrix(1:18, nrow = 6, ncol = 3))
 par(mar = c(1.2,1,1.2,0.75) + 0.1, oma = c(0.5,1,4,0), mgp = c(2,1,0))
 # MSAT
-Plot_AllK(clumppPath = QUAC.MSAT.clumppDir, Ks=2:7, Colors = QUAC.colors, 
+Plot_AllK(clumppPath = QUAC.MSAT.clumppDir, Ks=2:7, Colors = QUAC.colors, tickMarks = QUAC.tickMarks_AllKs, 
           popNames = QUAC.popNames, parFlag = FALSE)
-mtext("QUAC: MSAT (Subset)", side=3, line=52.5, cex=0.8)
+axis(1, at=QUAC.tickMarks_AllKs, labels = FALSE, lwd.ticks = 2, tck=-0.2)
+mtext("QUAC: MSAT (Subset)", side=3, line=40.5, cex=0.8)
 # SNP: DE NOVO 
-Plot_AllK(clumppPath = QUAC.SNP.DN.S.clumppDir, Ks=2:7, Colors = QUAC.colors, 
+Plot_AllK(clumppPath = QUAC.SNP.DN.clumppDir, Ks=2:7, Colors = QUAC.colors, tickMarks = QUAC.tickMarks_AllKs, 
           popNames = QUAC.popNames, parFlag = FALSE)
-mtext("QUAC: SNP, De novo (Subset, R80)", side=3, line=52.5, cex=0.8)
+axis(1, at=QUAC.tickMarks_AllKs, labels = FALSE, lwd.ticks = 2, tck=-0.2)
+mtext("QUAC: SNP, De novo (Subset, R80)", side=3, line=40.5, cex=0.8)
 # SNP: REFERENCE
-Plot_AllK(clumppPath = QUAC.SNP.REF.clumppDir, Ks=2:7, Colors = QUAC.colors, 
+Plot_AllK(clumppPath = QUAC.SNP.REF.clumppDir, Ks=2:7, Colors = QUAC.colors, tickMarks = QUAC.tickMarks_AllKs,
           popNames = QUAC.popNames, parFlag = FALSE)
-mtext("QUAC: SNP, Reference (Subset, R80)", side=3, line=52.5, cex=0.8)
+axis(1, at=QUAC.tickMarks_AllKs, labels = FALSE, lwd.ticks = 2, tck=-0.2)
+mtext("QUAC: SNP, Reference (Subset, R80)", side=3, line=40.5, cex=0.8)
 
 # Geographic K (K=4), MajorCluster results ----
 # Graphing parameters for K=4 across all 3 datasets (MSAT, SNP: De novo, SNP: Reference)
 par(mfrow=c(3,1), mar = c(4.5,3,1.2,3), oma=c(1,0,1,0))
-# Variables for lines designating groups beneath K charts. 
-lineWidth <- 1.9; lineHeight <- rep(-0.035,2)
-QUAC.labelPositions <- c(15, 44, 68, 95) 
 # MSAT
 Plot_K(QUAC.MSAT.clumppDir, K=4, Colors = QUAC.colors, QUAC.sampleNames, QUAC.popNames, 
-      mainTitle = "QUAC MSAT: K4")
+      mainTitle = "QUAC MSAT  (Subset): K4")
+axis(1, at=QUAC.tickMarks_K4, labels = FALSE, lwd.ticks = 2, tck=-0.08)
+text(x=QUAC.labelPositions_K4, y=-0.07, srt=35, adj=1, xpd=TRUE, labels=QUAC.labelNames, cex=1)
 # SNP: DE NOVO 
-Plot_K(QUAC.SNP.DN.S.clumppDir, K=4, Colors = QUAC.colors, QUAC.sampleNames, QUAC.popNames, 
-       mainTitle = "QUAC SNP, De novo (R80): K4")
+Plot_K(QUAC.SNP.DN.clumppDir, K=4, Colors = QUAC.colors, QUAC.sampleNames, QUAC.popNames, 
+       mainTitle = "QUAC SNP (Subset), De novo (R80): K4")
+axis(1, at=QUAC.tickMarks_K4, labels = FALSE, lwd.ticks = 2, tck=-0.08)
+text(x=QUAC.labelPositions_K4, y=-0.07, srt=35, adj=1, xpd=TRUE, labels=QUAC.labelNames, cex=1)
 # SNP: REFERENCE
 Plot_K(QUAC.SNP.REF.clumppDir, K=4, Colors = QUAC.colors, QUAC.sampleNames, QUAC.popNames, 
-       mainTitle = "QUAC SNP, Reference (R80): K4")
-# Plot lines
-lines(x = c(0.2,29.5), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
-lines(x = c(30.5,57.5), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
-lines(x = c(58.5,77.6), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
-lines(x = c(78.8,108.7), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
-# Add group labels
-text(x=QUAC.labelPositions, y=-0.063, srt=35, adj=1, xpd=TRUE, labels=QUAC.labelNames, cex=1.3)
+       mainTitle = "QUAC SNP (Subset), Reference (R80): K4")
+axis(1, at=QUAC.tickMarks_K4, labels = FALSE, lwd.ticks = 2, tck=-0.08)
+text(x=QUAC.labelPositions_K4, y=-0.07, srt=35, adj=1, xpd=TRUE, labels=QUAC.labelNames, cex=1)
 
 # Geographic K (K=4), Summary results (averaged across major and minor clusters) ----
 # Graphing parameters for K=4 across all 3 datasets (MSAT, SNP: De novo, SNP: Reference)
 par(mfrow=c(3,1), mar = c(4.5,3,1.2,3), oma=c(1,0,1,0))
-# Variables for lines designating groups beneath K charts. 
-lineWidth <- 1.9; lineHeight <- rep(-0.035,2)
-QUAC.labelPositions <- c(15, 44, 68, 95)
 # MSAT
 Plot_K(QUAC.MSAT.clumppDir, K=4, Colors = QUAC.colors, QUAC.sampleNames, QUAC.popNames, 
        mainTitle = "QUAC MSAT (Subset, Summary): K4", majorClust = FALSE)
+axis(1, at=QUAC.tickMarks_K4, labels = FALSE, lwd.ticks = 2, tck=-0.08)
+text(x=QUAC.labelPositions_K4, y=-0.07, srt=35, adj=1, xpd=TRUE, labels=QUAC.labelNames, cex=1)
 # SNP: DE NOVO 
-Plot_K(QUAC.SNP.DN.S.clumppDir, K=4, Colors = QUAC.colors, QUAC.sampleNames, QUAC.popNames, 
-       mainTitle = "QUAC SNP, De novo (Subset, Summary, R80): K4", majorClust = FALSE)
+Plot_K(QUAC.SNP.DN.clumppDir, K=4, Colors = QUAC.colors, QUAC.sampleNames, QUAC.popNames, 
+       mainTitle = "QUAC SNP (Subset, Summary), De novo (R80): K4", majorClust = FALSE)
+axis(1, at=QUAC.tickMarks_K4, labels = FALSE, lwd.ticks = 2, tck=-0.08)
+text(x=QUAC.labelPositions_K4, y=-0.07, srt=35, adj=1, xpd=TRUE, labels=QUAC.labelNames, cex=1)
 # SNP: REFERENCE
 Plot_K(QUAC.SNP.REF.clumppDir, K=4, Colors = QUAC.colors, QUAC.sampleNames, QUAC.popNames, 
-       mainTitle = "QUAC SNP, Reference (Subset, Summary, R80): K4", majorClust = FALSE)
-# Plot lines
-lines(x = c(0.2,29.5), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
-lines(x = c(30.5,57.5), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
-lines(x = c(58.5,77.6), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
-lines(x = c(78.8,108.7), y = lineHeight, lwd = lineWidth, col = "black", xpd = NA)
-# Add group labels
-text(x=QUAC.labelPositions, y=-0.063, srt=35, adj=1, xpd=TRUE, labels=QUAC.labelNames, cex=1.3)
+       mainTitle = "QUAC SNP (Subset, Summary), Reference (R80): K4", majorClust = FALSE)
+axis(1, at=QUAC.tickMarks_K4, labels = FALSE, lwd.ticks = 2, tck=-0.08)
+text(x=QUAC.labelPositions_K4, y=-0.07, srt=35, adj=1, xpd=TRUE, labels=QUAC.labelNames, cex=1)
