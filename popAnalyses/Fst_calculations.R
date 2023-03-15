@@ -143,7 +143,7 @@ genpop.filePath <-
   "/RAID1/IMLS_GCCO/Analysis/Stacks/denovo_finalAssemblies/QUAC/output/populations_wild_R0_NOMAF_1SNP_NoK/"
 QUAC.SNP.DN.R0.genind <- read.genepop(paste0(genpop.filePath,"populations.snps.gen"))
 # Correct popNames
-pop(QUAC.SNP.DN.R0.genind) <- factor(read.table(paste0(genpop.filePath, "QUAC_popmap_wild"), header=FALSE)[,2])
+pop(QUAC.SNP.DN.R0.genind) <- factor(read.table(paste0(genpop.filePath, "QUAC_popmap_wild_NoK"), header=FALSE)[,2])
 # Correct sample names
 rownames(QUAC.SNP.DN.R0.genind@tab) <- QUAC.SNP.tissueNames
 
@@ -152,7 +152,7 @@ genpop.filePath <-
   "/RAID1/IMLS_GCCO/Analysis/Stacks/denovo_finalAssemblies/QUAC/output/populations_wild_R80_NOMAF_1SNP_NoK/"
 QUAC.SNP.DN.R80.genind <- read.genepop(paste0(genpop.filePath,"populations.snps.gen"))
 # Correct popNames
-pop(QUAC.SNP.DN.R80.genind) <- factor(read.table(paste0(genpop.filePath, "QUAC_popmap_wild"), header=FALSE)[,2])
+pop(QUAC.SNP.DN.R80.genind) <- factor(read.table(paste0(genpop.filePath, "QUAC_popmap_wild_NoK"), header=FALSE)[,2])
 # Correct sample names
 rownames(QUAC.SNP.DN.R80.genind@tab) <- QUAC.SNP.tissueNames
 
@@ -166,7 +166,7 @@ genpop.filePath <-
 setwd(genpop.filePath)
 QUAC.SNP.REF.R0.genind <- read.genepop(paste0(genpop.filePath,"populations.snps.gen"))
 # Correct popNames
-pop(QUAC.SNP.REF.R0.genind) <- factor(read.table("QUAC_popmap_wild", header=FALSE)[,2])
+pop(QUAC.SNP.REF.R0.genind) <- factor(read.table("QUAC_popmap_wild_NoK", header=FALSE)[,2])
 # Correct sample names
 rownames(QUAC.SNP.REF.R0.genind@tab) <- QUAC.SNP.tissueNames
 
@@ -175,7 +175,7 @@ genpop.filePath <-
   "/RAID1/IMLS_GCCO/Analysis/Stacks/reference_filteredReads/QUAC/Q_rubra/output/populations_wild_R80_NOMAF_1SNP_NoK/"
 QUAC.SNP.REF.R80.genind <- read.genepop(paste0(genpop.filePath,"populations.snps.gen"))
 # Correct popNames
-pop(QUAC.SNP.REF.R80.genind) <- factor(read.table(paste0(genpop.filePath, "QUAC_popmap_wild"), header=FALSE)[,2])
+pop(QUAC.SNP.REF.R80.genind) <- factor(read.table(paste0(genpop.filePath, "QUAC_popmap_wild_NoK"), header=FALSE)[,2])
 # Correct sample names
 rownames(QUAC.SNP.REF.R80.genind@tab) <- QUAC.SNP.tissueNames
 
