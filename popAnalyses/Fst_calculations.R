@@ -162,7 +162,7 @@ rownames(QUAC.SNP.DN.R80.genind@tab) <- QUAC.SNP.tissueNames
 # are chosen from a incomplete populations.sumstats.tsv file (from a different run, of the REF R0 dataset), 
 # and these whitelisted loci are passed to the populations module for the successful run.
 genpop.filePath <-
-  "/RAID1/IMLS_GCCO/Analysis/Stacks/reference_filteredReads/QUAC/Q_rubra/output/populations_wild_R0_NOMAF_1SNP_NoK/"
+  "/RAID1/IMLS_GCCO/Analysis/Stacks/reference_filteredReads/QUAC/Q_rubra/output/populations_wild_R0_NOMAF_1SNP_NoK_WL/"
 setwd(genpop.filePath)
 QUAC.SNP.REF.R0.genind <- read.genepop(paste0(genpop.filePath,"populations.snps.gen"))
 # Correct popNames
