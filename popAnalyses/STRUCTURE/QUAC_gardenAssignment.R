@@ -160,8 +160,8 @@ QUAC.labelNames <- c("Magazine_W","Magazine_G","Porter_W","Porter_G", "Pryor_W",
 QUAC.labelPositions_AllKs <- c(14, 48, 78, 103, 119, 140, 170, 183, 190)
 QUAC.labelPositions_K4 <- c(15, 57, 90, 116, 136, 160, 191, 209, 216)
 # Tick mark positions (All Ks and K=4)
-QUAC.tickMarks_AllKs <- c(0,24.1,64.2,90.1,108,126,152.3,179.8,184)
-QUAC.tickMarks_K4 <- c(0,27.8,73.2,103.2,122.7,143,174.2,205.3,210)
+QUAC.tickMarks_AllKs <- c(0,24.1,64.2,90.1,108,126,152.3,179.8,183)
+QUAC.tickMarks_K4 <- c(0,27.8,73.2,103.2,122.7,143,174.2,205.3,209)
 # Variable file path: popmap file used by Stacks, which contains sample and population names
 QUAC.popMap <- 
   "/RAID1/IMLS_GCCO/Analysis/Stacks/denovo_finalAssemblies/QUAC/output/populations_R80_gardenProv/QUAC_popmap_gardenProv"
@@ -276,17 +276,17 @@ par(mfrow=c(3,1), mar = c(4.5,3,1.2,3), oma=c(1,0,1,0))
 # MSAT
 Plot_K(QUAC.MSAT.clumppDir, K=4, Colors = QUAC.colors, QUAC.sampleNames, QUAC.popNames, 
       mainTitle = "QUAC MSAT  (Subset): K4")
-axis(1, at=QUAC.tickMarks_K4, labels = FALSE, lwd.ticks = 2, tck=-0.08)
+axis(1, at=QUAC.tickMarks_K4, labels = FALSE, lwd.ticks = 2, tck=-0.1)
 text(x=QUAC.labelPositions_K4, y=-0.07, srt=35, adj=1, xpd=TRUE, labels=QUAC.labelNames, cex=1)
 # SNP: DE NOVO 
 Plot_K(QUAC.SNP.DN.clumppDir, K=4, Colors = QUAC.colors, QUAC.sampleNames, QUAC.popNames, 
        mainTitle = "QUAC SNP (Subset), De novo (R80): K4")
-axis(1, at=QUAC.tickMarks_K4, labels = FALSE, lwd.ticks = 2, tck=-0.08)
+axis(1, at=QUAC.tickMarks_K4, labels = FALSE, lwd.ticks = 2, tck=-0.1)
 text(x=QUAC.labelPositions_K4, y=-0.07, srt=35, adj=1, xpd=TRUE, labels=QUAC.labelNames, cex=1)
 # SNP: REFERENCE
 Plot_K(QUAC.SNP.REF.clumppDir, K=4, Colors = QUAC.colors, QUAC.sampleNames, QUAC.popNames, 
        mainTitle = "QUAC SNP (Subset), Reference (R80): K4")
-axis(1, at=QUAC.tickMarks_K4, labels = FALSE, lwd.ticks = 2, tck=-0.08)
+axis(1, at=QUAC.tickMarks_K4, labels = FALSE, lwd.ticks = 2, tck=-0.1)
 text(x=QUAC.labelPositions_K4, y=-0.07, srt=35, adj=1, xpd=TRUE, labels=QUAC.labelNames, cex=1)
 
 # Geographic K (K=4), Summary results (averaged across major and minor clusters) ----
@@ -295,15 +295,15 @@ par(mfrow=c(3,1), mar = c(4.5,3,1.2,3), oma=c(1,0,1,0))
 # MSAT
 Plot_K(QUAC.MSAT.clumppDir, K=4, Colors = QUAC.colors, QUAC.sampleNames, QUAC.popNames, 
        mainTitle = "QUAC MSAT (Subset, Summary): K4", majorClust = FALSE)
-axis(1, at=QUAC.tickMarks_K4, labels = FALSE, lwd.ticks = 2, tck=-0.08)
+axis(1, at=QUAC.tickMarks_K4, labels = FALSE, lwd.ticks = 2, tck=-0.1)
 text(x=QUAC.labelPositions_K4, y=-0.07, srt=35, adj=1, xpd=TRUE, labels=QUAC.labelNames, cex=1)
 # SNP: DE NOVO 
 Plot_K(QUAC.SNP.DN.clumppDir, K=4, Colors = QUAC.colors, QUAC.sampleNames, QUAC.popNames, 
        mainTitle = "QUAC SNP (Subset, Summary), De novo (R80): K4", majorClust = FALSE)
-axis(1, at=QUAC.tickMarks_K4, labels = FALSE, lwd.ticks = 2, tck=-0.08)
+axis(1, at=QUAC.tickMarks_K4, labels = FALSE, lwd.ticks = 2, tck=-0.1)
 text(x=QUAC.labelPositions_K4, y=-0.07, srt=35, adj=1, xpd=TRUE, labels=QUAC.labelNames, cex=1)
 # SNP: REFERENCE
 Plot_K(QUAC.SNP.REF.clumppDir, K=4, Colors = QUAC.colors, QUAC.sampleNames, QUAC.popNames, 
        mainTitle = "QUAC SNP (Subset, Summary), Reference (R80): K4", majorClust = FALSE)
-axis(1, at=QUAC.tickMarks_K4, labels = FALSE, lwd.ticks = 2, tck=-0.08)
+axis(1, at=QUAC.tickMarks_K4, labels = FALSE, lwd.ticks = 2, tck=-0.1)
 text(x=QUAC.labelPositions_K4, y=-0.07, srt=35, adj=1, xpd=TRUE, labels=QUAC.labelNames, cex=1)
