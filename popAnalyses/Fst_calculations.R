@@ -111,109 +111,109 @@ Fst_Stacks_report <- function(filepath.fst_tab, title){
   return(fst_mat)
 }
 
-# %%%% QUAC %%%% ----
-# ---- READ IN GENIND FILES ----
-# MICROSATELLITE ----
-QUAC.MSAT.genpop.filePath <- 
-  "~/Documents/peripheralProjects/GCC_QUAC_ZAIN/Data_Files/Adegenet_Files/"
-QUAC.MSAT.genind <- read.genepop(paste0(QUAC.MSAT.genpop.filePath, "QUAC_woK_allpop_clean.gen"), ncode = 3)
-# Specify filepath to GCC_QUAC_ZAIN dataframe, containing sample names and population names
-QUAC.MSAT.dataframe_filepath <- 
-  "~/Documents/peripheralProjects/GCC_QUAC_ZAIN/Data_Files/Data_Frames/QUAC_woK_allpop_clean_df.csv"
-# Assign sample names: read in Tissue database names from GCC_QUAC_ZAIN repository
-QUAC.MSAT.tissueNames <- unlist(read.csv2(QUAC.MSAT.dataframe_filepath, header = TRUE, sep=",")[1])
-rownames(QUAC.MSAT.genind@tab) <- QUAC.MSAT.tissueNames
-# Correct population names: read in a dataframe containing population values
-pop(QUAC.MSAT.genind) <- unlist(read.csv2(QUAC.MSAT.dataframe_filepath, header = TRUE, sep=",")[2])
-# Remove garden samples from tissueNames vector
-QUAC.MSAT.tissueNames <- QUAC.MSAT.tissueNames[-grep(pattern = "QAc-G-", QUAC.MSAT.tissueNames)]
-# Subset Complete MSAT genind object to just wild populations (last 5 populations)
-QUAC.MSAT.genind <- QUAC.MSAT.genind[QUAC.MSAT.tissueNames,,drop=TRUE]
-
-# SNP ----
-# Read in Tissue database names, for subsetting genetic matrices later
-# This file was created (by Austin K.), and can be found on the Hoban Lab Drive ("MSATcomparisons_TissueNames")
-QUAC.SNP.tissueNames_filepath <- paste0(SSRvSNP.wd,"exSituRepresentation/QUAC_SNP_TissueNames.csv")
-QUAC.SNP.tissueNames <- unlist(read.csv2(QUAC.SNP.tissueNames_filepath, header = TRUE, sep = ",")[3])
-# Remove garden samples from SNP tissue database names vector
-QUAC.SNP.tissueNames <- QUAC.SNP.tissueNames[-grep(pattern = "QAc-G-", QUAC.SNP.tissueNames)]
-
-# DE NOVO, R0
-genpop.filePath <- 
-  "/RAID1/IMLS_GCCO/Analysis/Stacks/denovo_finalAssemblies/QUAC/output/populations_wild_R0_NOMAF_1SNP_NoK/"
-QUAC.SNP.DN.R0.genind <- read.genepop(paste0(genpop.filePath,"populations.snps.gen"))
-# Correct popNames
-pop(QUAC.SNP.DN.R0.genind) <- factor(read.table(paste0(genpop.filePath, "QUAC_popmap_wild_NoK"), header=FALSE)[,2])
-# Correct sample names
-rownames(QUAC.SNP.DN.R0.genind@tab) <- QUAC.SNP.tissueNames
-
-# SNP: DE NOVO, R80
-genpop.filePath <- 
-  "/RAID1/IMLS_GCCO/Analysis/Stacks/denovo_finalAssemblies/QUAC/output/populations_wild_R80_NOMAF_1SNP_NoK/"
-QUAC.SNP.DN.R80.genind <- read.genepop(paste0(genpop.filePath,"populations.snps.gen"))
-# Correct popNames
-pop(QUAC.SNP.DN.R80.genind) <- factor(read.table(paste0(genpop.filePath, "QUAC_popmap_wild_NoK"), header=FALSE)[,2])
-# Correct sample names
-rownames(QUAC.SNP.DN.R80.genind@tab) <- QUAC.SNP.tissueNames
-
-# SNP: REFERENCE, R0
-# Values cannot be calculated for original SNP REF R0 dataset, because Stacks population module
-# is automatically killed (code 5806). Therefore, a set of 5,000 randomly selected "whitelisted" loci
-# are chosen from a incomplete populations.sumstats.tsv file (from a different run, of the REF R0 dataset), 
-# and these whitelisted loci are passed to the populations module for the successful run.
-genpop.filePath <-
-  "/RAID1/IMLS_GCCO/Analysis/Stacks/reference_filteredReads/QUAC/Q_rubra/output/populations_wild_R0_NOMAF_1SNP_NoK_WL/"
-setwd(genpop.filePath)
-QUAC.SNP.REF.R0.genind <- read.genepop(paste0(genpop.filePath,"populations.snps.gen"))
-# Correct popNames
-pop(QUAC.SNP.REF.R0.genind) <- factor(read.table("QUAC_popmap_wild_NoK", header=FALSE)[,2])
-# Correct sample names
-rownames(QUAC.SNP.REF.R0.genind@tab) <- QUAC.SNP.tissueNames
-
-# SNP: REFERENCE, R80
-genpop.filePath <- 
-  "/RAID1/IMLS_GCCO/Analysis/Stacks/reference_filteredReads/QUAC/Q_rubra/output/populations_wild_R80_NOMAF_1SNP_NoK/"
-QUAC.SNP.REF.R80.genind <- read.genepop(paste0(genpop.filePath,"populations.snps.gen"))
-# Correct popNames
-pop(QUAC.SNP.REF.R80.genind) <- factor(read.table(paste0(genpop.filePath, "QUAC_popmap_wild_NoK"), header=FALSE)[,2])
-# Correct sample names
-rownames(QUAC.SNP.REF.R80.genind@tab) <- QUAC.SNP.tissueNames
-
-# ---- CALCULATE FST VALUES: COMPLETE ----
-# MSAT
-Fst_Nei_report(QUAC.MSAT.genind, title = "QUAC MSAT (Complete)")
-
-# Subset SNP
-# De novo
-Fst_Nei_report(QUAC.SNP.DN.R0.genind, title = "QUAC SNP De novo (Complete, R0)")
-Fst_Nei_report(QUAC.SNP.DN.R80.genind, title = "QUAC SNP De novo (Complete, R80)")
-# Reference
-Fst_Nei_report(QUAC.SNP.REF.R0.genind, title = "QUAC SNP Reference (Complete, R0)")
-Fst_Nei_report(QUAC.SNP.REF.R80.genind, title = "QUAC SNP Reference (Complete, R80)")
-
-# ---- SUBSET GENIND FILES ----
-# Subset SNP sample names by those that are also seen within the MSAT samples 
-QUAC_sharedSamples <- sort(QUAC.SNP.tissueNames[which(QUAC.SNP.tissueNames %in% QUAC.MSAT.tissueNames)])
-# Subset MSAT and SNP genind matrices to strictly shared samples, dropping now absent alleles
-QUAC.MSAT_subset.genind <- QUAC.MSAT.genind[QUAC_sharedSamples,, drop=TRUE]
-# R0
-QUAC.SNP.DN.R0_subset.genind <- QUAC.SNP.DN.R0.genind[QUAC_sharedSamples,, drop=TRUE]
-QUAC.SNP.REF.R0_subset.genind <- QUAC.SNP.REF.R0.genind[QUAC_sharedSamples,, drop=TRUE]
-# R80
-QUAC.SNP.DN.R80_subset.genind <- QUAC.SNP.DN.R80.genind[QUAC_sharedSamples,, drop=TRUE]
-QUAC.SNP.REF.R80_subset.genind <- QUAC.SNP.REF.R80.genind[QUAC_sharedSamples,, drop=TRUE]
-
-# ---- CALCULATE FST VALUES: SUBSET ----
-# Subset MSAT
-Fst_Nei_report(QUAC.MSAT_subset.genind, title = "QUAC MSAT (Subset)")
-
-# Subset SNP
-# De novo
-Fst_Nei_report(QUAC.SNP.DN.R0_subset.genind, title = "QUAC SNP De novo (Subset, R0)")
-Fst_Nei_report(QUAC.SNP.DN.R80_subset.genind, title = "QUAC SNP De novo (Subset, R80)")
-# Reference
-Fst_Nei_report(QUAC.SNP.REF.R0_subset.genind, title = "QUAC SNP Reference (Subset, R0)")
-Fst_Nei_report(QUAC.SNP.REF.R80_subset.genind, title = "QUAC SNP Reference (Subset, R80)")
+# # %%%% QUAC %%%% ----
+# # ---- READ IN GENIND FILES ----
+# # MICROSATELLITE ----
+# QUAC.MSAT.genpop.filePath <- 
+#   "~/Documents/peripheralProjects/GCC_QUAC_ZAIN/Data_Files/Adegenet_Files/"
+# QUAC.MSAT.genind <- read.genepop(paste0(QUAC.MSAT.genpop.filePath, "QUAC_woK_allpop_clean.gen"), ncode = 3)
+# # Specify filepath to GCC_QUAC_ZAIN dataframe, containing sample names and population names
+# QUAC.MSAT.dataframe_filepath <- 
+#   "~/Documents/peripheralProjects/GCC_QUAC_ZAIN/Data_Files/Data_Frames/QUAC_woK_allpop_clean_df.csv"
+# # Assign sample names: read in Tissue database names from GCC_QUAC_ZAIN repository
+# QUAC.MSAT.tissueNames <- unlist(read.csv2(QUAC.MSAT.dataframe_filepath, header = TRUE, sep=",")[1])
+# rownames(QUAC.MSAT.genind@tab) <- QUAC.MSAT.tissueNames
+# # Correct population names: read in a dataframe containing population values
+# pop(QUAC.MSAT.genind) <- unlist(read.csv2(QUAC.MSAT.dataframe_filepath, header = TRUE, sep=",")[2])
+# # Remove garden samples from tissueNames vector
+# QUAC.MSAT.tissueNames <- QUAC.MSAT.tissueNames[-grep(pattern = "QAc-G-", QUAC.MSAT.tissueNames)]
+# # Subset Complete MSAT genind object to just wild populations (last 5 populations)
+# QUAC.MSAT.genind <- QUAC.MSAT.genind[QUAC.MSAT.tissueNames,,drop=TRUE]
+# 
+# # SNP ----
+# # Read in Tissue database names, for subsetting genetic matrices later
+# # This file was created (by Austin K.), and can be found on the Hoban Lab Drive ("MSATcomparisons_TissueNames")
+# QUAC.SNP.tissueNames_filepath <- paste0(SSRvSNP.wd,"exSituRepresentation/QUAC_SNP_TissueNames.csv")
+# QUAC.SNP.tissueNames <- unlist(read.csv2(QUAC.SNP.tissueNames_filepath, header = TRUE, sep = ",")[3])
+# # Remove garden samples from SNP tissue database names vector
+# QUAC.SNP.tissueNames <- QUAC.SNP.tissueNames[-grep(pattern = "QAc-G-", QUAC.SNP.tissueNames)]
+# 
+# # DE NOVO, R0
+# genpop.filePath <- 
+#   "/RAID1/IMLS_GCCO/Analysis/Stacks/denovo_finalAssemblies/QUAC/output/populations_wild_R0_NOMAF_1SNP_NoK/"
+# QUAC.SNP.DN.R0.genind <- read.genepop(paste0(genpop.filePath,"populations.snps.gen"))
+# # Correct popNames
+# pop(QUAC.SNP.DN.R0.genind) <- factor(read.table(paste0(genpop.filePath, "QUAC_popmap_wild_NoK"), header=FALSE)[,2])
+# # Correct sample names
+# rownames(QUAC.SNP.DN.R0.genind@tab) <- QUAC.SNP.tissueNames
+# 
+# # SNP: DE NOVO, R80
+# genpop.filePath <- 
+#   "/RAID1/IMLS_GCCO/Analysis/Stacks/denovo_finalAssemblies/QUAC/output/populations_wild_R80_NOMAF_1SNP_NoK/"
+# QUAC.SNP.DN.R80.genind <- read.genepop(paste0(genpop.filePath,"populations.snps.gen"))
+# # Correct popNames
+# pop(QUAC.SNP.DN.R80.genind) <- factor(read.table(paste0(genpop.filePath, "QUAC_popmap_wild_NoK"), header=FALSE)[,2])
+# # Correct sample names
+# rownames(QUAC.SNP.DN.R80.genind@tab) <- QUAC.SNP.tissueNames
+# 
+# # SNP: REFERENCE, R0
+# # Values cannot be calculated for original SNP REF R0 dataset, because Stacks population module
+# # is automatically killed (code 5806). Therefore, a set of 5,000 randomly selected "whitelisted" loci
+# # are chosen from a incomplete populations.sumstats.tsv file (from a different run, of the REF R0 dataset), 
+# # and these whitelisted loci are passed to the populations module for the successful run.
+# genpop.filePath <-
+#   "/RAID1/IMLS_GCCO/Analysis/Stacks/reference_filteredReads/QUAC/Q_rubra/output/populations_wild_R0_NOMAF_1SNP_NoK_WL/"
+# setwd(genpop.filePath)
+# QUAC.SNP.REF.R0.genind <- read.genepop(paste0(genpop.filePath,"populations.snps.gen"))
+# # Correct popNames
+# pop(QUAC.SNP.REF.R0.genind) <- factor(read.table("QUAC_popmap_wild_NoK", header=FALSE)[,2])
+# # Correct sample names
+# rownames(QUAC.SNP.REF.R0.genind@tab) <- QUAC.SNP.tissueNames
+# 
+# # SNP: REFERENCE, R80
+# genpop.filePath <- 
+#   "/RAID1/IMLS_GCCO/Analysis/Stacks/reference_filteredReads/QUAC/Q_rubra/output/populations_wild_R80_NOMAF_1SNP_NoK/"
+# QUAC.SNP.REF.R80.genind <- read.genepop(paste0(genpop.filePath,"populations.snps.gen"))
+# # Correct popNames
+# pop(QUAC.SNP.REF.R80.genind) <- factor(read.table(paste0(genpop.filePath, "QUAC_popmap_wild_NoK"), header=FALSE)[,2])
+# # Correct sample names
+# rownames(QUAC.SNP.REF.R80.genind@tab) <- QUAC.SNP.tissueNames
+# 
+# # ---- CALCULATE FST VALUES: COMPLETE ----
+# # MSAT
+# Fst_Nei_report(QUAC.MSAT.genind, title = "QUAC MSAT (Complete)")
+# 
+# # Subset SNP
+# # De novo
+# Fst_Nei_report(QUAC.SNP.DN.R0.genind, title = "QUAC SNP De novo (Complete, R0)")
+# Fst_Nei_report(QUAC.SNP.DN.R80.genind, title = "QUAC SNP De novo (Complete, R80)")
+# # Reference
+# Fst_Nei_report(QUAC.SNP.REF.R0.genind, title = "QUAC SNP Reference (Complete, R0)")
+# Fst_Nei_report(QUAC.SNP.REF.R80.genind, title = "QUAC SNP Reference (Complete, R80)")
+# 
+# # ---- SUBSET GENIND FILES ----
+# # Subset SNP sample names by those that are also seen within the MSAT samples 
+# QUAC_sharedSamples <- sort(QUAC.SNP.tissueNames[which(QUAC.SNP.tissueNames %in% QUAC.MSAT.tissueNames)])
+# # Subset MSAT and SNP genind matrices to strictly shared samples, dropping now absent alleles
+# QUAC.MSAT_subset.genind <- QUAC.MSAT.genind[QUAC_sharedSamples,, drop=TRUE]
+# # R0
+# QUAC.SNP.DN.R0_subset.genind <- QUAC.SNP.DN.R0.genind[QUAC_sharedSamples,, drop=TRUE]
+# QUAC.SNP.REF.R0_subset.genind <- QUAC.SNP.REF.R0.genind[QUAC_sharedSamples,, drop=TRUE]
+# # R80
+# QUAC.SNP.DN.R80_subset.genind <- QUAC.SNP.DN.R80.genind[QUAC_sharedSamples,, drop=TRUE]
+# QUAC.SNP.REF.R80_subset.genind <- QUAC.SNP.REF.R80.genind[QUAC_sharedSamples,, drop=TRUE]
+# 
+# # ---- CALCULATE FST VALUES: SUBSET ----
+# # Subset MSAT
+# Fst_Nei_report(QUAC.MSAT_subset.genind, title = "QUAC MSAT (Subset)")
+# 
+# # Subset SNP
+# # De novo
+# Fst_Nei_report(QUAC.SNP.DN.R0_subset.genind, title = "QUAC SNP De novo (Subset, R0)")
+# Fst_Nei_report(QUAC.SNP.DN.R80_subset.genind, title = "QUAC SNP De novo (Subset, R80)")
+# # Reference
+# Fst_Nei_report(QUAC.SNP.REF.R0_subset.genind, title = "QUAC SNP Reference (Subset, R0)")
+# Fst_Nei_report(QUAC.SNP.REF.R80_subset.genind, title = "QUAC SNP Reference (Subset, R80)")
 
 # %%%% QUBO %%%% ----
 # ---- READ IN GENIND FILES ----
@@ -224,7 +224,7 @@ genpop.filePath <-
 QUBO.MSAT.genind <- read.genepop(paste0(genpop.filePath,"Qb_wild_w_ALL.gen"), ncode=3)
 # Correct popNames: read in a dataframe which contains population names, in order of 
 # samples in genind file. This document was created manually by Austin Koontz, and can be 
-# found on the Hoban Lab Drive
+# found on the Hoban Lab Drive (MSATvsSNP_Supplement_SampleSheets: QUBO_MSAT_Complete_WildLocations)
 QUBO.MSAT.dataframe_filepath <- 
   "~/Documents/SSRvSNP/Code/popAnalyses/QUBO_MSAT_Complete_WildPops.csv"
 # Correct population names: read in a dataframe containing population values
@@ -240,28 +240,28 @@ genpop.filePath <-
   "/RAID1/IMLS_GCCO/Analysis/Stacks/denovo_finalAssemblies/QUBO/output/populations_wild_R0_NOMAF_1SNP_Ordered2/"
 QUBO.SNP.DN.R0.genind <- read.genepop(paste0(genpop.filePath,"populations.snps.gen"))
 # Correct popNames
-pop(QUBO.SNP.DN.R0.genind) <- factor(read.table(paste0(genpop.filePath, "QUBO_popmap_wild"), header=FALSE)[,2])
+pop(QUBO.SNP.DN.R0.genind) <- factor(read.table(paste0(genpop.filePath, "QUBO_popmap_wild_Ordered2"), header=FALSE)[,2])
 
 # SNP: DE NOVO, R80
 genpop.filePath <- 
   "/RAID1/IMLS_GCCO/Analysis/Stacks/denovo_finalAssemblies/QUBO/output/populations_wild_R80_NOMAF_1SNP_Ordered2/"
 QUBO.SNP.DN.R80.genind <- read.genepop(paste0(genpop.filePath,"populations.snps.gen"))
 # Correct popNames
-pop(QUBO.SNP.DN.R80.genind) <- factor(read.table(paste0(genpop.filePath, "QUBO_popmap_wild"), header=FALSE)[,2])
+pop(QUBO.SNP.DN.R80.genind) <- factor(read.table(paste0(genpop.filePath, "QUBO_popmap_wild_Ordered2"), header=FALSE)[,2])
 
 # SNP: REFERENCE, R0
 genpop.filePath <- 
   "/RAID1/IMLS_GCCO/Analysis/Stacks/reference_filteredReads/QUBO/GSNAP4/output/populations_wild_R0_NOMAF_1SNP_Ordered2/"
 QUBO.SNP.REF.R0.genind <- read.genepop(paste0(genpop.filePath,"populations.snps.gen"))
 # Correct popNames
-pop(QUBO.SNP.REF.R0.genind) <- factor(read.table(paste0(genpop.filePath, "QUBO_popmap_wild"), header=FALSE)[,2])
+pop(QUBO.SNP.REF.R0.genind) <- factor(read.table(paste0(genpop.filePath, "QUBO_popmap_wild_Ordered2"), header=FALSE)[,2])
 
 # SNP: REFERENCE, R80
 genpop.filePath <- 
   "/RAID1/IMLS_GCCO/Analysis/Stacks/reference_filteredReads/QUBO/GSNAP4/output/populations_wild_R80_NOMAF_1SNP_Ordered2/"
 QUBO.SNP.REF.R80.genind <- read.genepop(paste0(genpop.filePath,"populations.snps.gen"))
 # Correct popNames
-pop(QUBO.SNP.REF.R80.genind) <- factor(read.table(paste0(genpop.filePath, "QUBO_popmap_wild"), header=FALSE)[,2])
+pop(QUBO.SNP.REF.R80.genind) <- factor(read.table(paste0(genpop.filePath, "QUBO_popmap_wild_Ordered2"), header=FALSE)[,2])
 
 # Rename SNP samples (for subsetting later on)
 # Remove QUBO_W_ headers from sample names
