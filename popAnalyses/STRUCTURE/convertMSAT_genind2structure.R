@@ -81,13 +81,17 @@ QUAC.MSAT.genpop.filePath <-
   "~/Documents/peripheralProjects/GCC_QUAC_ZAIN/Data_Files/Adegenet_Files/"
 QUAC.MSAT.GW.genind <- read.genepop(paste0(QUAC.MSAT.genpop.filePath, "QUAC_woK_allpop_clean.gen"), ncode = 3)
 # Correct popNames: samples with popName pattern QAc-G- are garden 
-levels(QUAC.MSAT.GW.genind @pop)[grep(pattern = "QAc-G-", levels(QUAC.MSAT.GW.genind @pop))] <- 
+levels(QUAC.MSAT.GW.genind@pop)[grep(pattern = "QAc-G-", levels(QUAC.MSAT.GW.genind @pop))] <- 
   rep("garden", length(grep(pattern = "QAc-G-", levels(QUAC.MSAT.GW.genind @pop))))
 # Correct popNames: samples with popName pattern QAc-W- are wild
-levels(QUAC.MSAT.GW.genind @pop)[grep(pattern = "QAc-W-", levels(QUAC.MSAT.GW.genind @pop))] <- 
+levels(QUAC.MSAT.GW.genind@pop)[grep(pattern = "QAc-W-", levels(QUAC.MSAT.GW.genind @pop))] <- 
   rep("wild", length(grep(pattern = "QAc-W-", levels(QUAC.MSAT.GW.genind @pop))))
-# Subset to only wild individuals
+# Create a vector of MSAT tissue names, for subsetting later
+QUAC.MSAT.tissueNames <- indNames(QUAC.MSAT.GW.genind)
+# Create a genind that is only wild individuals
 QUAC.MSAT.W.genind <- QUAC.MSAT.GW.genind[which(pop(QUAC.MSAT.GW.genind)=="wild"),, drop=TRUE]
+# Create a vector of wild MSAT tissue names, for subsetting later
+QUAC.MSAT.W.tissueNames <- indNames(QUAC.MSAT.W.genind)
 
 # SNP: DE NOVO, R80, GARDEN AND WILD
 genpop.filePath <-
@@ -97,6 +101,11 @@ QUAC.SNP.DN.GW.R80.genind <- read.genepop(paste0(genpop.filePath,"populations.sn
 pop(QUAC.SNP.DN.GW.R80.genind) <- factor(read.table(paste0(genpop.filePath, "QUAC_popmap_gardenProv"), header=FALSE)[,2])
 # Capture sample names, to give the samples in the final Subset MSAT file names identical to SNP names (rather than "Tissue" names)
 QUAC.SNP.GW.Subset.sampleNames <- factor(read.table(paste0(genpop.filePath, "QUAC_popmap_gardenProv"), header=FALSE)[,1])
+# Stacks population module generates a .genepop output that is order by population, rather than the
+# order specified in the popmap file. To address this, we have to rearrange genetic matrix rows 
+# according to the order in the popmap file.
+QUAC.SNP.DN.GW.R80.genind@tab <- 
+  QUAC.SNP.DN.GW.R80.genind@tab[as.character(QUAC.SNP.GW.Subset.sampleNames),,drop=FALSE]
 
 # SNP: DE NOVO, R80, WILD
 genpop.filePath <-
@@ -107,7 +116,7 @@ pop(QUAC.SNP.DN.W.R80.genind) <- factor(read.table(paste0(genpop.filePath, "QUAC
 # Capture sample names, to give the samples in the final Subset MSAT file names identical to SNP names (rather than "Tissue" names)
 QUAC.SNP.W.sampleNames <- factor(read.table(paste0(genpop.filePath, "QUAC_popmap_wild_NoK"), header=FALSE)[,1])
 
-# SNP: REFERENCE, R80
+# SNP: REFERENCE, R80, WILD
 genpop.filePath <-
   "/RAID1/IMLS_GCCO/Analysis/Stacks/reference_filteredReads/QUAC/Q_rubra/output/populations_wild_R80_NOMAF_1SNP_NoK/"
 QUAC.SNP.REF.W.R80.genind <- read.genepop(paste0(genpop.filePath,"populations.snps.gen"))
@@ -115,32 +124,34 @@ QUAC.SNP.REF.W.R80.genind <- read.genepop(paste0(genpop.filePath,"populations.sn
 pop(QUAC.SNP.REF.W.R80.genind) <- factor(read.table(paste0(genpop.filePath, "QUAC_popmap_wild_NoK"), header=FALSE)[,2])
 
 # ---- SUBSET GENIND FILES ----
-# MSAT: read in Tissue database names from GCC_QUAC_ZAIN repository
-QUAC.MSAT.tissueNames_filepath <- 
-  "~/Documents/peripheralProjects/GCC_QUAC_ZAIN/Data_Files/Data_Frames/QUAC_woK_allpop_clean_df.csv"
-QUAC.MSAT.tissueNames <- unlist(read.csv2(QUAC.MSAT.tissueNames_filepath, header = TRUE, sep=",")[1])
-# Rename garden and wild MSAT matrix
-rownames(QUAC.MSAT.GW.genind@tab) <- QUAC.MSAT.tissueNames
-# Remove garden samples, and rename MSAT matrix
-QUAC.MSAT.W.tissueNames <- QUAC.MSAT.tissueNames[-grep(pattern = "QAc-G-", QUAC.MSAT.tissueNames)]
-rownames(QUAC.MSAT.W.genind@tab) <- QUAC.MSAT.W.tissueNames
-
 # SNP: read in Tissue database names
 # This file was created (by Austin K.), and can be found on the Hoban Lab Drive ("MSATcomparisons_TissueNames")
-QUAC.SNP.tissueNames_filepath <- paste0(SSRvSNP.wd,"exSituRepresentation/QUAC_SNP_TissueNames.csv")
-QUAC.SNP.tissueNames <- unlist(read.csv2(QUAC.SNP.tissueNames_filepath, header = TRUE, sep = ",")[3])
-# For wild only analyses: remove garden samples, and rename SNP matrices
-QUAC.SNP.W.tissueNames <- QUAC.SNP.tissueNames[-grep(pattern = "QAc-G-", QUAC.SNP.tissueNames)]
+QUAC.SNP.sampleTable_filepath <- paste0(SSRvSNP.wd,"exSituRepresentation/QUAC_SNP_TissueNames.csv")
+QUAC.SNP.sampleTable <- read.table(QUAC.SNP.sampleTable_filepath, header = TRUE, sep = ",")
+# Create vector of tissue names: return values in column 3, according to matching column 1 and
+# rownames of genind object
+QUAC.SNP.tissueNames <- 
+  QUAC.SNP.sampleTable[match(rownames(QUAC.SNP.DN.GW.R80.genind@tab), QUAC.SNP.sampleTable[,1]),3]
+# Rename genind rows to tissue names (instead of sample names)
+rownames(QUAC.SNP.DN.GW.R80.genind@tab) <- QUAC.SNP.tissueNames
+
+# For wild only analyses, remove garden names from tissue names vector, and sort
+QUAC.SNP.W.tissueNames <- sort(QUAC.SNP.tissueNames[-grep(pattern = "QAc-G-", QUAC.SNP.tissueNames)])
+# Rename wild SNP genind objects
 rownames(QUAC.SNP.DN.W.R80.genind@tab) <- rownames(QUAC.SNP.REF.W.R80.genind@tab) <- QUAC.SNP.W.tissueNames
 
-# Subset SNP sample names by those that are also seen within the MSAT samples 
-QUAC_sharedSamples <- sort(QUAC.SNP.tissueNames[which(QUAC.SNP.tissueNames %in% QUAC.MSAT.tissueNames)])
+# Subset SNP sample names by those that are also seen within the MSAT samples
+# In order to keep the sample order seen in SNP garden Prov genind files, we do not sort these names
+QUAC_sharedSamples <- QUAC.MSAT.tissueNames[match(QUAC.SNP.tissueNames, QUAC.MSAT.tissueNames)]
 # Subset Wild SNP sample names by those that are also seen within the MSAT samples 
 QUAC_Wild_sharedSamples <- sort(QUAC.SNP.W.tissueNames[which(QUAC.SNP.W.tissueNames %in% QUAC.MSAT.W.tissueNames)])
 # Subset SNP and MSAT genind matrices to strictly shared samples, dropping now absent alleles
 # SNP
-QUAC.SNP.DN.R80.W_subset.genind <- QUAC.SNP.DN.W.R80.genind[QUAC_Wild_sharedSamples,, drop=TRUE]
-QUAC.SNP.REF.R80.W_subset.genind <- QUAC.SNP.REF.W.R80.genind[QUAC_Wild_sharedSamples,, drop=TRUE]
+# Garden and Wild
+QUAC.SNP.DN.GW.R80_subset.genind <- QUAC.SNP.DN.GW.R80.genind[QUAC_sharedSamples,, drop=TRUE]
+# Wild
+QUAC.SNP.DN.W.R80_subset.genind <- QUAC.SNP.DN.W.R80.genind[QUAC_Wild_sharedSamples,, drop=TRUE]
+QUAC.SNP.REF.W.R80_subset.genind <- QUAC.SNP.REF.W.R80.genind[QUAC_Wild_sharedSamples,, drop=TRUE]
 
 # MSAT
 # Garden and Wild
@@ -159,7 +170,7 @@ genind2structure(QUAC.MSAT.W.genind, file = paste0(structFilesFolder, "QUAC.MSAT
 genind2structure(QUAC.MSAT.GW_subset.genind, file = paste0(structFilesFolder, "QUAC.MSAT.GardenAndWild_Subset.str"))
 genind2structure(QUAC.MSAT.W_subset.genind, file = paste0(structFilesFolder, "QUAC.MSAT.Wild_Subset.str"))
 # SNP: Commands commented out, as SNP .str files are generated using Stacks populations module
-# genind2structure(QUAC.SNP.DN.R80_subset.genind, file = paste0(structFilesFolder,"QUAC.SNP.DN.R80_Subset.str"))
+# genind2structure(QUAC.SNP.DN.GW.R80_subset.genind, file = paste0(structFilesFolder,"QUAC.SNP.DN.R80_Subset.str"))
 # genind2structure(QUAC.SNP.REF.R80_subset.genind, file = paste0(structFilesFolder,"QUAC.SNP.REF.R80_Subset.str"))
 
 # %%%% QUBO %%%% ----
@@ -180,6 +191,12 @@ genpop.filePath <-
 QUBO.SNP.DN.R80.genind <- read.genepop(paste0(genpop.filePath,"populations.snps.gen"))
 # Correct popNames
 pop(QUBO.SNP.DN.R80.genind) <- factor(read.table(paste0(genpop.filePath, "QUBO_popmap_wild_Subset_Ordered2"), header=FALSE)[,2])
+# Capture sample names in wild population order specified in Stacks
+# This is to ensure Subset MSAT and SNP structure files have identical sample orders (useful for plotting)
+QUBO.SNP.sampleNames <- as.character(read.table(paste0(genpop.filePath, "QUBO_popmap_wild_Subset_Ordered2"), header=FALSE)[,1])
+# Order the samples in the matrix of the genind file according to the sample order specified in the popmap
+# During the process of reading in the genepop files, sample order changes (samples become sorted according to name)
+QUBO.SNP.DN.R80.genind@tab <- QUBO.SNP.DN.R80.genind@tab[QUBO.SNP.sampleNames,]
 
 # SNP: REFERENCE, R80, WILD
 genpop.filePath <- 
@@ -187,15 +204,38 @@ genpop.filePath <-
 QUBO.SNP.REF.R80.genind <- read.genepop(paste0(genpop.filePath,"populations.snps.gen"))
 # Correct popNames
 pop(QUBO.SNP.REF.R80.genind) <- factor(read.table(paste0(genpop.filePath,"QUBO_popmap_wild_Subset_Ordered2"), header=FALSE)[,2])
+# Order the samples in the matrix of the genind file according to the sample order specified in the popmap
+# During the process of reading in the genepop files, sample order changes (samples become sorted according to name)
+QUBO.SNP.REF.R80.genind@tab <- QUBO.SNP.REF.R80.genind@tab[QUBO.SNP.sampleNames,]
 
 # ---- SUBSET GENIND FILES ----
 # MSAT: Split sample names on underscore, and return 3rd element. Rename the sample matrix 
 QUBO.MSAT.sampleNames <- unlist(lapply(rownames(QUBO.MSAT.W.genind@tab), function(x) strsplit(x, "_")[[1]][3]))
 rownames(QUBO.MSAT.W.genind@tab) <- QUBO.MSAT.sampleNames
 
+# # !!! WORKING !!!
+# # SNP: Remove QUBO_W_ headers from sample names
+# QUBO.SNP.NEW.sampleNames <- gsub("QUBO_W_",replacement = "", QUBO.SNP.NEW.sampleNames)
+# QUBO.SNP.NEW.sampleNames <- gsub("QUBO_W_",replacement = "", QUBO.SNP.NEW.sampleNames)
+# # Replace SH-Q names in SNP list with IMLS names
+# # These were determined by Austin K., and are outlined on the Hoban Lab Drive ("MSATcomparisons_TissueNames")
+# # Only 1 of the 11 SH_Q garden samples has an IMLS sample name (SHQ2177); others are unshared 
+# QUBO.SNP.NEW.sampleNames <- gsub("SH_Q2177",replacement = "IMLS338", QUBO.SNP.NEW.sampleNames)
+# QUBO.SNP.NEW.sampleNames <- gsub("SH_Q2178",replacement = "IMLS312", QUBO.SNP.NEW.sampleNames)
+# QUBO.SNP.NEW.sampleNames <- gsub("SH_Q2179",replacement = "IMLS062", QUBO.SNP.NEW.sampleNames)
+# QUBO.SNP.NEW.sampleNames <- gsub("SH_Q2180",replacement = "IMLS051", QUBO.SNP.NEW.sampleNames)
+# QUBO.SNP.NEW.sampleNames <- gsub("SH_Q2181",replacement = "IMLS011", QUBO.SNP.NEW.sampleNames)
+# QUBO.SNP.NEW.sampleNames <- gsub("SH_Q2182",replacement = "IMLS144", QUBO.SNP.NEW.sampleNames)
+# QUBO.SNP.NEW.sampleNames <- gsub("SH_Q2183",replacement = "IMLS170", QUBO.SNP.NEW.sampleNames)
+# QUBO.SNP.NEW.sampleNames <- gsub("SH_Q2184",replacement = "IMLS005", QUBO.SNP.NEW.sampleNames)
+# QUBO.SNP.NEW.sampleNames <- gsub("SH_Q2186",replacement = "IMLS017", QUBO.SNP.NEW.sampleNames)
+# # Rename sample matrices
+# rownames(QUBO.SNP.REF.R80.genind@tab) <- rownames(QUBO.SNP.DN.R80.genind@tab) <- QUBO.SNP.NEW.sampleNames
+# 
+# 
+
 # SNP: Remove QUBO_W_ headers from sample names
-QUBO.SNP.sampleNames <- gsub("QUBO_W_",replacement = "", row.names(QUBO.SNP.REF.R80.genind@tab))
-QUBO.SNP.sampleNames <- gsub("QUBO_W_",replacement = "", row.names(QUBO.SNP.DN.R80.genind@tab))
+QUBO.SNP.sampleNames <- gsub("QUBO_W_",replacement = "", QUBO.SNP.sampleNames)
 # Replace SH-Q names in SNP list with IMLS names
 # These were determined by Austin K., and are outlined on the Hoban Lab Drive ("MSATcomparisons_TissueNames")
 # Only 1 of the 11 SH_Q garden samples has an IMLS sample name (SHQ2177); others are unshared 
