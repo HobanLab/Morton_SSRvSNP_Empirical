@@ -110,7 +110,7 @@ plot_multipleK <- function(kList, kValues, kColors, tickMarks, parFlag=TRUE, pop
     axis(2, at = c(0, 0.25, 0.5, 0.75, 1), cex.axis = 1, las = 2, pos = -0.02)
     # For all but the last plot call, show tick marks
     if(i != length(kList)){
-      axis(1, at=tickMarks, labels = FALSE, lwd.ticks = 2, tck=-0.2)
+      axis(1, at=tickMarks, labels = FALSE, lwd.ticks = 2, tck=-0.1)
     }
   }
 }
@@ -157,11 +157,11 @@ QUAC.colors <- c('#A8FFFD','#B862D3', '#A39D9D','#FFFF00',
 QUAC.labelNames <- c("Magazine_W","Magazine_G","Porter_W","Porter_G", "Pryor_W","Pryor_G",
                      "Sugarloaf_W", "Sugarloaf_G", "Unknown")
 # Label positions (All Ks and K=4)
-QUAC.labelPositions_AllKs <- c(14, 48, 78, 103, 119, 140, 170, 183, 190)
+QUAC.labelPositions_AllKs <- c(14, 48, 78, 101, 119, 140, 170, 183, 190)
 QUAC.labelPositions_K4 <- c(15, 57, 90, 116, 136, 160, 191, 209, 216)
 # Tick mark positions (All Ks and K=4)
-QUAC.tickMarks_AllKs <- c(0,24.1,64.2,90.1,108,126,152.3,179.8,183)
-QUAC.tickMarks_K4 <- c(0,27.8,73.2,103.2,122.7,143,174.2,205.3,209)
+QUAC.tickMarks_AllKs <- c(0,24.1,64.2,90.3,107,125,151.3,178.6,182.8)
+QUAC.tickMarks_K4 <- c(0,27.8,73.2,103.2,122.6,143,173,204.2,209)
 # Variable file path: popmap file used by Stacks, which contains sample and population names
 QUAC.popMap <- 
   "/RAID1/IMLS_GCCO/Analysis/Stacks/denovo_finalAssemblies/QUAC/output/populations_R80_gardenProv/QUAC_popmap_gardenProv"
@@ -172,7 +172,7 @@ QUAC.popNames <- as.character(factor(read.table(QUAC.popMap, header=FALSE)[,2]))
 # %%% MSAT ----
 # Variable file path: directory containing all CLUMPPs output to read in
 QUAC.MSAT.clumppDir <- 
-  "/RAID1/IMLS_GCCO/Analysis/STRUCTURE/MSAT/QUAC/Subset_GardenAndWild_NoK/Output/CLUMPAK/Output/mainPipeline/QUAC.MSAT.Subset.GW.NoK_K2-7/"
+  "/RAID1/IMLS_GCCO/Analysis/STRUCTURE/MSAT/QUAC/Subset_GardenAndWild_NoK/Output/CLUMPAK/Output/mainPipeline/QUAC.MSAT.GW.Subset.NoK_K2-7/"
 
 # All Ks (K=2-7) ----
 Plot_AllK(clumppPath = QUAC.MSAT.clumppDir, Ks=2:7, Colors = QUAC.colors, tickMarks = QUAC.tickMarks_AllKs,
@@ -199,7 +199,7 @@ text(x=QUAC.labelPositions_K4, y=-0.07, srt=35, adj=1, xpd=TRUE, labels=QUAC.lab
 # ---- DE NOVO ----
 # Variable file path: directory containing all CLUMPPs output to read in
 QUAC.SNP.DN.clumppDir <- 
-  "/RAID1/IMLS_GCCO/Analysis/STRUCTURE/denovo_finalAssemblies/QUAC/Subset/GardenAndWild_NoK/Output/CLUMPAK/Output/mainPipeline/QUAC.SNP.DN.Subset.GW.NoK_K2-7/"
+  "/RAID1/IMLS_GCCO/Analysis/STRUCTURE/denovo_finalAssemblies/QUAC/Subset/GardenAndWild_NoK/Output/CLUMPAK/Output/mainPipeline/QUAC.DNFA.Subset.GW.NoK_K2-7/"
 
 # All Ks (K=2-7) ----
 Plot_AllK(clumppPath = QUAC.SNP.DN.clumppDir, Ks=2:7, Colors = QUAC.colors, tickMarks = QUAC.tickMarks_AllKs, 
@@ -226,7 +226,7 @@ text(x=QUAC.labelPositions_K4, y=-0.07, srt=35, adj=1, xpd=TRUE, labels=QUAC.lab
 # For QUAC Reference analyses, Stacks populations module was run using 5,000 randomly selected "whitelisted" loci,
 # in order to ease STRUCTURE computations
 QUAC.SNP.REF.clumppDir <- 
-  "/RAID1/IMLS_GCCO/Analysis/STRUCTURE/reference_filteredReads/QUAC/Subset/GardenAndWild_NoK_WL/Output/CLUMPAK/Output/mainPipeline/QUAC.Subset.GW.NoK.WL_K2-7/"
+  "/RAID1/IMLS_GCCO/Analysis/STRUCTURE/reference_filteredReads/QUAC/Subset/GardenAndWild_NoK_WL/Output/CLUMPAK/Output/mainPipeline/QUAC.REF.GW.Subset.NoK.WL_K2-7/"
 
 # All Ks (K=2-7) ----
 Plot_AllK(clumppPath = QUAC.SNP.REF.clumppDir, Ks=2:7, Colors = QUAC.colors, tickMarks = QUAC.tickMarks_AllKs,
@@ -257,17 +257,17 @@ par(mar = c(1.2,1,1.2,0.75) + 0.1, oma = c(0.5,1,4,0), mgp = c(2,1,0))
 # MSAT
 Plot_AllK(clumppPath = QUAC.MSAT.clumppDir, Ks=2:7, Colors = QUAC.colors, tickMarks = QUAC.tickMarks_AllKs, 
           popNames = QUAC.popNames, parFlag = FALSE)
-axis(1, at=QUAC.tickMarks_AllKs, labels = FALSE, lwd.ticks = 2, tck=-0.2)
+axis(1, at=QUAC.tickMarks_AllKs, labels = FALSE, lwd.ticks = 2, tck=-0.12)
 mtext("QUAC: MSAT (Subset)", side=3, line=40.5, cex=0.8)
 # SNP: DE NOVO 
 Plot_AllK(clumppPath = QUAC.SNP.DN.clumppDir, Ks=2:7, Colors = QUAC.colors, tickMarks = QUAC.tickMarks_AllKs, 
           popNames = QUAC.popNames, parFlag = FALSE)
-axis(1, at=QUAC.tickMarks_AllKs, labels = FALSE, lwd.ticks = 2, tck=-0.2)
+axis(1, at=QUAC.tickMarks_AllKs, labels = FALSE, lwd.ticks = 2, tck=-0.12)
 mtext("QUAC: SNP, De novo (Subset, R80)", side=3, line=40.5, cex=0.8)
 # SNP: REFERENCE
 Plot_AllK(clumppPath = QUAC.SNP.REF.clumppDir, Ks=2:7, Colors = QUAC.colors, tickMarks = QUAC.tickMarks_AllKs,
           popNames = QUAC.popNames, parFlag = FALSE)
-axis(1, at=QUAC.tickMarks_AllKs, labels = FALSE, lwd.ticks = 2, tck=-0.2)
+axis(1, at=QUAC.tickMarks_AllKs, labels = FALSE, lwd.ticks = 2, tck=-0.12)
 mtext("QUAC: SNP, Reference (Subset, R80)", side=3, line=40.5, cex=0.8)
 
 # Geographic K (K=4), MajorCluster results ----
