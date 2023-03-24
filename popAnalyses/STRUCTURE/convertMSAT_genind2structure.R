@@ -213,27 +213,6 @@ QUBO.SNP.REF.R80.genind@tab <- QUBO.SNP.REF.R80.genind@tab[QUBO.SNP.sampleNames,
 QUBO.MSAT.sampleNames <- unlist(lapply(rownames(QUBO.MSAT.W.genind@tab), function(x) strsplit(x, "_")[[1]][3]))
 rownames(QUBO.MSAT.W.genind@tab) <- QUBO.MSAT.sampleNames
 
-# # !!! WORKING !!!
-# # SNP: Remove QUBO_W_ headers from sample names
-# QUBO.SNP.NEW.sampleNames <- gsub("QUBO_W_",replacement = "", QUBO.SNP.NEW.sampleNames)
-# QUBO.SNP.NEW.sampleNames <- gsub("QUBO_W_",replacement = "", QUBO.SNP.NEW.sampleNames)
-# # Replace SH-Q names in SNP list with IMLS names
-# # These were determined by Austin K., and are outlined on the Hoban Lab Drive ("MSATcomparisons_TissueNames")
-# # Only 1 of the 11 SH_Q garden samples has an IMLS sample name (SHQ2177); others are unshared 
-# QUBO.SNP.NEW.sampleNames <- gsub("SH_Q2177",replacement = "IMLS338", QUBO.SNP.NEW.sampleNames)
-# QUBO.SNP.NEW.sampleNames <- gsub("SH_Q2178",replacement = "IMLS312", QUBO.SNP.NEW.sampleNames)
-# QUBO.SNP.NEW.sampleNames <- gsub("SH_Q2179",replacement = "IMLS062", QUBO.SNP.NEW.sampleNames)
-# QUBO.SNP.NEW.sampleNames <- gsub("SH_Q2180",replacement = "IMLS051", QUBO.SNP.NEW.sampleNames)
-# QUBO.SNP.NEW.sampleNames <- gsub("SH_Q2181",replacement = "IMLS011", QUBO.SNP.NEW.sampleNames)
-# QUBO.SNP.NEW.sampleNames <- gsub("SH_Q2182",replacement = "IMLS144", QUBO.SNP.NEW.sampleNames)
-# QUBO.SNP.NEW.sampleNames <- gsub("SH_Q2183",replacement = "IMLS170", QUBO.SNP.NEW.sampleNames)
-# QUBO.SNP.NEW.sampleNames <- gsub("SH_Q2184",replacement = "IMLS005", QUBO.SNP.NEW.sampleNames)
-# QUBO.SNP.NEW.sampleNames <- gsub("SH_Q2186",replacement = "IMLS017", QUBO.SNP.NEW.sampleNames)
-# # Rename sample matrices
-# rownames(QUBO.SNP.REF.R80.genind@tab) <- rownames(QUBO.SNP.DN.R80.genind@tab) <- QUBO.SNP.NEW.sampleNames
-# 
-# 
-
 # SNP: Remove QUBO_W_ headers from sample names
 QUBO.SNP.sampleNames <- gsub("QUBO_W_",replacement = "", QUBO.SNP.sampleNames)
 # Replace SH-Q names in SNP list with IMLS names
