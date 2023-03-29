@@ -95,12 +95,12 @@ QUAC.MSAT.W.tissueNames <- indNames(QUAC.MSAT.W.genind)
 
 # SNP: DE NOVO, R80, GARDEN AND WILD
 genpop.filePath <-
-  "/RAID1/IMLS_GCCO/Analysis/Stacks/denovo_finalAssemblies/QUAC/output/populations_R80_gardenProv/"
+  "/RAID1/IMLS_GCCO/Analysis/Stacks/denovo_finalAssemblies/QUAC/output/populations_R80_gardenProv_Ordered/"
 QUAC.SNP.DN.GW.R80.genind <- read.genepop(paste0(genpop.filePath,"populations.snps.gen"))
 # Correct popNames
-pop(QUAC.SNP.DN.GW.R80.genind) <- factor(read.table(paste0(genpop.filePath, "QUAC_popmap_gardenProv"), header=FALSE)[,2])
+pop(QUAC.SNP.DN.GW.R80.genind) <- factor(read.table(paste0(genpop.filePath, "QUAC_popmap_gardenProv_Ordered"), header=FALSE)[,2])
 # Capture sample names, to give the samples in the final Subset MSAT file names identical to SNP names (rather than "Tissue" names)
-QUAC.SNP.GW.Subset.sampleNames <- factor(read.table(paste0(genpop.filePath, "QUAC_popmap_gardenProv"), header=FALSE)[,1])
+QUAC.SNP.GW.Subset.sampleNames <- factor(read.table(paste0(genpop.filePath, "QUAC_popmap_gardenProv_Ordered"), header=FALSE)[,1])
 # Stacks population module generates a .genepop output that is order by population, rather than the
 # order specified in the popmap file. To address this, we have to rearrange genetic matrix rows 
 # according to the order in the popmap file.
