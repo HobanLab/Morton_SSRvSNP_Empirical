@@ -95,17 +95,17 @@ clusterColors <- alpha(clusterColors, alpha=0.6)
 QUBO.Qmat.cg <- cbind(QUBO.Qmat, clusterColors)
 
 # Generate a plot of points
-plot(QUBO.Qmat.cg$Longitude, QUBO.Qmat.cg$Latitude, col=QUBO.Qmat.cg$clusterColors, pch=16, cex=2.1,
+plot(QUBO.Qmat.cg$Longitude, QUBO.Qmat.cg$Latitude, col=QUBO.Qmat.cg$clusterColors, pch=16, cex=1.5,
      xlab="Longitude", ylab="Latitude", main="QUBO sample locations (De novo, R80)")
 # Add legend
 legend(x=-86.2, y=33.6,legend=c("Cluster 1", "Cluster 2"), col=c("darkred","grey"), pch = c(20,20), cex=1.5)
 
 # Zoom in on bottom left portion of above plot
 plot(QUBO.Qmat.cg$Longitude, QUBO.Qmat.cg$Latitude, col=QUBO.Qmat.cg$clusterColors, pch=16, cex=1.5,
-     xlab="Longitude", ylab="Latitude", main="Southwest Cluster", xlim=c(-86.855,-86.655), ylim=c(33.295,33.57))
+     xlab="Longitude", ylab="Latitude", main="Southwest Cluster (De novo, R80)", xlim=c(-86.855,-86.655), ylim=c(33.295,33.57))
 # Zoom in on central portion of above plot
 plot(QUBO.Qmat.cg$Longitude, QUBO.Qmat.cg$Latitude, col=QUBO.Qmat.cg$clusterColors, pch=16, cex=1.5,
-     xlab="Longitude", ylab="Latitude", main="Central Range", xlim=c(-86.4,-86.275), ylim=c(33.6,33.96))
+     xlab="Longitude", ylab="Latitude", main="Central Range (De novo, R80)", xlim=c(-86.4,-86.275), ylim=c(33.6,33.96))
 # Zoom in on upper right portion of above plot
 plot(QUBO.Qmat.cg$Longitude, QUBO.Qmat.cg$Latitude, col=QUBO.Qmat.cg$clusterColors, pch=16, cex=1.5,
-     xlab="Longitude", ylab="Latitude", main="Northeast Cluster", xlim=c(-86.034,-86.026), ylim=c(34.046,34.05))
+     xlab="Longitude", ylab="Latitude", main="Northeast Cluster (De novo, R80)", xlim=c(-86.034,-86.026), ylim=c(34.046,34.05))
