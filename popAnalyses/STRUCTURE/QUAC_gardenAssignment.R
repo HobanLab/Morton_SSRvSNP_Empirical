@@ -154,17 +154,18 @@ Plot_AllK <- function(clumppPath, Ks, Colors, sampleNames, popNames,
 QUAC.colors <- c('#A8FFFD','#B862D3', '#A39D9D','#FFFF00', 
                  '#69C261', '#FF59AC', '#26CDCD',  '#C1C6FF') 
 # Population labels
-QUAC.labelNames <- c("Magazine_W","Magazine_G","Porter_W","Porter_G", "Pryor_W","Pryor_G",
-                     "Sugarloaf_W", "Sugarloaf_G", "Unknown")
-# Label positions (All Ks and K=4)
-QUAC.labelPositions_AllKs <- c(14, 48, 78, 101, 119, 140, 170, 183, 190)
-QUAC.labelPositions_K4 <- c(15, 57, 90, 116, 136, 160, 191, 209, 216)
-# Tick mark positions (All Ks and K=4)
-QUAC.tickMarks_AllKs <- c(0,24.1,64.2,90.3,107,125,151.3,178.6,182.8)
-QUAC.tickMarks_K4 <- c(0,27.8,73.2,103.2,122.6,143,173,204.2,209)
+QUAC.labelNames <- c("Porter_W", "Porter_G", "Magazine_W","Magazine_G","Pryor_W","Pryor_G",
+                     "Sugarloaf_W", "Sugarloaf_G", "Unknown_G")
+# Label and tick mark positions (All Ks)
+QUAC.labelPositions_AllKs <- c(15, 36, 57, 87.15, 119, 140, 170, 183, 190)
+QUAC.tickMarks_AllKs <- c(0,26.2,43.1,67.3,107,125,151.3,178.6,182.8)
+# Label and tick mark positions (K=4)
+QUAC.labelPositions_K4 <- c(17, 42, 65, 103, 136, 160, 191, 209, 216)
+QUAC.tickMarks_K4 <- c(0,30,49.4,76.9,122.6,143,173,204.2,209)
+
 # Variable file path: popmap file used by Stacks, which contains sample and population names
 QUAC.popMap <- 
-  "/RAID1/IMLS_GCCO/Analysis/Stacks/denovo_finalAssemblies/QUAC/output/populations_R80_gardenProv/QUAC_popmap_gardenProv"
+  "/RAID1/IMLS_GCCO/Analysis/Stacks/denovo_finalAssemblies/QUAC/output/populations_R80_gardenProv_Ordered/QUAC_popmap_gardenProv_Ordered"
 # Vectors for sample and population names (used for all MSAT and SNP datasets)
 QUAC.sampleNames <- as.character(factor(read.table(QUAC.popMap, header=FALSE)[,1]))
 QUAC.popNames <- as.character(factor(read.table(QUAC.popMap, header=FALSE)[,2]))
@@ -172,7 +173,7 @@ QUAC.popNames <- as.character(factor(read.table(QUAC.popMap, header=FALSE)[,2]))
 # %%% MSAT ----
 # Variable file path: directory containing all CLUMPPs output to read in
 QUAC.MSAT.clumppDir <- 
-  "/RAID1/IMLS_GCCO/Analysis/STRUCTURE/MSAT/QUAC/Subset_GardenAndWild_NoK/Output/CLUMPAK/Output/mainPipeline/QUAC.MSAT.GW.Subset.NoK_K2-7/"
+  "/RAID1/IMLS_GCCO/Analysis/STRUCTURE/MSAT/QUAC/Subset_GardenAndWild_NoK/Output/CLUMPAK/Output/mainPipeline/QUAC.MSAT.Subset.GW.NoK_K2-7/"
 
 # All Ks (K=2-7) ----
 Plot_AllK(clumppPath = QUAC.MSAT.clumppDir, Ks=2:7, Colors = QUAC.colors, tickMarks = QUAC.tickMarks_AllKs,
@@ -226,7 +227,7 @@ text(x=QUAC.labelPositions_K4, y=-0.07, srt=35, adj=1, xpd=TRUE, labels=QUAC.lab
 # For QUAC Reference analyses, Stacks populations module was run using 5,000 randomly selected "whitelisted" loci,
 # in order to ease STRUCTURE computations
 QUAC.SNP.REF.clumppDir <- 
-  "/RAID1/IMLS_GCCO/Analysis/STRUCTURE/reference_filteredReads/QUAC/Subset/GardenAndWild_NoK_WL/Output/CLUMPAK/Output/mainPipeline/QUAC.REF.GW.Subset.NoK.WL_K2-7/"
+  "/RAID1/IMLS_GCCO/Analysis/STRUCTURE/reference_filteredReads/QUAC/Subset/GardenAndWild_NoK_WL/Output/CLUMPAK/Output/mainPipeline/QUAC.REF.Subset.GW.NoK.WL_K2-7/"
 
 # All Ks (K=2-7) ----
 Plot_AllK(clumppPath = QUAC.SNP.REF.clumppDir, Ks=2:7, Colors = QUAC.colors, tickMarks = QUAC.tickMarks_AllKs,
