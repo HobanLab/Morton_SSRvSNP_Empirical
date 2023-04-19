@@ -1,6 +1,6 @@
 # Overview
 This repository contains the code used in the SSR vs. SNP marker comparison project,
-one of the initiatives in the GCCO group. We're looking to compare how microsatellite
+one of the initiatives in the [GCCO](https://www.globalconservationconsortia.org/gcc/oak/) group. We're looking to compare how microsatellite
 and RADseq markers differ in their measurements of ex situ representation
 of two different oak species, _Quercus boyntonii_ (or QUBO; Boynton oak, in Alabama, in the white oak
 section of the genus) and _Quercus acerifolia_ (or QUAC; a red oak, section Lobatae). 
