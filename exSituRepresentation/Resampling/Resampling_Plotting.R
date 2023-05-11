@@ -208,7 +208,7 @@ QUAC.SNP.DN.R80.Complete.arrayPath <- paste0(resamplingDataDir,"QUAC.SNP.DN.R80.
 QUAC.SNP.DN.Complete.imagePath <- paste0(imageOutDir,"supplement/Fig_S10.pdf")
 # Generate resampling plot (R0 and R80)
 resample_doublePlot_PDF(QUAC.SNP.DN.R0.Complete.arrayPath, QUAC.SNP.DN.R80.Complete.arrayPath, 
-                        QUAC.SNP.DN.Complete.imagePath, colors = plotColors, xLeg=78.5, yLeg=70, minSampleLineDist=20,
+                        QUAC.SNP.DN.Complete.imagePath, colors = plotColors, xLeg=76, yLeg=70, minSampleLineDist=20,
                         mainText1 = "QUAC, SNPs: De novo, R0 (Complete: 91 samples)",
                         mainText2 = "QUAC, SNPs: De novo, R80 (Complete: 91 samples)")
 # Subset
@@ -217,7 +217,7 @@ QUAC.SNP.DN.R80.Subset.arrayPath <- paste0(resamplingDataDir,"QUAC.SNP.DN.R80.Su
 QUAC.SNP.DN.Subset.imagePath <- paste0(imageOutDir,"supplement/Fig_S11.pdf")
 # Generate resampling plot (R0 and R80)
 resample_doublePlot_PDF(QUAC.SNP.DN.R0.Subset.arrayPath, QUAC.SNP.DN.R80.Subset.arrayPath, 
-                        QUAC.SNP.DN.Subset.imagePath, colors = plotColors, xLeg=78.5, yLeg=70, minSampleLineDist=20,
+                        QUAC.SNP.DN.Subset.imagePath, colors = plotColors, xLeg=76, yLeg=70, minSampleLineDist=20,
                         mainText1 = "QUAC, SNPs: De novo, R0 (Subset: 91 samples)",
                         mainText2 = "QUAC, SNPs: De novo, R80 (Subset: 91 samples)")
 # Reference ----
@@ -227,7 +227,7 @@ QUAC.SNP.REF.R80.Complete.arrayPath <- paste0(resamplingDataDir,"QUAC.SNP.REF.R8
 QUAC.SNP.REF.Complete.imagePath <- paste0(imageOutDir,"supplement/Fig_S12.pdf")
 # Generate resampling plot (R0 and R80)
 resample_doublePlot_PDF(QUAC.SNP.REF.R0.Complete.arrayPath, QUAC.SNP.REF.R80.Complete.arrayPath, 
-                        QUAC.SNP.REF.Complete.imagePath, colors = plotColors, xLeg=78.5, yLeg=70, minSampleLineDist=20,
+                        QUAC.SNP.REF.Complete.imagePath, colors = plotColors, xLeg=76, yLeg=70, minSampleLineDist=20,
                         mainText1 = "QUAC, SNPs: Reference, R0 (Complete: 91 samples)",
                         mainText2 = "QUAC, SNPs: Reference, R80 (Complete: 91 samples)")
 # Subset
@@ -236,7 +236,7 @@ QUAC.SNP.REF.R80.Subset.arrayPath <- paste0(resamplingDataDir,"QUAC.SNP.REF.R80.
 QUAC.SNP.REF.Subset.imagePath <- paste0(imageOutDir,"supplement/Fig_S13.pdf")
 # Generate resampling plot (R0 and R80)
 resample_doublePlot_PDF(QUAC.SNP.REF.R0.Subset.arrayPath, QUAC.SNP.REF.R80.Subset.arrayPath, 
-                        QUAC.SNP.REF.Subset.imagePath, colors = plotColors, xLeg=78.5, yLeg=70, minSampleLineDist=20,
+                        QUAC.SNP.REF.Subset.imagePath, colors = plotColors, xLeg=76, yLeg=70, minSampleLineDist=20,
                         mainText1 = "QUAC, SNPs: Reference, R0 (Subset: 91 samples)",
                         mainText2 = "QUAC, SNPs: Reference, R80 (Subset: 91 samples)")
 # %%%% QUBO ----
@@ -253,7 +253,7 @@ QUBO.MSAT.Subset.arrayPath <- paste0(resamplingDataDir,"QUBO.MSAT.Subset_resampA
 QUBO.MSAT.Subset.imagePath <- paste0(imageOutDir,"supplement/Fig_S15.pdf")
 # Generate resampling plot
 resample_singlePlot_PDF(QUBO.MSAT.Subset.arrayPath, QUBO.MSAT.Subset.imagePath,  
-                        colors = plotColors, xLeg=78.5, yLeg=40, minSampleLineDist=25, 
+                        colors = plotColors, xLeg=78, yLeg=40, minSampleLineDist=25, 
                         mainText = "QUBO, Microsatellites (Subset: 94 samples)")
 # SNP ---
 # De novo ----
@@ -263,7 +263,7 @@ QUBO.SNP.DN.R80.Complete.arrayPath <- paste0(resamplingDataDir,"QUBO.SNP.DN.R80.
 QUBO.SNP.DN.Complete.imagePath <- paste0(imageOutDir,"supplement/Fig_S16.pdf")
 # Generate resampling plot (R0 and R80)
 resample_doublePlot_PDF(QUBO.SNP.DN.R0.Complete.arrayPath, QUBO.SNP.DN.R80.Complete.arrayPath, 
-                        QUBO.SNP.DN.Complete.imagePath, colors = plotColors, xLeg=82, yLeg=70, minSampleLineDist=25,
+                        QUBO.SNP.DN.Complete.imagePath, colors = plotColors, xLeg=80, yLeg=65, minSampleLineDist=25,
                         mainText1 = "QUBO, SNPs: De novo, R0 (Complete: 95 samples)",
                         mainText2 = "QUBO, SNPs: De novo, R80 (Complete: 95 samples)")
 # Subset
@@ -272,7 +272,7 @@ QUBO.SNP.DN.R80.Subset.arrayPath <- paste0(resamplingDataDir,"QUBO.SNP.DN.R80.Su
 QUBO.SNP.DN.Subset.imagePath <- paste0(imageOutDir,"supplement/Fig_S17.pdf")
 # Generate resampling plot (R0 and R80)
 resample_doublePlot_PDF(QUBO.SNP.DN.R0.Subset.arrayPath, QUBO.SNP.DN.R80.Subset.arrayPath, 
-                        QUBO.SNP.DN.Subset.imagePath, colors = plotColors, xLeg=82, yLeg=70, minSampleLineDist=25,
+                        QUBO.SNP.DN.Subset.imagePath, colors = plotColors, xLeg=80, yLeg=65, minSampleLineDist=25,
                         mainText1 = "QUBO, SNPs: De novo, R0 (Subset: 94 samples)",
                         mainText2 = "QUBO, SNPs: De novo, R80 (Subset: 94 samples)")
 # Reference ----
@@ -282,7 +282,7 @@ QUBO.SNP.REF.R80.Complete.arrayPath <- paste0(resamplingDataDir,"QUBO.SNP.REF.R8
 QUBO.SNP.REF.Complete.imagePath <- paste0(imageOutDir,"supplement/Fig_S18.pdf")
 # Generate resampling plot (R0 and R80)
 resample_doublePlot_PDF(QUBO.SNP.REF.R0.Complete.arrayPath, QUBO.SNP.REF.R80.Complete.arrayPath, 
-                        QUBO.SNP.REF.Complete.imagePath, colors = plotColors, xLeg=82, yLeg=70, minSampleLineDist=25,
+                        QUBO.SNP.REF.Complete.imagePath, colors = plotColors, xLeg=80, yLeg=65, minSampleLineDist=25,
                         mainText1 = "QUBO, SNPs: Reference, R0 (Complete: 95 samples)",
                         mainText2 = "QUBO, SNPs: Reference, R80 (Complete: 95 samples)")
 # Subset
@@ -291,6 +291,6 @@ QUBO.SNP.REF.R80.Subset.arrayPath <- paste0(resamplingDataDir,"QUBO.SNP.REF.R80.
 QUBO.SNP.REF.Subset.imagePath <- paste0(imageOutDir,"supplement/Fig_S19.pdf")
 # Generate resampling plot (R0 and R80)
 resample_doublePlot_PDF(QUBO.SNP.REF.R0.Subset.arrayPath, QUBO.SNP.REF.R80.Subset.arrayPath, 
-                        QUBO.SNP.REF.Subset.imagePath, colors = plotColors, xLeg=82, yLeg=70, minSampleLineDist=25,
+                        QUBO.SNP.REF.Subset.imagePath, colors = plotColors, xLeg=80, yLeg=65, minSampleLineDist=25,
                         mainText1 = "QUBO, SNPs: Reference, R0 (Subset: 94 samples)",
                         mainText2 = "QUBO, SNPs: Reference, R80 (Subset: 94 samples)")
