@@ -185,7 +185,7 @@ resample_singlePlot_PDF <- function(arrayPath, imagePath="~/", colors, xLeg, yLe
   # Add legend
   legend(x=xLeg, y=yLeg, inset = 0.05,
          legend = c("Total","Very common","Common","Low frequency", "Rare"),
-         col=fullColors, pch = c(20,20,20), cex=1, pt.cex = 2, bty="n", y.intersp = 1)
+         col=fullColors, pch = c(20,20,20), cex=0.9, pt.cex = 2, bty="n", y.intersp = 1)
   # Turn off plotting device
   dev.off()
 }
@@ -224,7 +224,7 @@ resample_doublePlot_PDF <- function(arrayPath1, arrayPath2, imagePath="~/",
   # Add legend
   legend(x=xLeg, y=yLeg, inset = 0.05,
          legend = c("Total","Very common","Common","Low frequency", "Rare"),
-         col=fullColors, pch = c(20,20,20), cex=1, pt.cex = 2, bty="n", y.intersp = 1.2)
+         col=fullColors, pch = c(20,20,20), cex=0.9, pt.cex = 2, bty="n", y.intersp = 1)
   
   # %%% SECOND ARRAY
   # Use the matplot function to plot the matrix of average values, with specified settings
@@ -240,7 +240,7 @@ resample_doublePlot_PDF <- function(arrayPath1, arrayPath2, imagePath="~/",
   # Add legend
   legend(x=xLeg, y=yLeg, inset = 0.05,
          legend = c("Total","Very common","Common","Low frequency", "Rare"),
-         col=fullColors, pch = c(20,20,20), cex=1, pt.cex = 2, bty="n", y.intersp = 1.2)
+         col=fullColors, pch = c(20,20,20), cex=0.9, pt.cex = 2, bty="n", y.intersp = 1)
   
   # Turn off plotting device
   dev.off()
