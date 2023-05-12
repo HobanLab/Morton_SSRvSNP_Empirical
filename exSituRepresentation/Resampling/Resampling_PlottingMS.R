@@ -105,6 +105,7 @@ mtext(text=paste0("Minimum sampling size (95%) = ", QUAC.SNP.REF.R80.Subset.min9
 mtext(text="Number of individuals", side=1, line=2.5, cex=1.2)
 # Turn off plotting device
 dev.off()
+
 # %%%% QUBO ----
 # READ IN AND PROCESS DATASETS ----
 # MSAT
@@ -183,7 +184,7 @@ dev.off()
 # %%%% SUPPLEMENTAL PLOTS %%%% ----
 # For each dataset, input (resampling arrays) and output (PDF of graph) filepaths are declared.
 # Then, using this input/output, a plot is generated using the resample_plot_PDF function.
-# Plots are generated according to their order in the supplement
+# 12 plots are generated according to their order in the supplement
 # %%%% QUAC ----
 # MSAT ----
 # Complete
