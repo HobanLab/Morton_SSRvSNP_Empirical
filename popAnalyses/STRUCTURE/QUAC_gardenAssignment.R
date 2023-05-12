@@ -149,7 +149,7 @@ Plot_AllK <- function(clumppPath, Ks, Colors, sampleNames, popNames,
                  parFlag=parFlag, popNamesPresent = TRUE)
 }
 
-# %%%% QUAC %%%%
+# %%%% VARIABLES %%%% ----
 # Colors for different clusters: combinations of RGB components in hexadecimal
 QUAC.colors <- c('#A8FFFD','#B862D3', '#A39D9D','#FFFF00', 
                  '#69C261', '#FF59AC', '#26CDCD',  '#C1C6FF') 
