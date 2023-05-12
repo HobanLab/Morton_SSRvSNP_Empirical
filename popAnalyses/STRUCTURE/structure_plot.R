@@ -169,7 +169,7 @@ QUAC.tickMarks_AllKs <- c(26.3, 38, 68.2)
 QUAC.tickMarks_SingleK <- c(30,57.6,78.1)
 
 # %%% MSAT ----
-# Variable file path: directory containing all CLUMPPs output to read in
+# Variable file path: directory containing all CLUMPP outputs to read in
 QUAC.MSAT.clumppDir <- 
   "/RAID1/IMLS_GCCO/Analysis/STRUCTURE/MSAT/QUAC/Subset_Wild_NoK/output/CLUMPAK/Output/mainPipeline/QUAC.MSAT.Subset.Wild.NoK_K2-7/"
 
@@ -200,7 +200,7 @@ text(x=QUAC.labelPositions_SingleK, y=-0.075, srt=35, adj=1, xpd=TRUE, labels=QU
 
 # %%% SNP ----
 # ---- DE NOVO ----
-# Variable file path: directory containing all CLUMPPs output to read in
+# Variable file path: directory containing all CLUMPP outputs to read in
 QUAC.SNP.DN.S.clumppDir <- 
   "/RAID1/IMLS_GCCO/Analysis/STRUCTURE/denovo_finalAssemblies/QUAC/Subset/Wild_NoK/output/CLUMPAK/Output/mainPipeline/QUAC.DNFA.Subset.Wild.NoK_K2-7/"
 # All Ks (QUAC wild samples, K=2-7) ----
@@ -233,7 +233,7 @@ text(x=QUAC.labelPositions_SingleK, y=-0.063, srt=35, adj=1, xpd=TRUE, labels=QU
 # For QUAC Reference analyses, the original dataset was too large (~15,000 loci) to process 
 # using CLUMPAKs Best K pipeline. Therefore, and randomly selected subset of 5,000 loci were 
 # used for the STRUCTURE and CLUMPAK steps. These are shown here.
-# Variable file path: directory containing all CLUMPPs output to read in
+# Variable file path: directory containing all CLUMPP outputs to read in
 QUAC.SNP.REF.clumppDir <- 
   "/RAID1/IMLS_GCCO/Analysis/STRUCTURE/reference_filteredReads/QUAC/Subset/Wild_NoK_WL/output/CLUMPAK/Output/mainPipeline/QUAC.Subset.Wild.NoK.WL_K2-7/"
 # All Ks (QUAC wild samples, K=2-7) ----
@@ -339,7 +339,6 @@ text(x=QUAC.labelPositions_SingleK, y=-0.063, srt=35, adj=1, xpd=TRUE, labels=QU
 
 # Geographic K (K=4), Summary results (averaged across major and minor clusters) ----
 # Graphing parameters for K=4 across all 3 datasets (MSAT, SNP: De novo, SNP: Reference)
-# par(mfrow=c(3,1), mar = c(4.5,3,1.2,3), oma=c(1,0,1,0))
 par(mfrow=c(3,1), mar = c(4.5,3,0.9,3), oma=c(1,0,0.8,0))
 # MSAT
 Plot_K(QUAC.MSAT.clumppDir, K=4, Colors = QUAC.colors, QUAC.sampleNames, QUAC.popNames, majorClust = FALSE)
@@ -381,7 +380,7 @@ QUBO.tickMarks_AllKs <- c(2.2, 9.5, 19, 27.3, 34.7, 65.2, 87.2, 93.4)
 QUBO.tickMarks_SingleK <- c(2.5, 10.9, 21.7, 31.3, 39.7, 74.5, 99.7, 106.9)
 
 # %%% MSAT ----
-# Variable file path: directory containing all CLUMPPs output to read in
+# Variable file path: directory containing all CLUMPP outputs to read in
 QUBO.MSAT.clumppDir <- 
   "/RAID1/IMLS_GCCO/Analysis/STRUCTURE/MSAT/QUBO/Subset_Wild_Ordered2/output/CLUMPAK/Output/mainPipeline/QUBO.MSAT.W.Subset.Ordered2_K2-7/"
 
@@ -413,7 +412,7 @@ text(x=QUBO.labelPositions_SingleK, y=-0.05, srt=35, adj=1, xpd=TRUE, labels=QUB
 
 # %%% SNP ----
 # ---- DE NOVO ----
-# Variable file path: directory containing all CLUMPPs output to read in
+# Variable file path: directory containing all CLUMPP outputs to read in
 QUBO.SNP.DN.clumppDir <- 
   "/RAID1/IMLS_GCCO/Analysis/STRUCTURE/denovo_finalAssemblies/QUBO/Subset/Wild_Ordered2/output/CLUMPAK/Output/mainPipeline/QUBO_SNP_DN_mainPipeline/"
 
@@ -444,7 +443,7 @@ axis(1, at=QUBO.tickMarks_SingleK, labels = FALSE, lwd.ticks = 2, tck=-0.15)
 text(x=QUBO.labelPositions_SingleK, y=-0.05, srt=35, adj=1, xpd=TRUE, labels=QUBO.labelNames, cex=1)
 
 # ---- REFERENCE ----
-# Variable file path: directory containing all CLUMPPs output to read in
+# Variable file path: directory containing all CLUMPP outputs to read in
 QUBO.SNP.REF.clumppDir <- 
   "/RAID1/IMLS_GCCO/Analysis/STRUCTURE/denovo_finalAssemblies/QUBO/Subset/Wild_Ordered2/output/CLUMPAK/Output/mainPipeline/QUBO_SNP_DN_mainPipeline/"
 
