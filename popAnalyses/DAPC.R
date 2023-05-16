@@ -2,16 +2,28 @@
 # %%% DISCRIMINANT ANALYSIS OF PRINCIPAL COMPONENTS (DAPC) %%%
 # %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-# This script uses the adegenet package to run DAPC on two datasets
-# For QUAC, the de novo final assembly (DNFA) dataset is used
-# For QUBO, the dataset aligned to the Quercus robur reference genome (GSNAP4) is used
-# In both analyses, garden and wild samples are included 
+# This script uses the adegenet package to run DAPC on six datasets:
+# for each species (QUAC and QUBO), the MSAT, SNP De novo, and SNP Reference loci datasets are imaged.
+# For all datasets, the Subset Wild samples (only wild individuals shared between MSAT and SNP studies)
+# are used. For SNP datasets, R80 loci are used.
+# Each of these DAPC plots are used for the manuscript. Because the orientation of points for each plot
+# will be changed each time DAPC is run, DAPC plots may appear differently across multiple runs.
+
+# Additionally, we visualize the Complete Wild MSAT datasets, for both species. These plots are not currently 
+# included in the supplemental material, for this project.
+
+# For SNP datasets, DAPC is used to visualize both the "supported" number of clusters
+# (those with the lowest BIC scores) and the "geographic" number of clusters (essentially, the number
+# of genetic clusters we expect, based on geography). However, only the supported number of clusters are
+# included in the supplemental material for this project. 
 
 library(adegenet)
 library(scales)
 # Set the working directory
 SSRvSNP.wd <- "~/Documents/SSRvSNP/Code/"
 setwd(SSRvSNP.wd)
+# Specify path to the directory (on the lab server), where DAPC plots (PDFs) will be saved
+imageOutDir <- "/home/akoontz/Documents/SSRvSNP/Documentation/Images/MolEcol_202305_Images/"
 
 # TO DO: Emily wants you to run a normal PCA on the dataset (i.e. not through adegenet; instructions
 # in adegenet Basics tutorial)
@@ -129,8 +141,8 @@ cbind(QUAC.Subset.W.MSAT.dapc1$grp, as.character(pop(QUAC.Subset.W.MSAT.genind))
 scatter(QUAC.Subset.W.MSAT.dapc1, scree.da=F, bg="white", pch=20, cell=0, cstar=0, solid=0.6, clab=0, legend=T,
         posi.leg=locator(n=1), cleg=1.0, cex=2, inset.solid=1,
         col = c("#66A61E","#E7298A","#7570B3","#2171B5"),
-        txt.leg = c("Porter", "Magazine", "Pryor", "Sugarloaf"))
-mtext("QUAC MSAT: Subset Wild", adj=0.25)
+        txt.leg = c("Pryor", "Magazine", "Sugarloaf", "Porter"))
+mtext("QUAC MSAT: Subset Wild (K=4)", line=2, adj=0.35)
 
 # SNP, DE NOVO (R80) ----
 # SUPPORTED CLUSTERS ----
@@ -151,8 +163,8 @@ cbind(QUAC.Subset.W.SNP.DN.dapc1$grp, as.character(pop(QUAC.Subset.W.SNP.DN.geni
 scatter(QUAC.Subset.W.SNP.DN.dapc1, scree.da=F, bg="white", pch=20, cell=0, cstar=0, solid=0.6, clab=0, legend=T,
         posi.leg=locator(n=1), cleg=1.0, cex=2, inset.solid=1,
         col = c("#66A61E","#E7298A","#7570B3","#2171B5"),
-        txt.leg = c("Pryor", "Sugarloaf/Magazine/Porter"))
-mtext("QUAC SNP De novo (R80): Subset Wild (Supported Clusters)", adj=0.15)
+        txt.leg = c("Sugarloaf/Magazine/Porter", "Pryor"))
+mtext("QUAC SNP De novo (R80): Subset Wild (K=2)", adj=0.15)
 
 # GEOGRAPHIC CLUSTERS ----
 # K-means clustering step
@@ -195,7 +207,7 @@ scatter(QUAC.Subset.W.SNP.REF.dapc1, scree.da=F, bg="white", pch=20, cell=0, cst
         posi.leg=locator(n=1), cleg=1.0, cex=2, inset.solid=1,
         col = c("#66A61E","#E7298A","#7570B3","#2171B5"),
         txt.leg = c("Pryor", "Sugarloaf/Magazine/Porter"))
-mtext("QUAC SNP Reference (R80): Subset Wild (Supported Clusters)", adj=0.15)
+mtext("QUAC SNP Reference (R80): Subset Wild (K=2)", adj=0.15)
 
 # GEOGRAPHIC CLUSTERS ----
 # K-means clustering step
@@ -332,20 +344,19 @@ QUBO.Subset.W.MSAT.grp <- find.clusters(QUBO.Subset.W.MSAT.genind)
 # Clusters (seeking to minimize the Bayesian Information Criterion value): 3
 # Conduct DAPC: transform the data using PCA, then run discriminant analysis on retained principal components,
 # using the inferred groupings from the k-means clustering step above
-# QUBO.Subset.W.MSAT.dapc1 <- dapc(x=QUBO.Subset.W.MSAT.genind, pop=QUBO.Subset.W.MSAT.grp$grp, n.pca = 40, n.da = 2)
+# QUBO.Subset.W.MSAT.dapc1 <- dapc(x=QUBO.Subset.W.MSAT.genind, pop=QUBO.Subset.W.MSAT.grp$grp, n.pca = 45, n.da = 2)
 QUBO.Subset.W.MSAT.dapc1 <- dapc(x=QUBO.Subset.W.MSAT.genind, pop=QUBO.Subset.W.MSAT.grp$grp)
-# Retained PCs (specifying a large value can lead to overfitting/unstable membership probability): 40
+# Retained PCs (specifying a large value can lead to overfitting/unstable membership probability): 45
 # Discriminant functions to retain (for less than 10 clusters, all eigenvalues can be retained): 2
 # List grouping of each individual (helpful for determining correct coloration)
 cbind(QUBO.Subset.W.MSAT.dapc1$grp, as.character(pop(QUBO.Subset.W.MSAT.genind)), rownames(QUBO.Subset.W.MSAT.genind@tab))
 
 # Show DAPC as a scatterplot
 scatter(QUBO.Subset.W.MSAT.dapc1, scree.da=F, bg="white", pch=20, cell=0, cstar=0, solid=0.6, clab=0, legend=T,
-        posi.leg=locator(n=1), cleg=1.0, cex=1.3, inset.solid=1,
+        posi.leg=locator(n=1), cleg=1.0, cex=1.0, inset.solid=1,
         col = c("#66A61E","#E7298A","#7570B3","#2171B5"),
-        txt.leg = c("Pop11/MossRock/Hinds", "Irondale/Hinds/OMSP",
-                    "Worldsong/Wattsville/OMSP/Peavine"))
-mtext("QUBO MSAT: Subset Wild", adj=0.35, line = 1.3)
+        txt.leg = c("Irondale/Hinds/OMSP", "Worldsong/Wattsville/OMSP/Peavine", "Pop11/MossRock/Hinds")) 
+mtext("QUBO MSAT: Subset Wild (K=3)", adj=0.35, line = 1.3)
 
 # SNP: DE NOVO (R80) ----
 # SUPPORTED CLUSTERS ----
@@ -367,7 +378,7 @@ scatter(QUBO.Subset.W.SNP.DN.dapc1, scree.da=F, bg="white", pch=20, cell=0, csta
         posi.leg=locator(n=1), cleg=1.0, cex=1.3, inset.solid=1,
         col = c("#66A61E","#E7298A","#7570B3","#2171B5"),
         txt.leg = c("Worldsong/OMSP/Wattsville/Peavine", "Oakbrook/MossRock/Hinds/Pop11"))
-mtext("QUBO SNP De novo (R80): Subset Wild (Supported Clusters)", adj=0.15)
+mtext("QUBO SNP De novo (R80): Subset Wild (K=2)", adj=0.15)
 
 # GEOGRAPHIC CLUSTERS (K=6) ----
 # K-means clustering step
@@ -409,8 +420,8 @@ cbind(QUBO.Subset.W.SNP.REF.dapc1$grp, as.character(pop(QUBO.Subset.W.SNP.REF.ge
 scatter(QUBO.Subset.W.SNP.REF.dapc1, scree.da=F, bg="white", pch=20, cell=0, cstar=0, solid=0.6, clab=0, legend=T,
         posi.leg=locator(n=1), cleg=1.0, cex=1.3, inset.solid=1,
         col = c("#66A61E","#E7298A","#7570B3","#2171B5"),
-        txt.leg = c("Oakbrook/Irondale/Hinds/Pop11/MossRock", "Worldsong/OMSP/Peavine/Wattsville"))
-mtext("QUBO SNP Reference (R80): Subset Wild (Geographic Clusters)", adj=0.15)
+        txt.leg = c("Worldsong/OMSP/Peavine/Wattsville", "Oakbrook/Irondale/Hinds/Pop11/MossRock"))
+mtext("QUBO SNP Reference (R80): Subset Wild (K=2)", adj=0.15)
 
 # GEOGRAPHIC CLUSTERS (K=6) ----
 # K-means clustering step
