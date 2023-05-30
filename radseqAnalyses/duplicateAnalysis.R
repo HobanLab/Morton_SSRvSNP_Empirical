@@ -39,6 +39,10 @@ pop(QUAC.SNP.DN.R0.wDup.genind) <- factor(read.table("QUAC_popmap_GardenWild_wDu
 # Calculate differences in number of loci/alleles
 nLoc(QUAC.SNP.DN.R0.wDup.genind) - nLoc(QUAC.SNP.DN.R0.genind)
 ncol(QUAC.SNP.DN.R0.wDup.genind@tab) - ncol(QUAC.SNP.DN.R0.genind@tab)
+# Calculate proportion of duplicate loci 
+# (number of duplicate loci/number of loci in datasets with duplicates)
+print(paste0("%%% QUAC: DN: R0: Duplicate loci percentage: ",
+  ((nLoc(QUAC.SNP.DN.R0.wDup.genind) - nLoc(QUAC.SNP.DN.R0.genind))/nLoc(QUAC.SNP.DN.R0.wDup.genind))*100, "%"))
 
 # R80 ----
 # WITHOUT DUPLICATES
@@ -62,6 +66,10 @@ pop(QUAC.SNP.DN.R80.wDup.genind) <- factor(read.table("QUAC_popmap_GardenWild_wD
 # Calculate differences in number of loci/alleles
 nLoc(QUAC.SNP.DN.R80.wDup.genind) - nLoc(QUAC.SNP.DN.R80.genind)
 ncol(QUAC.SNP.DN.R80.wDup.genind@tab) - ncol(QUAC.SNP.DN.R80.genind@tab)
+# Calculate proportion of duplicate loci 
+# (number of duplicate loci/number of loci in datasets with duplicates)
+print(paste0("%%% QUAC: DN: R80: Duplicate loci percentage: ",
+             ((nLoc(QUAC.SNP.DN.R80.wDup.genind) - nLoc(QUAC.SNP.DN.R80.genind))/nLoc(QUAC.SNP.DN.R80.wDup.genind))*100, "%"))
 
 # ---- SNPS, REFERENCE ----
 # R0 ----
@@ -86,6 +94,10 @@ pop(QUAC.SNP.REF.R0.wDup.genind) <- factor(read.table("QUAC_popmap_GardenWild_wD
 # Calculate differences in number of loci/alleles
 nLoc(QUAC.SNP.REF.R0.wDup.genind) - nLoc(QUAC.SNP.REF.R0.genind)
 ncol(QUAC.SNP.REF.R0.wDup.genind@tab) - ncol(QUAC.SNP.REF.R0.genind@tab)
+# Calculate proportion of duplicate loci 
+# (number of duplicate loci/number of loci in datasets with duplicates)
+print(paste0("%%% QUAC: REF: R0: Duplicate loci percentage: ",
+             ((nLoc(QUAC.SNP.REF.R0.wDup.genind) - nLoc(QUAC.SNP.REF.R0.genind))/nLoc(QUAC.SNP.REF.R0.wDup.genind))*100, "%"))
 
 # R80 ----
 # WITHOUT DUPLICATES
@@ -109,6 +121,10 @@ pop(QUAC.SNP.REF.R80.wDup.genind) <- factor(read.table("QUAC_popmap_GardenWild_w
 # Calculate differences in number of loci/alleles
 nLoc(QUAC.SNP.REF.R80.wDup.genind) - nLoc(QUAC.SNP.REF.R80.genind)
 ncol(QUAC.SNP.REF.R80.wDup.genind@tab) - ncol(QUAC.SNP.REF.R80.genind@tab)
+# Calculate proportion of duplicate loci 
+# (number of duplicate loci/number of loci in datasets with duplicates)
+print(paste0("%%% QUAC: REF: R80: Duplicate loci percentage: ",
+             ((nLoc(QUAC.SNP.REF.R80.wDup.genind) - nLoc(QUAC.SNP.REF.R80.genind))/nLoc(QUAC.SNP.REF.R80.wDup.genind))*100, "%"))
 
 # %%%% QUBO %%%% ----
 # ---- SNPS: DE NOVO ASSEMBLY ----
@@ -134,6 +150,10 @@ pop(QUBO.SNP.DN.R0.wDup.genind) <- factor(read.table("QUBO_popmap_GardenWild_wDu
 # Calculate differences in number of loci/alleles
 nLoc(QUBO.SNP.DN.R0.wDup.genind) - nLoc(QUBO.SNP.DN.R0.genind)
 ncol(QUBO.SNP.DN.R0.wDup.genind@tab) - ncol(QUBO.SNP.DN.R0.genind@tab)
+# Calculate proportion of duplicate loci 
+# (number of duplicate loci/number of loci in datasets with duplicates)
+print(paste0("%%% QUBO: DN: R0: Duplicate loci percentage: ",
+             ((nLoc(QUBO.SNP.DN.R0.wDup.genind) - nLoc(QUBO.SNP.DN.R0.genind))/nLoc(QUBO.SNP.DN.R0.wDup.genind))*100, "%"))
 
 # R80 ----
 # WITHOUT DUPLICATES
@@ -157,6 +177,10 @@ pop(QUBO.SNP.DN.R80.wDup.genind) <- factor(read.table("QUBO_popmap_GardenWild_wD
 # Calculate differences in number of loci/alleles
 nLoc(QUBO.SNP.DN.R80.wDup.genind) - nLoc(QUBO.SNP.DN.R80.genind)
 ncol(QUBO.SNP.DN.R80.wDup.genind@tab) - ncol(QUBO.SNP.DN.R80.genind@tab)
+# Calculate proportion of duplicate loci 
+# (number of duplicate loci/number of loci in datasets with duplicates)
+print(paste0("%%% QUBO: DN: R80: Duplicate loci percentage: ",
+             ((nLoc(QUBO.SNP.DN.R80.wDup.genind) - nLoc(QUBO.SNP.DN.R80.genind))/nLoc(QUBO.SNP.DN.R80.wDup.genind))*100, "%"))
 
 # ---- SNPS: REFERENCE ----
 # R0 ----
@@ -181,6 +205,10 @@ pop(QUBO.SNP.REF.R0.wDup.genind) <- factor(read.table("QUBO_popmap_GardenWild_wD
 # Calculate differences in number of loci/alleles
 nLoc(QUBO.SNP.REF.R0.wDup.genind) - nLoc(QUBO.SNP.REF.R0.genind)
 ncol(QUBO.SNP.REF.R0.wDup.genind@tab) - ncol(QUBO.SNP.REF.R0.genind@tab)
+# Calculate proportion of duplicate loci 
+# (number of duplicate loci/number of loci in datasets with duplicates)
+print(paste0("%%% QUBO: REF: R0: Duplicate loci percentage: ",
+             ((nLoc(QUBO.SNP.REF.R0.wDup.genind) - nLoc(QUBO.SNP.REF.R0.genind))/nLoc(QUBO.SNP.REF.R0.wDup.genind))*100, "%"))
 
 # R80 ----
 # WITHOUT DUPLICATES
@@ -204,3 +232,7 @@ pop(QUBO.SNP.REF.R80.wDup.genind) <- factor(read.table("QUBO_popmap_GardenWild_w
 # Calculate differences in number of loci/alleles
 nLoc(QUBO.SNP.REF.R80.wDup.genind) - nLoc(QUBO.SNP.REF.R80.genind)
 ncol(QUBO.SNP.REF.R80.wDup.genind@tab) - ncol(QUBO.SNP.REF.R80.genind@tab)
+# Calculate proportion of duplicate loci 
+# (number of duplicate loci/number of loci in datasets with duplicates)
+print(paste0("%%% QUBO: REF: R80: Duplicate loci percentage: ",
+             ((nLoc(QUBO.SNP.REF.R80.wDup.genind) - nLoc(QUBO.SNP.REF.R80.genind))/nLoc(QUBO.SNP.REF.R80.wDup.genind))*100, "%"))
