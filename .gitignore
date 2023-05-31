@@ -59,5 +59,6 @@ popAnalyses/popDiff.R
 popAnalyses/structureMissingData.R
 
 
-# Any Rhistory files
+# Any Rhistory/Rdata files
 *.Rhistory
+*.RData
