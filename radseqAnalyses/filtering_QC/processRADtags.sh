@@ -9,7 +9,7 @@
 # Pull data from SNPsaurus sharesite (411 GB)
 wget -r -nH --cut-dirs=1 --no-parent --reject "index.html*" https://gc3fstorage.uoregon.edu/HG3YYDSX2/GC3F-PE-4637/
 
-# Random stuff: extracting parts of the file names to create a sample sheet (use sed and awk for text matching)
+# Extracting parts of the file names to create a sample sheet (use sed and awk for text matching)
 ls | cut -f1 -d"_" >> prelim_Barcodes.text
 sed -n '1~2!p' prelim_Barcodes.txt >> Barcodes.txt
 ls | awk -F'_' '{print $2}' >> prelim_SampleNames.txt
@@ -65,14 +65,14 @@ ulimit -Sn
 # --- NOTE ON ADAPTER TRIMMING! ---
 # Preliminary runs showed the presence of Nextera transposase I7 (in R1 reads) and I5 (in R2 reads) sequences in NextRAD data.
 # By looking at catalog of Nextera sequences from bbmap (bbmap/resources/nextera.fa.gz), the sequences for these adaptors were determined.
-# These were passed to Stacks, for trimming.
+# These were passed to Stacks, for trimming. We use adapter-trimmed data, for downstream analyses.
 # We specify a barcode mismatch of 2, in order to account for both the Nextera I5 sequence and the NextRAD I5 sequence (I7 sequence unchanged)
 
 # Old command, without trimming
 process_radtags -p /RAID1/IMLS_GCCO/RawData/GC3F-PE-4637 --paired -b /RAID1/IMLS_GCCO/Analysis/Stacks/Barcodes.txt --index-index \
 -o /RAID1/IMLS_GCCO/Analysis/Stacks/process_RADtags -c -q --disable_rad_check --len-limit 100
 
-# New command, with trimming
+# New command, with trimming. These outputs are used for downstream analyses (de novo assembly and reference alignment)
 process_radtags -p /RAID1/IMLS_GCCO/RawData/GC3F-PE-4637 --paired -b /RAID1/IMLS_GCCO/Analysis/Stacks/Barcodes.txt --index-index \
 -o /RAID1/IMLS_GCCO/Analysis/Stacks/process_RADtags -c -q --adapter_1 CTGTCTCTTATACACATCTCCGAGCCCACGAGAC --adapter_2 CTGTCTCTTATACACATCTGACGCTGCCGACGA --adapter_mm 2 --disable_rad_check --len-limit 100
 
