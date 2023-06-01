@@ -4,8 +4,8 @@
 # the GSNAP program ("promiscuous" alignment parameters from Paris et al. 2017, but with 4 allowed mismatches instead of 5).
 # It also uses the samtools flagstat command to generate alignment statistics for each sample.
 
-# Loop over the sample names listed in the popmap file for QUBO samples (removing first row, column headers)
-sed '1d' /RAID1/IMLS_GCCO/Alignment/filteredReads/QUBO/QUBO_popmap | cut -f1 |
+# Loop over the names in the list of QUBO samples (removing first row, column headers)
+sed '1d' /RAID1/IMLS_GCCO/Alignment/filteredReads/QUBO/QUBO_sampleList | cut -f1 |
 while read sample; do
         # Create variables for each sample
         fq1=/RAID1/IMLS_GCCO/Analysis/Stacks/process_RADtags/QUBO/${sample}.1.fq.gz # Forward reads

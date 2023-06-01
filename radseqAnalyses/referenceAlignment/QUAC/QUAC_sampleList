@@ -21,6 +21,7 @@ QUAC_G_SH_Q1528	garden
 QUAC_G_SH_Q1531	garden
 QUAC_G_SH_Q1536	garden
 QUAC_G_SH_Q1550	garden
+QUAC_G_SH_Q1550_rep	garden
 QUAC_G_SH_Q1551	garden
 QUAC_G_SH_Q1553	garden
 QUAC_G_SH_Q1555	garden
@@ -33,6 +34,7 @@ QUAC_G_SH_Q1569	garden
 QUAC_G_SH_Q1574	garden
 QUAC_G_SH_Q1576	garden
 QUAC_G_SH_Q1577	garden
+QUAC_G_DUP_SH_Q1577	garden
 QUAC_G_SH_Q1588	garden
 QUAC_G_SH_Q1590	garden
 QUAC_G_SH_Q1592	garden
@@ -74,6 +76,7 @@ QUAC_G_SH_Q2201	garden
 QUAC_G_SH_Q2202	garden
 QUAC_G_SH_Q2203	garden
 QUAC_G_SH_Q2204	garden
+QUAC_G_DUP_SH_Q2204	garden
 QUAC_G_SH_Q2205	garden
 QUAC_G_SH_Q2206	garden
 QUAC_G_SH_Q2207	garden
@@ -90,6 +93,7 @@ QUAC_G_SH_Q2217	garden
 QUAC_G_SH_Q2219	garden
 QUAC_G_SH_Q2222	garden
 QUAC_G_SH_Q2223	garden
+QUAC_G_DUP_SH_Q2223	garden
 QUAC_G_SH_Q2224	garden
 QUAC_G_SH_Q2225	garden
 QUAC_G_SH_Q2226	garden
@@ -167,6 +171,7 @@ QUAC_W_SH_Q2118	wild
 QUAC_W_SH_Q2119	wild
 QUAC_W_SH_Q2120	wild
 QUAC_W_SH_Q2121	wild
+QUAC_W_DUP_SH_Q2121	wild
 QUAC_W_SH_Q2122	wild
 QUAC_W_SH_Q2123	wild
 QUAC_W_SH_Q2124	wild
