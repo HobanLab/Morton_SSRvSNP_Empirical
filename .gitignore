@@ -36,6 +36,10 @@ radseqAnalyses/oneCatalog_multiplePops.R
 # the Project Guide
 radseqAnalyses/preliminarySubset/ 
 
+# %%% DE NOVO Assembly
+# This R script is meant to plot the distribution of SNPs per locus in a RAD assembly. This distribution can be used to
+# assess the quality of a de novo assembly.
+radseqAnalyses/denovoAssembly/finalAssemblies/plot_SNPsPerLocDistribs.R
 
 # Outdated or development resampling scripts, including those used for failed Resampling timings
 exSituRepresentation/Resampling/QUAC.NEW.samplingArray.Rdata
