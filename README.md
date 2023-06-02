@@ -7,6 +7,7 @@ We do this using two different oak species, _Quercus boyntonii_ (or QUBO; Boynto
 section of the genus) and _Quercus acerifolia_ (or QUAC; a red oak, section Lobatae). 
 Both of these species are included on the IUCN Red List.
 
+# Repository layout
 Below we describe the general structure of the repository and it's directories; more information can be found in each
 folder's respective READMEs. Generally, this repo will contain the scripts used to generate data for different steps in our analyses
 and any other input files required for those scripts to run, such as parameter values, sample lists, 
@@ -35,11 +36,6 @@ This folder contains the scripts used to download and index reference genomes, b
 It contains 2 folders: one for the scripts used in building reference alignments ([refAlign](https://github.com/HobanLab/Morton_SSRvSNP_Empirical/tree/main/radseqAnalyses/reference/refAlignment)), 
 and one for SNP calling ([processLoci](https://github.com/HobanLab/Morton_SSRvSNP_Empirical/tree/main/radseqAnalyses/reference/processLoci)).
 
-## popAnalyses
-This folder contains R scripts used for analyzing QUAC/QUBO populations using different approaches common in 
-population genetic analyses. Scripts in here are used to calculate statistical measures (Fst, heterozygosity, allelic richness)
-and run clustering analyses (STRUCTURE and DAPC).
-
 ## exSituRep
 This folder contains the scripts used to run two analyses concerned with the _ex situ_ representation of QUAC/QUBO. 
 These are described below. The functions_exSituRepresentation.R script declares functions used in both of these analyses.
@@ -61,8 +57,13 @@ The scripts in this folder run the resampling analyses, in which wild samples ar
 of those randomly selected samples is calculated, and this process is repeated to determine a minimum sampling size for different 
 thresholds of required wild allelic diversity.
 
-## Contact
-For questions about this dataset, open an Issue or contact Austin. 
+## popAnalysis
+This folder contains R scripts used for analyzing QUAC/QUBO populations using different approaches common in 
+population genetic analyses. Scripts in here are used to calculate statistical measures (Fst, heterozygosity, allelic richness)
+and run clustering analyses (STRUCTURE and DAPC).
 
+# Data and Contact
 A link to the raw data for this analysis can be found on the [NCBI SRA](https://submit.ncbi.nlm.nih.gov/subs/sra/SUB10415299/overview)
+
+For questions about this dataset or the scripts included here, contact Austin Koontz.
 

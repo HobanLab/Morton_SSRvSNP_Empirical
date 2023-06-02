@@ -57,10 +57,10 @@ exSituRep/Resampling/resamplingData
 exSituRep/exSituCaptureRates.R
         
 # Population level analyses scripts: either outdated or in development
-popAnalyses/Fst_Measure.R
-popAnalyses/Fst_plot.R
-popAnalyses/popDiff.R
-popAnalyses/structureMissingData.R
+popAnalysis/Fst_Measure.R
+popAnalysis/Fst_plot.R
+popAnalysis/popDiff.R
+popAnalysis/structureMissingData.R
 
 
 # Any Rhistory/Rdata files
