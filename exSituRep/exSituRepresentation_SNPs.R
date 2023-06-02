@@ -36,9 +36,9 @@ library(adegenet)
 
 # %%%% FUNCTIONS %%%% ----
 # Read in relevant functions required for resampling analyses
-SSRvSNP.wd <- "~/Documents/SSRvSNP/Code/"
+SSRvSNP.wd <- "/home/akoontz/Documents/SSRvSNP/Code/"
 setwd(SSRvSNP.wd)
-source("exSituRepresentation/functions_exSituRepresentation.R")
+source("exSituRep/functions_exSituRepresentation.R")
 
 # %%%% QUAC %%%% ----
 # %%%% DE NOVO %%%% ----

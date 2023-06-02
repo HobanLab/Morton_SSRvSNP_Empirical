@@ -1,6 +1,6 @@
-# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-# %%% EX SITU REPRESENTATION RATES: MSAT %%%
-# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+# %%% EX SITU REPRESENTATION RATES %%%
+# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 # This script uses the functions declared in the functions_exSituRepresentation.R file to generate 
 # ex situ representation values for Quercus acerifolia (QUAC) and Quercus boyntonii (QUBO). QUAC 
@@ -22,7 +22,7 @@ library(adegenet)
 # Read in relevant functions required for ex situ representation analyses
 SSRvSNP.wd <- "/home/akoontz/Documents/SSRvSNP/Code/"
 setwd(SSRvSNP.wd)
-source("exSituRepresentation/functions_exSituRepresentation.R")
+source("exSituRep/functions_exSituRepresentation.R")
 
 # %%%% QUAC %%%% ----
 # ---- MSATS: COMPLETE ----
