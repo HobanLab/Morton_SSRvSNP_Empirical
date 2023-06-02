@@ -47,12 +47,12 @@ These are described below. The functions_exSituRepresentation.R script declares 
 ### exSituRepresentation
 The scripts in this folder measure how well garden samples represent the allelic diversity of wild populations, in different contexts. 
 
-There are 2 scripts for ex situ representation calculations. The first, exSituRepresentation.R, is the primary script, the results of which are presented in our
+There are 2 scripts for _ex situ_ representation calculations. The first, exSituRepresentation.R, is the primary script, the results of which are presented in our
 final reports. The second, exSituRepresentation_Expanded.R, is more exploratory: it examines the impacts of different filters (mostly from the Stacks
-[populations](https://catchenlab.life.illinois.edu/stacks/comp/populations.php) module) on ex situ representation.
+[populations](https://catchenlab.life.illinois.edu/stacks/comp/populations.php) module) on _ex situ_ representation.
 
 The functions used for both scripts, as well as for resampling analyses, are declared in the [functions_exSituRepresentation.R](https://github.com/HobanLab/Morton_SSRvSNP_Empirical/blob/main/exSituRep/functions_exSituRepresentation.R) script.
-These functions are nested, but ultimately allow for the calculation of ex situ representation given a single genind file with two populations: "wild" and "garden".
+These functions are nested, but ultimately allow for the calculation of _ex situ_ representation given a single genind file with two populations: "wild" and "garden".
 The functions used for resampling are also nested, in order to allow for parallel processing of large SNP datasets.
 
 ### Resampling
