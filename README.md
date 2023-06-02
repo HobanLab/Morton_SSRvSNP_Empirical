@@ -14,6 +14,10 @@ and any other input files required for those scripts to run, such as parameter v
 and input files. However, many input files cannot be included in this repository due to GitHub file size limits
 (for instance, there are no genind files, and no input or output STRUCTURE files).
 
+The [radAnalysis](https://github.com/HobanLab/Morton_SSRvSNP_Empirical/tree/main/radAnalysis) folder represents the first part of this process, which involves QC and SNP calling (via _de novo_
+assembly and reference alignment). The [exSituRep](https://github.com/HobanLab/Morton_SSRvSNP_Empirical/tree/main/exSituRep) folder contains the scripts for calculating _ex situ_ representation and
+resampling analyses, and the [popAnalysis](https://github.com/HobanLab/Morton_SSRvSNP_Empirical/tree/main/popAnalysis) folder contains the scripts for clustering and calculating population level data.
+
 Often, subfolders will be named QUAC and QUBO: these refer to the files used for the different 
 species being analyzed. Files will often match one another for both species (but not always!).
 
