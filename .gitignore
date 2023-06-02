@@ -41,6 +41,13 @@ radAnalysis/preliminarySubset/
 # assess the quality of a de novo assembly.
 radAnalysis/denovoAssembly/finalAssemblies/plot_SNPsPerLocDistribs.R
 
+# Population level analyses scripts: either outdated or in development
+popAnalysis/Fst_Measure.R
+popAnalysis/Fst_plot.R
+popAnalysis/popDiff.R
+popAnalysis/structureMissingData.R
+
+# %%% EX SITU REPRESENTATION %%%
 # Outdated or development resampling scripts, including those used for failed Resampling timings
 exSituRep/Resampling/QUAC.NEW.samplingArray.Rdata
 exSituRep/Resampling/QUAC.OLD.samplingArray.Rdata
@@ -54,14 +61,8 @@ exSituRep/Resampling/ResamplingTiming_Old2.R
 exSituRep/Resampling/Resampling_Old.R
 exSituRep/Resampling/exSitu_Sampling.R
 exSituRep/Resampling/resamplingData
-exSituRep/exSituCaptureRates.R
-        
-# Population level analyses scripts: either outdated or in development
-popAnalysis/Fst_Measure.R
-popAnalysis/Fst_plot.R
-popAnalysis/popDiff.R
-popAnalysis/structureMissingData.R
-
+exSituRep/exSituRepresentation_QUHA.R       
+exSituRep/exSituRepresentation_SNPs_Expanded.R
 
 # Any Rhistory/Rdata files
 *.Rhistory
