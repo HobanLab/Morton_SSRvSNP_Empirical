@@ -20,7 +20,7 @@ library(parallel)
 # Read in relevant functions required for resampling analyses
 SSRvSNP.wd <- "/home/akoontz/Documents/SSRvSNP/Code/"
 setwd(SSRvSNP.wd)
-source("exSituRepresentation/functions_exSituRepresentation.R")
+source("exSituRep/functions_exSituRepresentation.R")
 # Specify path to the directory (on the lab server), where resampling arrays are held
 resamplingDataDir <- paste0(SSRvSNP.wd, "exSituRepresentation/Resampling/resamplingData/")
 # Specify path to the directory (on the lab server), where resampling plots (PDFs) will be saved

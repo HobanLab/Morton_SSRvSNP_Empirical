@@ -23,9 +23,9 @@ library(parallel)
 
 # %%%% FUNCTIONS AND PARALLELIZATION %%%% ----
 # Read in relevant functions required for resampling analyses
-SSRvSNP.wd <- "~/Documents/SSRvSNP/Code/"
+SSRvSNP.wd <- "/home/akoontz/Documents/SSRvSNP/Code/"
 setwd(SSRvSNP.wd)
-source("exSituRepresentation/functions_exSituRepresentation.R")
+source("exSituRep/functions_exSituRepresentation.R")
 # Set up relevant cores
 num_cores <- detectCores() - 1 ; cl <- makeCluster(num_cores)
 
@@ -95,11 +95,11 @@ min95_SD_QUBO.1SNP <- apply(samplingResults_QUBO.1SNP[,1,],1,sd)[min_95_QUBO.1SN
 print(min95_SD_QUBO.1SNP)
 # Export resampling array, for later analysis
 saveRDS(samplingResults_QUBO.1SNP, 
-        file=paste0(SSRvSNP.wd,"exSituRepresentation/Resampling/QUBO_1SNP_resamplingArray.Rdata"))
+        file=paste0(SSRvSNP.wd,"exSituRep/Resampling/QUBO_1SNP_resamplingArray.Rdata"))
 
 # PLOTTING ----
 # Read in resampling array
-samplingResults_QUBO.1SNP <- readRDS(file=paste0(SSRvSNP.wd,"exSituRepresentation/Resampling/QUBO_1SNP_resamplingArray.Rdata"))
+samplingResults_QUBO.1SNP <- readRDS(file=paste0(SSRvSNP.wd,"exSituRep/Resampling/QUBO_1SNP_resamplingArray.Rdata"))
 # Set graphing parameters to plot to charts vertically (for 1 SNP per locus and microhaplotypes)
 par(mfcol=c(2,1), oma=rep(0.2,4))
 # Calculate means and standard deviations, for each capture rate category
@@ -168,11 +168,11 @@ min_95SD_QUBO.HapSNPs <- apply(samplingResults_QUBO.HapSNPs[,1,],1,sd)[min_95_QU
 print(min_95SD_QUBO.HapSNPs)
 # Export resampling array, for later analysis
 saveRDS(samplingResults_QUBO.HapSNPs, 
-        file=paste0(SSRvSNP.wd,"exSituRepresentation/Resampling/QUBO_HapSNPs_resamplingArray.Rdata"))
+        file=paste0(SSRvSNP.wd,"exSituRep/Resampling/QUBO_HapSNPs_resamplingArray.Rdata"))
 
 # PLOTTING ----
 # Read in resampling array
-samplingResults_QUBO.HapSNPs <- readRDS(file=paste0(SSRvSNP.wd,"exSituRepresentation/Resampling/QUBO_HapSNPs_resamplingArray.Rdata"))
+samplingResults_QUBO.HapSNPs <- readRDS(file=paste0(SSRvSNP.wd,"exSituRep/Resampling/QUBO_HapSNPs_resamplingArray.Rdata"))
 # Calculate means and standard deviations, for each capture rate category
 total_means <- apply(samplingResults_QUBO.HapSNPs[,1,], 1, mean); print(total_means)
 total_sd <- apply(samplingResults_QUBO.HapSNPs[,1,], 1, sd)

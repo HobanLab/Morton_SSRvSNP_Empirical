@@ -33,11 +33,11 @@ library(parallel)
 
 # %%%% FUNCTIONS, VARIABLES, AND PARALLELIZATION %%%% ----
 # Read in relevant functions required for resampling analyses
-SSRvSNP.wd <- "~/Documents/SSRvSNP/Code/"
+SSRvSNP.wd <- "/home/akoontz/Documents/SSRvSNP/Code/"
 setwd(SSRvSNP.wd)
-source("exSituRepresentation/functions_exSituRepresentation.R")
+source("exSituRep/functions_exSituRepresentation.R")
 # Declare a directory within which to store .Rdata objects of resampling arrays, and plots
-resamplingDataDir <- paste0(SSRvSNP.wd, "exSituRepresentation/Resampling/resamplingData/")
+resamplingDataDir <- paste0(SSRvSNP.wd, "exSituRep/Resampling/resamplingData/")
 # Dimensions for resmpling plots
 plotWidth <- 1262 ; plotHeight <- 734
 # Plotting colors (for all plots!), with transparency for values other than Total (alpha = 1.0 is transparent)
@@ -55,7 +55,7 @@ clusterExport(cl, varlist = c("getAlleleCategories", "exSitu_Sample", "exSitu_Re
 # ---- MSATS (COMPLETE) ----
 # READ IN GENIND FILE (GCC_QUAC_ZAIN repo; QUAC_woK_garden_wild_clean.gen)
 QUAC.MSAT.filePath <- 
-  "~/Documents/peripheralProjects/GCC_QUAC_ZAIN/Data_Files/"
+  "/home/akoontz/Documents/peripheralProjects/GCC_QUAC_ZAIN/Data_Files/"
 QUAC.MSAT.genind <- 
   read.genepop(paste0(QUAC.MSAT.filePath, "Adegenet_Files/QUAC_woK_allpop_clean.gen"), ncode = 3)
 # Assign sample names: read in Tissue database names from GCC_QUAC_ZAIN repository
