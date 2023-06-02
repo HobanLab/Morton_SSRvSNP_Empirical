@@ -1,28 +1,32 @@
-# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-# %%% EX SITU REPRESENTATION RATES: SNP %%%
-# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+# %%% EX SITU REPRESENTATION RATES: EXPANDED %%%
+# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-# This script uses the functions declared in the functions_exSituRepresentation.R file to generate ex situ representation values 
+# This script uses the functions declared in the functions_exSituRepresentation.R 
+# script to generate ex situ representation values 
 # for Quercus acerifolia (QUAC, two datasets: optimized Stacks de novo assembly, 
 # m 7, M/n 4, gt-alpha 0.01, and GSNAP4 alignment with Quercus rubra reference) 
 # and Quercus boyntonii (QUBO; GSNAP4 alignment with Quercus robur reference) samples
 
-# Many scenarios/methodologies/filters were explored when conducting ex situ representation analyses; to see 
-# all of these, check out the exSituRepresentation_SNPs_Expanded.R script. The scenarios contained in this script
-# are those we choose to include in our final Results, in one form or another. Some of the justifications for using
-# these particular scenarios, out of all of those explores in the Expanded script, are offered below:
+# This script is exploratory, and its outputs are not utilized in the final analyses for this project.
+# For externally reported ex situ representation values, refer to the exSituRepresentation.R script.
+# Many scenarios/methodologies/filters were explored when conducting ex situ representation analyses. 
+# This script is a subset of the scenarios included in the exSituRepresentation_OLD.R script.
+# In particular, 4 settings are fixed in this script due to our findings in preliminary analyses;
+# these are outlined below.
 
-# -SINGLE GENIND OBJECT (TOGETHER): we decided that processing garden and wild samples together (creating a single genind)
+# 1. SINGLE GENIND OBJECT (TOGETHER): we decided that processing garden and wild samples together (creating a single genind)
 # had a minimal impact on the SNP genotyping algorithm used by Stacks.
-# -COMPLTE SNP LOCI: because we're interested in SNP values and positions in a RAD locus, we use complete locus names,
+# 2. COMPLTE SNP LOCI: because we're interested in SNP values and positions in a RAD locus, we use complete locus names,
 # rather than the _Partial analyses.
-# NO MINOR ALLELE FREQUENCY (NOMAF): we found that including a minor allele frequency greatly impacted our rates of 
+# 3. NO MINOR ALLELE FREQUENCY (NOMAF): we found that including a minor allele frequency greatly impacted our rates of 
 # gardens representing rare Wild alleles. Therefore, we turned of minor allele frequencies for the analyses we report.
-# FIRST SNP PER LOCUS (1SNP): in order to maintain consistency across separate Stacks runs, we avoided writing a random SNP
+# 4. FIRST SNP PER LOCUS (1SNP): in order to maintain consistency across separate Stacks runs, we avoided writing a random SNP
 # to each locus. Writing all SNPs to each locus led to computationally intensive datasets, and did not greatly impact 
 # ex situ conservation (although some _AllSNPs scenarios are included here).
 
-# Additional filters are described below, and code sections are broken out according to the filters used.
+# The filters that are explored in this script are described below; 
+# code sections are broken out according to the filters used.
 # %%% FILTERS %%%
 # -R: corresponds the percentage of individuals a locus needs to be present in, 
 # to be included in the analysis (0 or 80%)
