@@ -24,7 +24,6 @@ QUBO_DN_DIR="/RAID1/IMLS_GCCO/Analysis/Stacks/denovo_finalAssemblies/QUBO/output
 # %%% POPULATIONS MODULE CALLS %%%
 
 # GARDEN AND WILD %%%
-# Complete
 populations -P $QUBO_DN_DIR -O ./ -M ./QUBO_popmap -t 16 -hwe --write-single-snp --fstats --fasta-samples --vcf --genepop --structure --plink --phylip-var-all
 populations -P $QUBO_DN_DIR -O ./ -M ./QUBO_popmap -t 16 -R 80 -hwe --write-single-snp --fstats --fasta-samples --vcf --genepop --structure --plink --phylip-var-all
 

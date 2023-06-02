@@ -1,57 +1,50 @@
 # Overview
 This repository contains the code used in the SSR vs. SNP marker comparison project,
-one of the initiatives in the [GCCO](https://www.globalconservationconsortia.org/gcc/oak/) group. We're looking to compare how microsatellite
-and RADseq markers differ in their measurements of ex situ representation
-of two different oak species, _Quercus boyntonii_ (or QUBO; Boynton oak, in Alabama, in the white oak
+one of the initiatives in the [GCCO](https://www.globalconservationconsortia.org/gcc/oak/) group. 
+We compare microsatellite and SNPs from a RADseq analysis, and calculate how each marker leads to 
+different measurements of ex situ representation.
+We do this using two different oak species, _Quercus boyntonii_ (or QUBO; Boynton oak, in Alabama, in the white oak
 section of the genus) and _Quercus acerifolia_ (or QUAC; a red oak, section Lobatae). 
 Both of these species are included on the IUCN Red List.
 
 Below we describe the general structure of the repository and it's directories. Generally,
 this repo will contain the scripts used to generate data for different steps in our analyses
-and any other input files required for those scripts to run, such as parameter files, population
-files, and input files (when GH size limits allow). 
+and any other input files required for those scripts to run, such as parameter values, sample lists, 
+and input files. However, many input files cannot be included in this repository due to GitHub file size limits
+(for instance, there are no genind files, and no input or output STRUCTURE files).
 
-Often, subfolder will exist name QUAC and QUBO: these refer to the files used for the different 
-species being analyzed. Files will often match one another for these two speices (but not always!)
+Often, subfolders will be named QUAC and QUBO: these refer to the files used for the different 
+species being analyzed. Files will often match one another for both species (but not always!)
 
 ## radseqAnalyses
 The files in this folder describe the steps used to generate SNP datasets for downstream _ex situ_
 representation analyses. Assemblies and loci derived from reference alignments were built using the
-[Stacks](https://catchenlab.life.illinois.edu/stacks/) software.
+[Stacks](https://catchenlab.life.illinois.edu/stacks/) software. More information can be found in the folder's 
+specific README, but a rough outline is provided below.
 
-### denovoAssembly
+### denovo
 This contains the scripts and parameter files used to explore the parameter space of a Stacks 
-_de novo_ assembly. The [parameterOptimization](https://github.com/akoontz11/Morton_SSRvSNP_Empirical/tree/main/radseqAnalyses/denovoAssembly/parameterOptimization) 
-folder contains the script used to generate a _de novo_
-assembly across a variety of parameters (paramOpt_QU*.sh), extract metrics from those assemblies
-(QU**_extractMetrics.bash), and analyze those extracted metrics (R scripts).
+_de novo_ assembly. It contains 2 folders: one for parameter optimization ([paramOpt]()), and one for SNP calling ([finalAssemblies]()).
 
-The [finalAssemblies](https://github.com/akoontz11/Morton_SSRvSNP_Empirical/tree/main/radseqAnalyses/denovoAssembly/finalAssemblies)
-folder contains the `denovo_map.pl` commands ultimately used for downstream analyses.
+More information can be foud in the README for this folder.
 
 ### filtering_QC
 This folder contains various scripts used to clean the raw NextRAD data (generated from the
 sequencing company SNPsaurus). The fastQC folder contains the output of the `fastqc` program,
-which was run on our raw data, our data cleaned with `process_radtags` *without* adapter trimming
+which was run on our raw data ("Prefiltering"), our data cleaned with `process_radtags` *without* adapter trimming
 ("Untrimmed"), and our data cleaned with `process_radtags` *with* adapter trimming. 
 
-The preliminarySubset folder contains the scripts and Stacks files used to analyze a 12 sample subset
-of QUBO and QUAC samples together. The purpose of the preliminarySubset analysis was to check for 
-basic assumptions of our data: making sure replicates matched, and making sure samples within the same
-populations were more similar to each other than samples across populations. There are subfolders for 
-the scripts passed to Stacks, STRUCTURE (for analyzing the Stacks output), and R (also for analyzing 
-the Stacks output)
-
-Finally, the Barcodes.txt file was used by the `process_radtags` command to sort samples by their species
+The Barcodes.txt file was used by the `process_radtags` command to sort samples by their species
 and collection origin (Garden, G, or Wild, W). The dataCleaning script contains the command `process_radtags`
 commands sent to Stacks, as well as other commands used to generate and organize Stacks output.
 
-### referenceAlignment
-This folder the script used to align sequences (which have actually been passed through 
-`process_radtags`) to a reference genome, as well as the consensus sequences generated by the Stacks
-_de novo_ assembly. We aligned our sequences to the _Quercus robur_ [reference genome](https://urgi.versailles.inra.fr/download/oak/Qrob_V2_2N.fa.gz),
-diploid version 2. We tested multiple alignment software, but ultimately went with reference alignments 
-generated using the [GSNAP](https://bioinformaticshome.com/tools/rna-seq/descriptions/GSNAP.html) software.
+More information can be foud in the README for this folder.
+
+### reference
+This folder contains the scripts used to download and index reference genomes, build reference alignments, and call SNPs from those alignments. 
+It contains two folders: one for the scripts used in building reference alignments ([refAlign]()), and one for SNP calling ([processLoci]()).
+
+More information can be foud in the README for this folder.
 
 ## popAnalyses
 This folder contains R scripts used for analyzing QUAC/QUBO populations using different approaches common in 
