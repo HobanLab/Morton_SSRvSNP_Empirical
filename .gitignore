@@ -21,25 +21,25 @@
 # for the Stacks populations scripts)
 
 # Script looking at the allele/loci names given to Stacks loci. This is to interpret the location of SNPs along the loci
-radseqAnalyses/analyzingAlleleNames.R
+radAnalysis/analyzingAlleleNames.R
 # This script was used to fine tune the parameters of the populations Stacks processes we ran: it analyzes the "Separate"
 # vs. "Together" approaches (as does the script below), as well as rare alleles filters, R values, and number of SNPs per locus.
-radseqAnalyses/differentPopScenarios.R
+radAnalysis/differentPopScenarios.R
 # Script examining the impact of processing garden and wild samples "Together" (single genind) and "Separate"
 # (two different geninds). Ultimately, we took the "Together" approach in this project 
-radseqAnalyses/oneCatalog_multiplePops.R
+radAnalysis/oneCatalog_multiplePops.R
 
 # %%% PRELIMINARY SUBSET FOLDER
 # This scripts in this folder were used for a preliminary exploratory analysis, to confirm certain expectations about
 # our data (for instance, samples of the same population clustered more closely together than samples from different 
 # poulations). We ignore these scripts in the GitHub repo, but the results of this preliminary analysis are included in
 # the Project Guide
-radseqAnalyses/preliminarySubset/ 
+radAnalysis/preliminarySubset/ 
 
 # %%% DE NOVO Assembly
 # This R script is meant to plot the distribution of SNPs per locus in a RAD assembly. This distribution can be used to
 # assess the quality of a de novo assembly.
-radseqAnalyses/denovoAssembly/finalAssemblies/plot_SNPsPerLocDistribs.R
+radAnalysis/denovoAssembly/finalAssemblies/plot_SNPsPerLocDistribs.R
 
 # Outdated or development resampling scripts, including those used for failed Resampling timings
 exSituRepresentation/Resampling/QUAC.NEW.samplingArray.Rdata
