@@ -43,24 +43,28 @@ These are described below. The functions_exSituRepresentation.R script declares 
 ### exSituRepresentation
 The scripts in this folder measure how well garden samples represent the allelic diversity of wild populations, in different contexts. 
 
-The exSituRepresentation_SNPs.R script measures wild allelic representation in gardens for the QUAC/QUBO SNP datasets, but explores **many**
-different filters on those datasets. 
+There are 2 scripts for ex situ representation calculations. The first, exSituRepresentation.R, is the primary script, the results of which are presented in our
+final reports. The second, exSituRepresentation_Expanded.R, is more exploratory: it examines the impacts of different filters (mostly from the Stacks
+[populations](https://catchenlab.life.illinois.edu/stacks/comp/populations.php) module) on ex situ representation.
 
-The exSituRepresentation_MSATs.R script measures wild allelic representation in gardens for the QUAC/QUBO SNP *AND* MSAT datasets,
-both complete (all samples for each dataset) and subset (only samples shared across SNP and MSAT studies, for each species). 
-
-The exSituRepresentation_QUHA.R script measures wild allelic representation in the same datasets as the exSituRepresentation_MSATs.R script.
-It's meant to serve as a validation for the values generated in that script.
+The functions used for both scripts, as well as for resampling analyses, are declared in the [functions_exSituRepresentation.R](https://github.com/HobanLab/Morton_SSRvSNP_Empirical/blob/main/exSituRep/functions_exSituRepresentation.R) script.
+These functions are nested, but ultimately allow for the calculation of ex situ representation given a single genind file with two populations: "wild" and "garden".
+The functions used for resampling are also nested, in order to allow for parallel processing of large SNP datasets.
 
 ### Resampling
 The scripts in this folder run the resampling analyses, in which wild samples are iteratively selected randomly, allelic representation
-of those randomly selected samples is calculated, and this process is repeated to determine a minimum sampling size for different 
-thresholds of required wild allelic diversity.
+of those randomly selected samples is calculated, and this process is repeated to determine a minimum sampling size estimate for different 
+thresholds of required wild allelic diversity. This folder also contains a script for generating images used in the manuscript for this project.
 
 ## popAnalysis
 This folder contains R scripts used for analyzing QUAC/QUBO populations using different approaches common in 
 population genetic analyses. Scripts in here are used to calculate statistical measures (Fst, heterozygosity, allelic richness)
-and run clustering analyses (STRUCTURE and DAPC).
+and run clustering analyses (STRUCTURE and DAPC). Note that the Fst calculates are separated from the He and Ar calculations.
+
+### STRUCTURE
+This folder contains the script used to create STRUCTURE plots (one for the project in general, ane one for the manuscript).
+It also contains a script that's used to convert the microsatellite genind files to STRUCTURE. This script uses the function [genind2structure](https://zenodo.org/record/846816),
+which was originally written by [Lindsay Clark](https://github.com/lvclark).
 
 # Data and Contact
 A link to the raw data for this analysis can be found on the [NCBI SRA](https://submit.ncbi.nlm.nih.gov/subs/sra/SUB10415299/overview)
