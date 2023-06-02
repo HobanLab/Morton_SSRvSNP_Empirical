@@ -1,25 +1,25 @@
 # Overview
 This repository contains the code used in the SSR vs. SNP marker comparison project,
 one of the initiatives in the [GCCO](https://www.globalconservationconsortia.org/gcc/oak/) group. 
-We compare microsatellite and SNPs from a RADseq analysis, and calculate how each marker leads to 
-different measurements of ex situ representation.
+We compare microsatellites and SNPs from a RADseq analysis, and calculate how each marker leads to 
+different measurements of _ex situ_ representation and population clustering.
 We do this using two different oak species, _Quercus boyntonii_ (or QUBO; Boynton oak, in Alabama, in the white oak
 section of the genus) and _Quercus acerifolia_ (or QUAC; a red oak, section Lobatae). 
 Both of these species are included on the IUCN Red List.
 
 # Repository layout
-Below we describe the general structure of the repository and it's directories; more information can be found in each
+Below we describe the general structure of the repository and its directories; more information can be found in each
 folder's respective READMEs. Generally, this repo will contain the scripts used to generate data for different steps in our analyses
 and any other input files required for those scripts to run, such as parameter values, sample lists, 
 and input files. However, many input files cannot be included in this repository due to GitHub file size limits
-(for instance, there are no genind files, and no input or output STRUCTURE files).
+(for instance, no genind files, and no input or output STRUCTURE files).
 
 The [radAnalysis](https://github.com/HobanLab/Morton_SSRvSNP_Empirical/tree/main/radAnalysis) folder represents the first part of this process, which involves QC and SNP calling (via _de novo_
 assembly and reference alignment). The [exSituRep](https://github.com/HobanLab/Morton_SSRvSNP_Empirical/tree/main/exSituRep) folder contains the scripts for calculating _ex situ_ representation and
 resampling analyses, and the [popAnalysis](https://github.com/HobanLab/Morton_SSRvSNP_Empirical/tree/main/popAnalysis) folder contains the scripts for clustering and calculating population level data.
 
 Often, subfolders will be named QUAC and QUBO: these refer to the files used for the different 
-species being analyzed. Files will often match one another for both species (but not always!).
+species being analyzed. Files will often match one another for both species (but not always!)
 
 ## radAnalysis
 The files in this folder describe the steps used to generate SNP datasets for downstream _ex situ_
