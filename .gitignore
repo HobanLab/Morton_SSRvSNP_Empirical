@@ -62,7 +62,7 @@ exSituRep/Resampling/Resampling_Old.R
 exSituRep/Resampling/exSitu_Sampling.R
 exSituRep/Resampling/resamplingData
 exSituRep/exSituRepresentation_QUHA.R       
-exSituRep/exSituRepresentation_SNPs_Expanded.R
+exSituRep/exSituRepresentation_OLD.R
 
 # Any Rhistory/Rdata files
 *.Rhistory
