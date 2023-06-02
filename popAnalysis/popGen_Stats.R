@@ -3,7 +3,9 @@
 # %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 # This script calculates the following population genetic statistics:
-# heterozygosity, allele counts (i.e. number of variant sites across all loci), and allelic richness
+# heterozygosity, allele counts (i.e. number of variant sites across all loci), and allelic richness.
+# (Fst values are reported in the Fst_calculations.R script).
+
 # It does this for both QUAC (optimized de novo assembly) and QUBO 
 # (aligned to the Q. robur reference genome) NextRAD datasets
 
@@ -28,7 +30,7 @@
 library(adegenet)
 library(hierfstat)
 # Set working directory
-SSRvSNP.wd <- "~/Documents/SSRvSNP/Code/"
+SSRvSNP.wd <- "/home/akoontz/Documents/SSRvSNP/Code/"
 setwd(SSRvSNP.wd)
 
 # %%%% QUAC %%%% ----
@@ -36,7 +38,7 @@ setwd(SSRvSNP.wd)
 # ---- MSATS ----
 # Read in genind file (GCC_QUAC_ZAIN repo; garden and wild individuals WITHOUT Kessler)
 QUAC.MSAT_filePath <- 
-  "~/Documents/peripheralProjects/GCC_QUAC_ZAIN/Data_Files/Adegenet_Files/"
+  "/home/akoontz/Documents/peripheralProjects/GCC_QUAC_ZAIN/Data_Files/Adegenet_Files/"
 QUAC.MSAT_genind <- read.genepop(paste0(QUAC.MSAT_filePath, "QUAC_woK_allpop_clean.gen"), ncode = 3)
 # Correct popNames: samples with popName pattern QAc-G- are garden 
 levels(QUAC.MSAT_genind@pop)[grep(pattern = "QAc-G-", levels(QUAC.MSAT_genind@pop))] <- 
@@ -221,7 +223,7 @@ print(paste0("Allelic richness: ", QUAC.SNP.REF.R80_AR))
 
 # ---- SUBSET ----
 # MSAT: read in Tissue database names from GCC_QUAC_ZAIN repository, and rename MSAT genind matrix
-QUAC.MSAT.tissueNames_filepath <- "~/Documents/peripheralProjects/GCC_QUAC_ZAIN/Data_Files/Data_Frames/QUAC_woK_allpop_clean_df.csv"
+QUAC.MSAT.tissueNames_filepath <- "/home/akoontz/Documents/peripheralProjects/GCC_QUAC_ZAIN/Data_Files/Data_Frames/QUAC_woK_allpop_clean_df.csv"
 QUAC.MSAT.tissueNames <- unlist(read.csv2(QUAC.MSAT.tissueNames_filepath, header = TRUE, sep=",")[1])
 rownames(QUAC.MSAT_genind@tab) <- QUAC.MSAT.tissueNames
 
@@ -351,7 +353,7 @@ print(paste0("Allelic richness: ", QUAC.SNP.REF.R80.subset_AR))
 # ---- MSATS ----
 # Read in genind file (Southeast Oaks repo; genetic_data/Qb_total.gen file)
 QUBO.MSAT_filePath <- 
-  "~/Documents/peripheralProjects/SE_oaks_genetics/genetic_data/"
+  "/home/akoontz/Documents/peripheralProjects/SE_oaks_genetics/genetic_data/"
 QUBO.MSAT_genind <- read.genepop(paste0(QUBO.MSAT_filePath,"Qb_total.gen"), ncode=3)
 # Correct popNames: last population (IMLS4_MP1_IMLS336_C05) is garden; rest (9) are wild
 levels(QUBO.MSAT_genind@pop) <- c(rep("wild",9), "garden") 

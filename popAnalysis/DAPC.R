@@ -20,7 +20,7 @@
 library(adegenet)
 library(scales)
 # Set the working directory
-SSRvSNP.wd <- "~/Documents/SSRvSNP/Code/"
+SSRvSNP.wd <- "/home/akoontz/Documents/SSRvSNP/Code/"
 setwd(SSRvSNP.wd)
 # Specify path to the directory (on the lab server), where DAPC plots (PDFs) will be saved
 imageOutDir <- "/home/akoontz/Documents/SSRvSNP/Documentation/Images/MolEcol_202305_Images/"
@@ -35,11 +35,11 @@ imageOutDir <- "/home/akoontz/Documents/SSRvSNP/Documentation/Images/MolEcol_202
 # ---- READ IN AND PROCESS GENIND FILES ----
 # MSAT
 QUAC.MSAT.genpop.filePath <- 
-  "~/Documents/peripheralProjects/GCC_QUAC_ZAIN/Data_Files/Adegenet_Files/"
+  "/home/akoontz/Documents/peripheralProjects/GCC_QUAC_ZAIN/Data_Files/Adegenet_Files/"
 QUAC.MSAT.genind <- read.genepop(paste0(QUAC.MSAT.genpop.filePath, "QUAC_woK_allpop_clean.gen"), ncode = 3)
 # Specify filepath to GCC_QUAC_ZAIN dataframe, containing sample names and population names
 QUAC.MSAT.dataframe_filepath <- 
-  "~/Documents/peripheralProjects/GCC_QUAC_ZAIN/Data_Files/Data_Frames/QUAC_woK_allpop_clean_df.csv"
+  "/home/akoontz/Documents/peripheralProjects/GCC_QUAC_ZAIN/Data_Files/Data_Frames/QUAC_woK_allpop_clean_df.csv"
 # Assign sample names: read in Tissue database names from GCC_QUAC_ZAIN repository
 QUAC.MSAT.tissueNames <- unlist(read.csv2(QUAC.MSAT.dataframe_filepath, header = TRUE, sep=",")[1])
 rownames(QUAC.MSAT.genind@tab) <- QUAC.MSAT.tissueNames
@@ -81,11 +81,11 @@ mtext("QUAC MSAT: Complete Wild", adj=0.07)
 # ---- READ IN AND PROCESS GENIND FILES ----
 # MSAT
 QUAC.MSAT.genpop.filePath <- 
-  "~/Documents/peripheralProjects/GCC_QUAC_ZAIN/Data_Files/Adegenet_Files/"
+  "/home/akoontz/Documents/peripheralProjects/GCC_QUAC_ZAIN/Data_Files/Adegenet_Files/"
 QUAC.MSAT.genind <- read.genepop(paste0(QUAC.MSAT.genpop.filePath, "QUAC_woK_allpop_clean.gen"), ncode = 3)
 # Specify filepath to GCC_QUAC_ZAIN dataframe, containing sample names and population names
 QUAC.MSAT.dataframe_filepath <- 
-  "~/Documents/peripheralProjects/GCC_QUAC_ZAIN/Data_Files/Data_Frames/QUAC_woK_allpop_clean_df.csv"
+  "/home/akoontz/Documents/peripheralProjects/GCC_QUAC_ZAIN/Data_Files/Data_Frames/QUAC_woK_allpop_clean_df.csv"
 # Assign sample names: read in Tissue database names from GCC_QUAC_ZAIN repository
 QUAC.MSAT.tissueNames <- unlist(read.csv2(QUAC.MSAT.dataframe_filepath, header = TRUE, sep=",")[1])
 rownames(QUAC.MSAT.genind@tab) <- QUAC.MSAT.tissueNames
@@ -241,13 +241,13 @@ compoplot(QUAC.Subset.W.SNP.REF.dapc1, posi="bottomright",
 # ---- READ IN AND PROCESS GENIND FILES ----
 # MSAT
 genpop.filePath <- 
-  "~/Documents/peripheralProjects/SE_oaks_genetics/genetic_data/"
+  "/home/akoontz/Documents/peripheralProjects/SE_oaks_genetics/genetic_data/"
 QUBO.W.MSAT.genind <- read.genepop(paste0(genpop.filePath,"Qb_wild_w_ALL.gen"), ncode=3)
 # Correct popNames: read in a dataframe which contains population names, in order of 
 # samples in genind file. This document was created manually by Austin Koontz, and can be 
 # found on the Hoban Lab Drive
 QUBO.MSAT.dataframe_filepath <- 
-  "~/Documents/SSRvSNP/Code/popAnalyses/QUBO_MSAT_Complete_WildPops.csv"
+  "/home/akoontz/Documents/SSRvSNP/Code/popAnalyses/QUBO_MSAT_Complete_WildPops.csv"
 # Correct population names: read in a dataframe containing population values
 pop(QUBO.W.MSAT.genind) <- unlist(read.csv2(QUBO.MSAT.dataframe_filepath, header = TRUE, sep=",", skip = 1)[2])
 # Rename MSAT samples 
@@ -284,13 +284,13 @@ mtext("QUBO MSAT: Complete Wild", adj=0.15)
 # ---- READ IN AND PROCESS GENIND FILES ----
 # MSAT
 genpop.filePath <- 
-  "~/Documents/peripheralProjects/SE_oaks_genetics/genetic_data/"
+  "/home/akoontz/Documents/peripheralProjects/SE_oaks_genetics/genetic_data/"
 QUBO.W.MSAT.genind <- read.genepop(paste0(genpop.filePath,"Qb_wild_w_ALL.gen"), ncode=3)
 # Correct popNames: read in a dataframe which contains population names, in order of 
 # samples in genind file. This document was created manually by Austin Koontz, and can be 
 # found on the Hoban Lab Drive (MSATvsSNP_Supplement_SampleSheets: QUBO_MSAT_Complete_WildLocations)
 QUBO.MSAT.dataframe_filepath <- 
-  "~/Documents/SSRvSNP/Code/popAnalyses/QUBO_MSAT_Complete_WildPops.csv"
+  "/home/akoontz/Documents/SSRvSNP/Code/popAnalyses/QUBO_MSAT_Complete_WildPops.csv"
 # Correct population names: read in a dataframe containing population values
 pop(QUBO.W.MSAT.genind) <- unlist(read.csv2(QUBO.MSAT.dataframe_filepath, header = TRUE, sep=",")[2])
 # Rename MSAT samples 

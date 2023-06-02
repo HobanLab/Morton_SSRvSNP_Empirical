@@ -28,7 +28,7 @@ library(hierfstat)
 # Set the working directory, in order to properly read in tissue and population names
 SSRvSNP.wd <- "/home/akoontz/Documents/SSRvSNP/Code/"
 setwd(SSRvSNP.wd)
-source("exSituRepresentation/functions_exSituRepresentation.R")
+source("exSituRep/functions_exSituRepresentation.R")
 
 # Declare different functions for calculating Fst
 # Function for plotting Fst values using a heatmap, given a matrix of values (and a title)

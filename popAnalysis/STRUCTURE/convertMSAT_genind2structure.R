@@ -22,9 +22,9 @@
 library(adegenet)
 
 # Set the working directory, in order to properly read in tissue and population names
-SSRvSNP.wd <- "~/Documents/SSRvSNP/Code/"
+SSRvSNP.wd <- "/home/akoontz/Documents/SSRvSNP/Code/"
 setwd(SSRvSNP.wd)
-source("exSituRepresentation/functions_exSituRepresentation.R")
+source("exSituRep/functions_exSituRepresentation.R")
 # Specify folders to save STRUCTURE files to
 structFilesFolder <- paste0(SSRvSNP.wd, "popAnalyses/STRUCTURE/")
 
@@ -78,7 +78,7 @@ genind2structure <- function(obj, file="", pops=FALSE){
 # ---- READ IN GENIND FILES ----
 # MICROSATELLITE
 QUAC.MSAT.genpop.filePath <- 
-  "~/Documents/peripheralProjects/GCC_QUAC_ZAIN/Data_Files/Adegenet_Files/"
+  "/home/akoontz/Documents/peripheralProjects/GCC_QUAC_ZAIN/Data_Files/Adegenet_Files/"
 QUAC.MSAT.GW.genind <- read.genepop(paste0(QUAC.MSAT.genpop.filePath, "QUAC_woK_allpop_clean.gen"), ncode = 3)
 # Correct popNames: samples with popName pattern QAc-G- are garden 
 levels(QUAC.MSAT.GW.genind@pop)[grep(pattern = "QAc-G-", levels(QUAC.MSAT.GW.genind @pop))] <- 
@@ -178,7 +178,7 @@ setwd(SSRvSNP.wd)
 # ---- READ IN GENIND FILES ----
 # MICROSATELLITE
 genpop.filePath <- 
-  "~/Documents/peripheralProjects/SE_oaks_genetics/genetic_data/"
+  "/home/akoontz/Documents/peripheralProjects/SE_oaks_genetics/genetic_data/"
 QUBO.MSAT.GW.genind <- read.genepop(paste0(genpop.filePath,"Qb_total.gen"), ncode=3)
 # Correct popNames: last population (IMLS4_MP1_IMLS336_C05) is garden; rest (9) are wild
 levels(QUBO.MSAT.GW.genind@pop) <- c(rep("wild",9), "garden") 
