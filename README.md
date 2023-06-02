@@ -7,44 +7,33 @@ We do this using two different oak species, _Quercus boyntonii_ (or QUBO; Boynto
 section of the genus) and _Quercus acerifolia_ (or QUAC; a red oak, section Lobatae). 
 Both of these species are included on the IUCN Red List.
 
-Below we describe the general structure of the repository and it's directories. Generally,
-this repo will contain the scripts used to generate data for different steps in our analyses
+Below we describe the general structure of the repository and it's directories; more information can be found in each
+folder's respective READMEs. Generally, this repo will contain the scripts used to generate data for different steps in our analyses
 and any other input files required for those scripts to run, such as parameter values, sample lists, 
 and input files. However, many input files cannot be included in this repository due to GitHub file size limits
 (for instance, there are no genind files, and no input or output STRUCTURE files).
 
 Often, subfolders will be named QUAC and QUBO: these refer to the files used for the different 
-species being analyzed. Files will often match one another for both species (but not always!)
+species being analyzed. Files will often match one another for both species (but not always!).
 
 ## radseqAnalyses
 The files in this folder describe the steps used to generate SNP datasets for downstream _ex situ_
 representation analyses. Assemblies and loci derived from reference alignments were built using the
-[Stacks](https://catchenlab.life.illinois.edu/stacks/) software. More information can be found in the folder's 
-specific README, but a rough outline is provided below.
+[Stacks](https://catchenlab.life.illinois.edu/stacks/) software.
 
 ### denovo
 This contains the scripts and parameter files used to explore the parameter space of a Stacks 
-_de novo_ assembly. It contains 2 folders: one for parameter optimization ([paramOpt]()), and one for SNP calling ([finalAssemblies]()).
-
-More information can be foud in the README for this folder.
+_de novo_ assembly. It contains 2 folders: one for parameter optimization ([paramOpt](https://github.com/HobanLab/Morton_SSRvSNP_Empirical/tree/main/radseqAnalyses/denovo/paramOpt)), 
+and one for SNP calling ([finalAssemblies](https://github.com/HobanLab/Morton_SSRvSNP_Empirical/tree/main/radseqAnalyses/denovo/finalAssemblies)).
 
 ### filtering_QC
 This folder contains various scripts used to clean the raw NextRAD data (generated from the
-sequencing company SNPsaurus). The fastQC folder contains the output of the `fastqc` program,
-which was run on our raw data ("Prefiltering"), our data cleaned with `process_radtags` *without* adapter trimming
-("Untrimmed"), and our data cleaned with `process_radtags` *with* adapter trimming. 
-
-The Barcodes.txt file was used by the `process_radtags` command to sort samples by their species
-and collection origin (Garden, G, or Wild, W). The dataCleaning script contains the command `process_radtags`
-commands sent to Stacks, as well as other commands used to generate and organize Stacks output.
-
-More information can be foud in the README for this folder.
+sequencing company SNPsaurus). It also includes the FastQC scripts used to assess data quality.
 
 ### reference
 This folder contains the scripts used to download and index reference genomes, build reference alignments, and call SNPs from those alignments. 
-It contains two folders: one for the scripts used in building reference alignments ([refAlign]()), and one for SNP calling ([processLoci]()).
-
-More information can be foud in the README for this folder.
+It contains 2 folders: one for the scripts used in building reference alignments ([refAlign](https://github.com/HobanLab/Morton_SSRvSNP_Empirical/tree/main/radseqAnalyses/reference/refAlignment)), 
+and one for SNP calling ([processLoci](https://github.com/HobanLab/Morton_SSRvSNP_Empirical/tree/main/radseqAnalyses/reference/processLoci)).
 
 ## popAnalyses
 This folder contains R scripts used for analyzing QUAC/QUBO populations using different approaches common in 
