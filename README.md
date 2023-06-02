@@ -16,7 +16,7 @@ and input files. However, many input files cannot be included in this repository
 Often, subfolders will be named QUAC and QUBO: these refer to the files used for the different 
 species being analyzed. Files will often match one another for both species (but not always!).
 
-## radseqAnalyses
+## radAnalysis
 The files in this folder describe the steps used to generate SNP datasets for downstream _ex situ_
 representation analyses. Assemblies and loci derived from reference alignments were built using the
 [Stacks](https://catchenlab.life.illinois.edu/stacks/) software.
@@ -40,7 +40,7 @@ This folder contains R scripts used for analyzing QUAC/QUBO populations using di
 population genetic analyses. Scripts in here are used to calculate statistical measures (Fst, heterozygosity, allelic richness)
 and run clustering analyses (STRUCTURE and DAPC).
 
-## exSituRepresentation
+## exSituRep
 This folder contains the scripts used to run two analyses concerned with the _ex situ_ representation of QUAC/QUBO. 
 These are described below. The functions_exSituRepresentation.R script declares functions used in both of these analyses.
 
