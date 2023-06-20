@@ -41,8 +41,7 @@ It contains 2 folders: one for the scripts used in building reference alignments
 and one for SNP calling ([processLoci](https://github.com/HobanLab/Morton_SSRvSNP_Empirical/tree/main/radseqAnalyses/reference/processLoci)).
 
 ## exSituRep
-This folder contains the scripts used to run two analyses concerned with the _ex situ_ representation of QUAC/QUBO. 
-These are described below. The functions_exSituRepresentation.R script declares functions used in both of these analyses.
+This folder contains the scripts used to run two analyses concerned with the _ex situ_ representation of QUAC/QUBO, described below.
 
 ### exSituRepresentation
 The scripts in this folder measure how well garden samples represent the allelic diversity of wild populations, in different contexts. 
@@ -63,7 +62,7 @@ thresholds of required wild allelic diversity. This folder also contains a scrip
 ## popAnalysis
 This folder contains R scripts used for analyzing QUAC/QUBO populations using different approaches common in 
 population genetic analyses. Scripts in here are used to calculate statistical measures (Fst, heterozygosity, allelic richness)
-and run clustering analyses (STRUCTURE and DAPC). Note that the Fst calculates are separated from the He and Ar calculations.
+and run clustering analyses (STRUCTURE and DAPC). Note that the Fst calculations are separated from the He and Ar calculations.
 
 ### STRUCTURE
 This folder contains the script used to create STRUCTURE plots (one for the project in general, ane one for the manuscript).
