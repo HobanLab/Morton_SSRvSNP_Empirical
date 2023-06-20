@@ -12,16 +12,15 @@ library(parallel)
 
 # ---- REPRESENTATION FUNCTIONS ----
 # Function for reporting representation rates, using a vector of allele frequencies and a sample matrix.
-# This function assumes that the freqVector represents the absolute allele frequencies
+# This function assumes that freqVector represents the absolute allele frequencies
 # for the population of interest (typically, the entire wild population). Allele names 
-# between the frequency vector and the sample matrix must correspond in order for values to be comparable. 
-# First, the length of matches between garden alleles and wild alleles of a given category 
-# is calculated (numerator). Then, the number of wild alleles of that category (denominator) 
-# is calculated. From these 2 values, a percentage is calculated. This function returns (for each
-# allele category) the number of alleles seen in garden samples (numerators), the number of 
-# alleles seen in wild samples (denominators),and the proportion of the two (representation rates) in a matrix.
+# between the frequency vector and the sample matrix must match! 
+# 1. The length of matches between garden and wild alleles is calculated (numerator). 
+# 2. The number of wild alleles of that category (denominator) is calculated. 
+# 3. From these 2 values, a percentage is calculated. 
+# This function returns the numerators, denominators, and the proportion (representation rates) in a matrix.
 getAlleleCategories <- function(freqVector, sampleMat){
-  # Determine how many total alleles in the sample matrix are found in the frequency vector 
+  # Determine how many Total alleles in the sample matrix are found in the frequency vector 
   garden.total_Alleles <- length(which(names(freqVector) %in% colnames(sampleMat)))
   wild.total_Alleles <- length(freqVector)
   total_Percentage <- (garden.total_Alleles/wild.total_Alleles)*100
@@ -53,12 +52,10 @@ getAlleleCategories <- function(freqVector, sampleMat){
   return(exSituValues)
 }
 
-# This function is a wrapper of getAlleleCategories, and takes as an argument a single genind object
-# (containing both garden and wild samples to analyze). It processes that genind object to extract the
-# objects it needs to calculate ex situ representation: a vector of wild allele frequencies, and a 
-# sample matrix of garden samples. Missing alleles (those with allele frequencies or colSums of 0) 
-# are removed from the wild allele frequency vector and the garden sample matrix, prior to 
-# ex situ representation rates being calculated.
+# Wrapper of getAlleleCategories: processes a genind object (containing wild and garden samples) 
+# to extract  a vector of wild allele frequencies and a matrix of garden samples, and then calculate
+# ex situ representation. Missing alleles (those with allele frequencies/colSums of 0) 
+# are removed (from frequency vector and the sample matrix), prior to representation rates being calculated.
 exSitu_Rep <- function(gen.obj){
   # Generate numerical vectors corresponding to garden and wild rows
   garden.Rows <- which(gen.obj@pop == "garden")
