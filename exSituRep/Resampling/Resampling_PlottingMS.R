@@ -22,7 +22,7 @@ SSRvSNP.wd <- "/home/akoontz/Documents/SSRvSNP/Code/"
 setwd(SSRvSNP.wd)
 source("exSituRep/functions_exSituRepresentation.R")
 # Specify path to the directory (on the lab server), where resampling arrays are held
-resamplingDataDir <- paste0(SSRvSNP.wd, "exSituRepresentation/Resampling/resamplingData/")
+resamplingDataDir <- paste0(SSRvSNP.wd, "exSituRep/Resampling/resamplingData/")
 # Specify path to the directory (on the lab server), where resampling plots (PDFs) will be saved
 imageOutDir <- "/home/akoontz/Documents/SSRvSNP/Documentation/Images/MolEcol_202305_Images/"
 # Plotting colors (for all plots!)
