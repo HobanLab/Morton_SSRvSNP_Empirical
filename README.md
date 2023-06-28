@@ -28,8 +28,8 @@ representation analyses. Assemblies and loci derived from reference alignments w
 
 ### denovo
 This contains the scripts and parameter files used to explore the parameter space of a Stacks 
-_de novo_ assembly. It contains 2 folders: one for parameter optimization ([paramOpt](https://github.com/HobanLab/Morton_SSRvSNP_Empirical/tree/main/radseqAnalyses/denovo/paramOpt)), 
-and one for SNP calling ([finalAssemblies](https://github.com/HobanLab/Morton_SSRvSNP_Empirical/tree/main/radseqAnalyses/denovo/finalAssemblies)).
+_de novo_ assembly. It contains 2 folders: one for parameter optimization ([paramOpt](https://github.com/HobanLab/Morton_SSRvSNP_Empirical/tree/main/radAnalyses/denovo/paramOpt)), 
+and one for SNP calling ([finalAssemblies](https://github.com/HobanLab/Morton_SSRvSNP_Empirical/tree/main/radAnalyses/denovo/finalAssemblies)).
 
 ### filtering_QC
 This folder contains various scripts used to clean the raw NextRAD data (generated from the
@@ -37,8 +37,8 @@ sequencing company SNPsaurus). It also includes the FastQC scripts used to asses
 
 ### reference
 This folder contains the scripts used to download and index reference genomes, build reference alignments, and call SNPs from those alignments. 
-It contains 2 folders: one for the scripts used in building reference alignments ([refAlign](https://github.com/HobanLab/Morton_SSRvSNP_Empirical/tree/main/radseqAnalyses/reference/refAlignment)), 
-and one for SNP calling ([processLoci](https://github.com/HobanLab/Morton_SSRvSNP_Empirical/tree/main/radseqAnalyses/reference/processLoci)).
+It contains 2 folders: one for the scripts used in building reference alignments ([refAlign](https://github.com/HobanLab/Morton_SSRvSNP_Empirical/tree/main/radAnalyses/reference/refAlignment)), 
+and one for SNP calling ([processLoci](https://github.com/HobanLab/Morton_SSRvSNP_Empirical/tree/main/radAnalyses/reference/processLoci)).
 
 ## exSituRep
 This folder contains the scripts used to run two analyses concerned with the _ex situ_ representation of QUAC/QUBO, described below.
