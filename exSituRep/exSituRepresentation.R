@@ -42,7 +42,7 @@ levels(QUAC.MSAT.genind@pop)[grep(pattern = "QAc-W-", levels(QUAC.MSAT.genind@po
   rep("wild", length(grep(pattern = "QAc-W-", levels(QUAC.MSAT.genind@pop))))
 # Report representation of wild alleles in gardens
 exSitu_Rep(QUAC.MSAT.genind)
-# Exploration of total and wild allele frequency proportions
+# Exploration of total and wild allele frequency proportions.
 getWildAlleleFreqProportions(QUAC.MSAT.genind)
 getTotalAlleleFreqProportions(QUAC.MSAT.genind)
 
