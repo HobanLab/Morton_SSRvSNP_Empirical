@@ -11,10 +11,9 @@ library(adegenet)
 library(parallel)
 
 # ---- REPRESENTATION FUNCTIONS ----
-# Function for reporting representation rates, using a vector of allele frequencies and a sample matrix.
-# This function assumes that freqVector represents the absolute allele frequencies
-# for the population of interest (typically, the entire wild population). Allele names 
-# between the frequency vector and the sample matrix must match! 
+## Function for reporting representation rates, using a vector of allele frequencies and a sample matrix.
+# Assumes that freqVector represents the absolute allele frequencies for the population of interest 
+# (typically, entire wild population). Allele names between frequency vector and sample matrix must match! 
 # 1. The length of matches between garden and wild alleles is calculated (numerator). 
 # 2. The complete number of wild alleles of that category (denominator) is calculated. 
 # 3. From these 2 values, a percentage is calculated. 
