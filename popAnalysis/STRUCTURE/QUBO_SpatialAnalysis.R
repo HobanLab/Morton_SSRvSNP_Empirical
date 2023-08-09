@@ -52,7 +52,7 @@ QUBO.Qmat <- read.CLUMPP(QUBO.SNP.DN.clumppDir, sampleNames = QUBO.sampleNames, 
 # Filepath for csv, which contains lat/long values for Subset SNP samples.
 # Sample order matches that of Q matrix (samples grouped by population). Columns 4 and 5 contain relevant values
 QUBO.sampleLocations.filepath <- 
-  "/home/akoontz/Documents/SSRvSNP/Code/popAnalyses/STRUCTURE/QUBO.SNP.Wild.Subset_sampleLocations.csv"
+  "/home/akoontz/Documents/SSRvSNP/Code/popAnalysis/STRUCTURE/QUBO.SNP.Wild.Subset_sampleLocations.csv"
 QUBO.sampleLocations <- read.csv2(QUBO.sampleLocations.filepath,sep=",")[,4:5]
 # Combine lat/long values with Q.mat
 QUBO.Qmat <- as.data.frame(cbind(QUBO.sampleLocations,QUBO.Qmat))
