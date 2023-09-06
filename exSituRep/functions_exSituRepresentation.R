@@ -143,14 +143,21 @@ resample_meanValues <- function(resamplingArray){
   # Declare a matrix to receive average values
   meanValue_mat <- matrix(nrow=nrow(resamplingArray), ncol=ncol(resamplingArray))
   # For each column in the array, average results across replicates (3rd array dimension)
-  meanValue_mat[,1] <- apply(resamplingArray[,1,], 1, mean, na.rm=TRUE)
-  meanValue_mat[,2] <- apply(resamplingArray[,2,], 1, mean, na.rm=TRUE)
-  meanValue_mat[,3] <- apply(resamplingArray[,3,], 1, mean, na.rm=TRUE)
-  meanValue_mat[,4] <- apply(resamplingArray[,4,], 1, mean, na.rm=TRUE)
-  meanValue_mat[,5] <- apply(resamplingArray[,5,], 1, mean, na.rm=TRUE)
+  for(i in 1:ncol(resamplingArray)){
+    meanValue_mat[,i] <- apply(resamplingArray[,i,], 1, mean, na.rm=TRUE)
+  }
   # Give names to meanValue_mat columns, and return
   colnames(meanValue_mat) <- c("Total","Very common","Common","Low frequency","Rare")
   return(meanValue_mat)
+}
+
+# From resampling array, calculate the 95% quantile (across replicates) for just the Total allele frequency category
+resample_quantiles <- function(resamplingArray, CI){
+  # Calculate the quantiles (across number of samples, or rows) from the array, and return
+  # CI argument specifies the interval used to calculate quantiles
+  # Since we're only interested in Total allelic representation, subset columns to just the 1st
+  quantiles_95 <- apply(resamplingArray[,1,], 1, quantile, CI)
+  return(quantiles_95)
 }
 
 # From resampling array, plot the results of the resampling analysis and save to a PDF file
