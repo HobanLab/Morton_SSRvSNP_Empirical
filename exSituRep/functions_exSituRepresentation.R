@@ -97,6 +97,11 @@ exSitu_Sample <- function(wildMat, numSamples){
 
 # Wrapper of exSitu_Sample: iterates that function over the entire sample matrix
 exSitu_Resample <- function(gen.obj){
+  # Check that populations in the genind object are properly formatted (need to be either "garden" or "wild")
+  if(!("wild" %in% levels(pop(gen.obj)))){
+      stop("Error: Samples in gen.obj must belong to populations that are named either 'garden'
+         or 'wild'. Please reformat the genind object such that only these population names are used.")
+  }
   # Create a matrix of wild individuals (those with population "wild") from genind object
   wildMat <- gen.obj@tab[which(pop(gen.obj) == "wild"),]
   # Apply the exSitu_Sample function to all rows of the wild matrix
@@ -110,6 +115,11 @@ exSitu_Resample <- function(gen.obj){
 # Wrapper of exSitu_Resample: runs resampling in parallel over a specified cluster. Results
 # are saved to a specified file path.
 exSitu_Resample_Parallel <- function(gen.obj, cluster, reps, arrayFilepath="~/resamplingArray.Rdata"){
+  # Check that populations in the genind object are properly formatted (need to be either "garden" or "wild")
+  if(!("wild" %in% levels(pop(gen.obj)))){
+    stop("Error: Samples in gen.obj must belong to populations that are named either 'garden'
+         or 'wild'. Please reformat the genind object such that only these population names are used.")
+  }
   # Run resampling in parallel, capturing results to an array
   resamplingArray <- 
     parSapply(cluster, 1:reps, function(a) exSitu_Resample(gen.obj = gen.obj), simplify = "array")
