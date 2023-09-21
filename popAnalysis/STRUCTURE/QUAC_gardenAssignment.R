@@ -173,7 +173,7 @@ QUAC.popNames <- as.character(factor(read.table(QUAC.popMap, header=FALSE)[,2]))
 # %%% MSAT ----
 # Variable file path: directory containing all CLUMPPs output to read in
 QUAC.MSAT.clumppDir <- 
-  "/RAID1/IMLS_GCCO/Analysis/STRUCTURE/MSAT/QUAC/Subset_GardenAndWild_NoK/Output/CLUMPAK/Output/mainPipeline/QUAC.MSAT.Subset.GW.NoK_K2-7/"
+  "/RAID1/IMLS_GCCO/Analysis/STRUCTURE/MSAT/QUAC/Subset_GardenAndWild_NoK/Output/CLUMPAK/Output/mainPipeline/QUAC.MSAT.GW.Subset_K2-7/"
 
 # All Ks (K=2-7) ----
 Plot_AllK(clumppPath = QUAC.MSAT.clumppDir, Ks=2:7, Colors = QUAC.colors, tickMarks = QUAC.tickMarks_AllKs,
@@ -200,7 +200,7 @@ text(x=QUAC.labelPositions_K4, y=-0.07, srt=35, adj=1, xpd=TRUE, labels=QUAC.lab
 # ---- DE NOVO ----
 # Variable file path: directory containing all CLUMPPs output to read in
 QUAC.SNP.DN.clumppDir <- 
-  "/RAID1/IMLS_GCCO/Analysis/STRUCTURE/denovo_finalAssemblies/QUAC/Subset/GardenAndWild_NoK/Output/CLUMPAK/Output/mainPipeline/QUAC.DNFA.Subset.GW.NoK_K2-7/"
+  "/RAID1/IMLS_GCCO/Analysis/STRUCTURE/denovo_finalAssemblies/QUAC/Subset/GardenAndWild_NoK/Output/CLUMPAK/Output/mainPipeline/QUAC_DNFA_R80_NOMAF_1SNP_Subset_GardenAndWild_K2-7/"
 
 # All Ks (K=2-7) ----
 Plot_AllK(clumppPath = QUAC.SNP.DN.clumppDir, Ks=2:7, Colors = QUAC.colors, tickMarks = QUAC.tickMarks_AllKs, 
@@ -227,7 +227,7 @@ text(x=QUAC.labelPositions_K4, y=-0.07, srt=35, adj=1, xpd=TRUE, labels=QUAC.lab
 # For QUAC Reference analyses, Stacks populations module was run using 5,000 randomly selected "whitelisted" loci,
 # in order to ease STRUCTURE computations
 QUAC.SNP.REF.clumppDir <- 
-  "/RAID1/IMLS_GCCO/Analysis/STRUCTURE/reference_filteredReads/QUAC/Subset/GardenAndWild_NoK_WL/Output/CLUMPAK/Output/mainPipeline/QUAC.REF.Subset.GW.NoK.WL_K2-7/"
+  "/RAID1/IMLS_GCCO/Analysis/STRUCTURE/reference_filteredReads/QUAC/Subset/GardenAndWild_NoK_WL/Output/CLUMPAK/Output/mainPipeline/QUAC_REF_R80_NOMAF_1SNP_Subset_GardenAndWild_K2-7/"
 
 # All Ks (K=2-7) ----
 Plot_AllK(clumppPath = QUAC.SNP.REF.clumppDir, Ks=2:7, Colors = QUAC.colors, tickMarks = QUAC.tickMarks_AllKs,

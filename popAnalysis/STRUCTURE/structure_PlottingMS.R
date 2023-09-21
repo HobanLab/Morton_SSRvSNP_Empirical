@@ -10,8 +10,8 @@
 # Some notes on the file inputs for generating these plots:
 # 1. For each K value, the CLUMPAK output file read in by these functions is in the folder
 # "CLUMPP.files/ClumppIndFile.output" (unless only Major clusters wish to be plotted--in which
-# case, the majorClust flag is switched on, and the fiels in "/MajorCluster/CLUMPP.files/ClumppIndFile.output")
-# is used.
+# case, the majorClust flag is switched on, and the files in "/MajorCluster/CLUMPP.files/ClumppIndFile.output")
+# are used.
 # 2. CLUMPAK outputs locate results in folders named for each K value, with the format
 # "K=2", "K=3", etc. Because the "=" symbol is difficult to deal with in BASH (similar to "/"),
 # these folders have been manually renamed "K2", "K3", etc., for every CLUMPAK output folder.
@@ -151,12 +151,14 @@ Plot_AllK <- function(clumppPath, Ks, Colors, sampleNames, popNames,
 
 # %%%% VARIABLES %%%% ----
 # Specify path to the directory (on the lab server), where STRUCTURE plots (PDFs) will be saved
-imageOutDir <- "/home/akoontz/Documents/SSRvSNP/Documentation/Images/MolEcol_202305_Images/"
+imageOutDir <- "/home/akoontz/Documents/SSRvSNP/Documentation/Images/EvolApp_2023_Images/"
 
 # %%%% PLOTTING VARIABLES ----
 # QUAC ----
 # Colors for different clusters: combinations of RGB components in hexadecimal
 QUAC.colors <- c('#A8FFFD','#B862D3', '#A39D9D','#FFFF00', '#69C261', '#FF59AC', '#26CDCD', '#C1C6FF')
+# Flag for whether or not to plot Major clusters (versus Summary clusters)
+majClustFlag <- TRUE
 
 # WILD ONLY
 # Population labels
@@ -215,59 +217,58 @@ QUBO.tickMarks_SingleK <- c(2.5, 10.9, 21.7, 31.3, 39.7, 74.5, 99.7, 106.9)
 # WILD ONLY
 # Variable file path: directory containing all MSAT CLUMPP outputs to read in
 QUAC.MSAT.clumppDir <- 
-  "/RAID1/IMLS_GCCO/Analysis/STRUCTURE/MSAT/QUAC/Subset_Wild_NoK/output/CLUMPAK/Output/mainPipeline/QUAC.MSAT.Subset.Wild.NoK_K2-7/"
+  "/RAID1/IMLS_GCCO/Analysis/STRUCTURE/MSAT/QUAC/Subset_Wild_NoK/output/CLUMPAK/Output/mainPipeline/QUAC.MSAT.Wild.Subset_K2-7/"
 # Variable file path: directory containing all SNP De novo CLUMPP outputs to read in
 QUAC.SNP.DN.clumppDir <- 
-  "/RAID1/IMLS_GCCO/Analysis/STRUCTURE/denovo_finalAssemblies/QUAC/Subset/Wild_NoK/output/CLUMPAK/Output/mainPipeline/QUAC.DNFA.Subset.Wild.NoK_K2-7/"
+  "/RAID1/IMLS_GCCO/Analysis/STRUCTURE/denovo_finalAssemblies/QUAC/Subset/Wild_NoK/output/CLUMPAK/Output/mainPipeline/QUAC_DNFA_R80_NOMAF_1SNP_Subset_Wild_NoK/"
 # Variable file path: directory containing all SNP Reference CLUMPP outputs to read in
 QUAC.SNP.REF.clumppDir <- 
-  "/RAID1/IMLS_GCCO/Analysis/STRUCTURE/reference_filteredReads/QUAC/Subset/Wild_NoK_WL/output/CLUMPAK/Output/mainPipeline/QUAC.Subset.Wild.NoK.WL_K2-7/"
+  "/RAID1/IMLS_GCCO/Analysis/STRUCTURE/reference_filteredReads/QUAC/Subset/Wild_NoK_WL/output/CLUMPAK/Output/mainPipeline/QUAC_REF_R80_NOMAF_1SNP_Subset_Wild_NoK_WL_K2-7/"
 
 # GARDEN AND WILD
 # Variable file path: directory containing all MSAT CLUMPP outputs to read in
 QUAC.G.MSAT.clumppDir <- 
-  "/RAID1/IMLS_GCCO/Analysis/STRUCTURE/MSAT/QUAC/Subset_GardenAndWild_NoK/Output/CLUMPAK/Output/mainPipeline/QUAC.MSAT.Subset.GW.NoK_K2-7/"
+  "/RAID1/IMLS_GCCO/Analysis/STRUCTURE/MSAT/QUAC/Subset_GardenAndWild_NoK/Output/CLUMPAK/Output/mainPipeline/QUAC.MSAT.GW.Subset_K2-7/"
 # Variable file path: directory containing all SNP De novo CLUMPP outputs to read in
 QUAC.G.SNP.DN.clumppDir <- 
-  "/RAID1/IMLS_GCCO/Analysis/STRUCTURE/denovo_finalAssemblies/QUAC/Subset/GardenAndWild_NoK/Output/CLUMPAK/Output/mainPipeline/QUAC.DNFA.Subset.GW.NoK_K2-7/"
+  "/RAID1/IMLS_GCCO/Analysis/STRUCTURE/denovo_finalAssemblies/QUAC/Subset/GardenAndWild_NoK/Output/CLUMPAK/Output/mainPipeline/QUAC_DNFA_R80_NOMAF_1SNP_Subset_GardenAndWild_K2-7/"
 # Variable file path: directory containing all SNP Reference CLUMPP outputs to read in
 QUAC.G.SNP.REF.clumppDir <- 
-  "/RAID1/IMLS_GCCO/Analysis/STRUCTURE/reference_filteredReads/QUAC/Subset/GardenAndWild_NoK_WL/Output/CLUMPAK/Output/mainPipeline/QUAC.REF.Subset.GW.NoK.WL_K2-7/"
+  "/RAID1/IMLS_GCCO/Analysis/STRUCTURE/reference_filteredReads/QUAC/Subset/GardenAndWild_NoK_WL/Output/CLUMPAK/Output/mainPipeline/QUAC_REF_R80_NOMAF_1SNP_Subset_GardenAndWild_K2-7/"
 
 # QUBO ----
 # Variable file path: directory containing all MSAT CLUMPP outputs to read in
 QUBO.MSAT.clumppDir <- 
-  "/RAID1/IMLS_GCCO/Analysis/STRUCTURE/MSAT/QUBO/Subset_Wild_Ordered2/output/CLUMPAK/Output/mainPipeline/QUBO.MSAT.W.Subset.Ordered2_K2-7/"
+  "/RAID1/IMLS_GCCO/Analysis/STRUCTURE/MSAT/QUBO/Subset_Wild_Ordered2/output/CLUMPAK/Output/mainPipeline/QUBO.MSAT.Wild_Subset_K2-7/"
 # Variable file path: directory containing all SNP De novo CLUMPP outputs to read in
 QUBO.SNP.DN.clumppDir <- 
-  "/RAID1/IMLS_GCCO/Analysis/STRUCTURE/denovo_finalAssemblies/QUBO/Subset/Wild_Ordered2/output/CLUMPAK/Output/mainPipeline/QUBO_SNP_DN_mainPipeline/"
+  "/RAID1/IMLS_GCCO/Analysis/STRUCTURE/denovo_finalAssemblies/QUBO/Subset/Wild_Ordered2/output/CLUMPAK/Output/mainPipeline/QUBO_DNFA_R80_NOMAF_1SNP_Wild_Ordered2_K2-7/"
 # Variable file path: directory containing all SNP Reference CLUMPP outputs to read in
 QUBO.SNP.REF.clumppDir <- 
-  "/RAID1/IMLS_GCCO/Analysis/STRUCTURE/denovo_finalAssemblies/QUBO/Subset/Wild_Ordered2/output/CLUMPAK/Output/mainPipeline/QUBO_SNP_DN_mainPipeline/"
-
+  "/RAID1/IMLS_GCCO/Analysis/STRUCTURE/denovo_finalAssemblies/QUBO/Subset/Wild_Ordered2/output/CLUMPAK/Output/mainPipeline/QUBO_DNFA_R80_NOMAF_1SNP_Wild_Ordered2_K2-7/"
 
 # %%%% MAIN TEXT PLOTS %%%% ----
 # 2 plots are generated for the main text: one for QUAC (K=4), and one for QUBO (K=2)
 
 # %%%% QUAC ----
 # Call pdf command, to save plots to disk
-pdf(file = paste0(imageOutDir, "mainText/Fig_4.pdf"), width = 9, height = 7.5)
+pdf(file = paste0(imageOutDir, "mainText/Fig_3.pdf"), width = 9, height = 7.5)
 # Graphing parameters for K=4 across all 3 datasets (MSAT, SNP: De novo, SNP: Reference)
 par(mfrow=c(3,1), mar = c(4.5,3,0.9,3), oma=c(1,0,0.8,0))
 # MSAT
-Plot_K(QUAC.MSAT.clumppDir, K=4, Colors = QUAC.colors, QUAC.sampleNames, QUAC.popNames, majorClust = FALSE)
+Plot_K(QUAC.MSAT.clumppDir, K=4, Colors = QUAC.colors, QUAC.sampleNames, QUAC.popNames, majorClust = majClustFlag)
 # Plot title, tick marks, and group labels
 title(main="QUAC MSAT: K4", line=-2)
 axis(1, at=QUAC.tickMarks_SingleK, labels = FALSE, lwd.ticks = 2, tck=-0.15)
 text(x=QUAC.labelPositions_SingleK, y=-0.063, srt=35, adj=1, xpd=TRUE, labels=QUAC.labelNames, cex=1.3)
 # SNP: DE NOVO 
-Plot_K(QUAC.SNP.DN.clumppDir, K=4, Colors = QUAC.colors, QUAC.sampleNames, QUAC.popNames, majorClust = FALSE)
+Plot_K(QUAC.SNP.DN.clumppDir, K=4, Colors = QUAC.colors, QUAC.sampleNames, QUAC.popNames, majorClust = majClustFlag)
 # Plot title, tick marks, and group labels
 title(main="QUAC SNP, De novo (R80): K4", line=-2)
 axis(1, at=QUAC.tickMarks_SingleK, labels = FALSE, lwd.ticks = 2, tck=-0.15)
 text(x=QUAC.labelPositions_SingleK, y=-0.063, srt=35, adj=1, xpd=TRUE, labels=QUAC.labelNames, cex=1.3)
 # SNP: REFERENCE
-Plot_K(QUAC.SNP.REF.clumppDir, K=4, Colors = QUAC.colors, QUAC.sampleNames, QUAC.popNames, majorClust = FALSE)
+Plot_K(QUAC.SNP.REF.clumppDir, K=4, Colors = QUAC.colors, QUAC.sampleNames, QUAC.popNames, majorClust = majClustFlag)
 # Plot title, tick marks, and group labels
 title(main="QUAC SNP, Reference (R80): K4", line=-2)
 axis(1, at=QUAC.tickMarks_SingleK, labels = FALSE, lwd.ticks = 2, tck=-0.15)
@@ -277,23 +278,23 @@ dev.off()
 
 # %%%% QUBO ----
 # Call pdf command, to save plots to disk
-pdf(file = paste0(imageOutDir, "mainText/Fig_5.pdf"), width = 9, height = 7.5)
+pdf(file = paste0(imageOutDir, "mainText/Fig_4.pdf"), width = 9, height = 7.5)
 # Graphing parameters for K=4 across all 3 datasets (MSAT, SNP: De novo, SNP: Reference)
 par(mfrow=c(3,1), mar = c(4.5,3,0.9,3), oma=c(1,0,0.8,0))
 # MSAT
-Plot_K(QUBO.MSAT.clumppDir, K=2, Colors = QUBO.colors, QUBO.sampleNames, QUBO.popNames, majorClust = FALSE)
+Plot_K(QUBO.MSAT.clumppDir, K=2, Colors = QUBO.colors, QUBO.sampleNames, QUBO.popNames, majorClust = majClustFlag)
 # Plot title, tick marks, and group labels
 title(main="QUBO MSAT: K2", line=-2)
 axis(1, at=QUBO.tickMarks_SingleK, labels = FALSE, lwd.ticks = 2, tck=-0.15)
 text(x=QUBO.labelPositions_SingleK, y=-0.063, srt=35, adj=1, xpd=TRUE, labels=QUBO.labelNames, cex=1.3)
 # SNP: DE NOVO 
-Plot_K(QUBO.SNP.DN.clumppDir, K=2, Colors = QUBO.colors, QUBO.sampleNames, QUBO.popNames, majorClust = FALSE)
+Plot_K(QUBO.SNP.DN.clumppDir, K=2, Colors = QUBO.colors, QUBO.sampleNames, QUBO.popNames, majorClust = majClustFlag)
 # Plot title, tick marks, and group labels
 title(main="QUBO SNP, De novo (R80): K2", line=-2)
 axis(1, at=QUBO.tickMarks_SingleK, labels = FALSE, lwd.ticks = 2, tck=-0.15)
 text(x=QUBO.labelPositions_SingleK, y=-0.063, srt=35, adj=1, xpd=TRUE, labels=QUBO.labelNames, cex=1.3)
 # SNP: REFERENCE
-Plot_K(QUBO.SNP.REF.clumppDir, K=2, Colors = QUBO.colors, QUBO.sampleNames, QUBO.popNames, majorClust = FALSE)
+Plot_K(QUBO.SNP.REF.clumppDir, K=2, Colors = QUBO.colors, QUBO.sampleNames, QUBO.popNames, majorClust = majClustFlag)
 # Plot title, tick marks, and group labels
 title(main="QUBO SNP, Reference (R80): K2", line=-2)
 axis(1, at=QUBO.tickMarks_SingleK, labels = FALSE, lwd.ticks = 2, tck=-0.15)
@@ -314,25 +315,25 @@ layout(mat = matrix(1:18, nrow = 6, ncol = 3))
 par(mar = c(3,1,1.2,0.75) + 0.1, oma = c(2,1,2.5,0), mgp = c(2,1,0))
 # MSAT
 Plot_AllK(clumppPath = QUAC.MSAT.clumppDir, Ks=2:7, Colors = QUAC.colors, popNames = QUAC.popNames, 
-          tickMarks = QUAC.tickMarks_AllKs, parFlag = FALSE, majorClust = FALSE)
+          tickMarks = QUAC.tickMarks_AllKs, parFlag = FALSE, majorClust = majClustFlag)
 # Plot tick marks (along bottom) and add group labels and title
 axis(1, at=QUAC.tickMarks_AllKs, labels = FALSE, lwd.ticks = 2, tck=-0.2)
 text(x=QUAC.labelPositions_AllKs, y=-0.1, srt=35, adj=1, xpd=TRUE, labels=QUAC.labelNames, cex=1)
-mtext("QUAC: MSAT (Subset, Summary)", side=3, line=51, cex=0.8)
+mtext("QUAC: MSAT", side=3, line=46, cex=0.8)
 # SNP: DE NOVO 
 Plot_AllK(clumppPath = QUAC.SNP.DN.clumppDir, Ks=2:7, Colors = QUAC.colors, popNames = QUAC.popNames, 
-          tickMarks = QUAC.tickMarks_AllKs, parFlag = FALSE, majorClust = FALSE)
+          tickMarks = QUAC.tickMarks_AllKs, parFlag = FALSE, majorClust = majClustFlag)
 # Plot tick marks (along bottom) and add group labels and title
 axis(1, at=QUAC.tickMarks_AllKs, labels = FALSE, lwd.ticks = 2, tck=-0.2)
 text(x=QUAC.labelPositions_AllKs, y=-0.1, srt=35, adj=1, xpd=TRUE, labels=QUAC.labelNames, cex=1)
-mtext("QUAC: SNP, De novo (Subset, Summary, R80)", side=3, line=51, cex=0.8)
+mtext("QUAC: SNP, De novo (R80)", side=3, line=46, cex=0.8)
 # SNP: REFERENCE
 Plot_AllK(clumppPath = QUAC.SNP.REF.clumppDir, Ks=2:7, Colors = QUAC.colors, popNames = QUAC.popNames, 
-          tickMarks = QUAC.tickMarks_AllKs, parFlag = FALSE, majorClust = FALSE)
+          tickMarks = QUAC.tickMarks_AllKs, parFlag = FALSE, majorClust = majClustFlag)
 # Plot tick marks (along bottom) and add group labels and title
 axis(1, at=QUAC.tickMarks_AllKs, labels = FALSE, lwd.ticks = 2, tck=-0.2)
 text(x=QUAC.labelPositions_AllKs, y=-0.1, srt=35, adj=1, xpd=TRUE, labels=QUAC.labelNames, cex=1)
-mtext("QUAC: SNP, Reference (Subset, Summary, R80)", side=3, line=51, cex=0.8)
+mtext("QUAC: SNP, Reference (R80)", side=3, line=46, cex=0.8)
 # Turn off plotting device (to save PDF)
 dev.off()
 
@@ -340,23 +341,20 @@ dev.off()
 # Call pdf command, to save plots to disk
 pdf(file = paste0(imageOutDir, "supplement/Fig_S22.pdf"), width = 9, height = 7.5)
 # Graphing parameters for K=4 across all 3 datasets (MSAT, SNP: De novo, SNP: Reference)
-par(mfrow=c(3,1), mar = c(4.5,1,1.1,1), oma=c(1,0,1,0))
+par(mfrow=c(3,1), mar = c(4.5,1,1.1,3), oma=c(1,0,1,3))
 # MSAT
-Plot_K(QUAC.G.MSAT.clumppDir, K=4, Colors = QUAC.colors, QUAC.G.sampleNames, QUAC.G.popNames,
-       majorClust = FALSE)
-title("QUAC MSAT (Garden and Wild): K4", line=-1.5)
+Plot_K(QUAC.G.MSAT.clumppDir, K=4, Colors = QUAC.colors, QUAC.G.sampleNames, QUAC.G.popNames)
+title("QUAC MSAT  (Subset): K4", line=-1.5)
 axis(1, at=QUAC.G.tickMarks_K4, labels = FALSE, lwd.ticks = 2, tck=-0.08)
 text(x=QUAC.G.labelPositions_K4, y=-0.07, srt=35, adj=1, xpd=TRUE, labels=QUAC.G.labelNames, cex=1)
 # SNP: DE NOVO 
-Plot_K(QUAC.G.SNP.DN.clumppDir, K=4, Colors = QUAC.colors, QUAC.G.sampleNames, QUAC.G.popNames, 
-       majorClust = FALSE)
-title("QUAC SNP (Garden and Wild), De novo (R80): K4", line=-1.5)
+Plot_K(QUAC.G.SNP.DN.clumppDir, K=4, Colors = QUAC.colors, QUAC.G.sampleNames, QUAC.G.popNames)
+title("QUAC SNP (Subset), De novo (R80): K4", line=-1.5)
 axis(1, at=QUAC.G.tickMarks_K4, labels = FALSE, lwd.ticks = 2, tck=-0.08)
 text(x=QUAC.G.labelPositions_K4, y=-0.07, srt=35, adj=1, xpd=TRUE, labels=QUAC.G.labelNames, cex=1)
 # SNP: REFERENCE
-Plot_K(QUAC.G.SNP.REF.clumppDir, K=4, Colors = QUAC.colors, QUAC.G.sampleNames, QUAC.G.popNames, 
-       majorClust = FALSE)
-title("QUAC SNP (Garden and Wild), Reference (R80): K4", line=-1.5)
+Plot_K(QUAC.G.SNP.REF.clumppDir, K=4, Colors = QUAC.colors, QUAC.G.sampleNames, QUAC.G.popNames)
+title("QUAC SNP (Subset), Reference (R80): K4", line=-1.5)
 axis(1, at=QUAC.G.tickMarks_K4, labels = FALSE, lwd.ticks = 2, tck=-0.08)
 text(x=QUAC.G.labelPositions_K4, y=-0.07, srt=35, adj=1, xpd=TRUE, labels=QUAC.G.labelNames, cex=1)
 # Turn off plotting device (to save PDF)
@@ -367,27 +365,27 @@ dev.off()
 pdf(file = paste0(imageOutDir, "supplement/Fig_S21.pdf"), width = 9, height = 7.5)
 # Graphing parameters: 6 K values (2-7), 3 datasets (MSAT, SNP: De novo, SNP: Reference)
 layout(mat = matrix(1:18, nrow = 6, ncol = 3))
-par(mar = c(3,1,1,0.75) + 0.1, oma = c(0.5,1,4,0), mgp = c(2,1,0))
+par(mar = c(3,2,1.2,0.75) + 0.1, oma = c(2,2,2.5,0), mgp = c(2,1,0))
 # MSAT
 Plot_AllK(clumppPath = QUBO.MSAT.clumppDir, Ks=2:7, Colors = QUBO.colors, popNames = QUBO.popNames, 
-          tickMarks = QUBO.tickMarks_AllKs, parFlag = FALSE, majorClust = FALSE)
+          tickMarks = QUBO.tickMarks_AllKs, parFlag = FALSE, majorClust = majClustFlag)
 # Plot tick marks (along bottom) and add group labels and title
 axis(1, at=QUBO.tickMarks_AllKs, labels = FALSE, lwd.ticks = 2, tck=-0.16)
 text(x=QUBO.labelPositions_AllKs, y=-0.08, srt=35, adj=1, xpd=TRUE, labels=QUBO.labelNames, cex=1)
-mtext("QUBO: MSAT", side=3, line=51, cex=0.8)
+mtext("QUBO: MSAT", side=3, line=46, cex=0.8)
 # SNP: DE NOVO 
 Plot_AllK(clumppPath = QUBO.SNP.DN.clumppDir, Ks=2:7, Colors = QUBO.colors, popNames = QUBO.popNames, 
-          tickMarks = QUBO.tickMarks_AllKs, parFlag = FALSE, majorClust = FALSE)
+          tickMarks = QUBO.tickMarks_AllKs, parFlag = FALSE, majorClust = majClustFlag)
 # Plot tick marks (along bottom) and add group labels and title
 axis(1, at=QUBO.tickMarks_AllKs, labels = FALSE, lwd.ticks = 2, tck=-0.16)
 text(x=QUBO.labelPositions_AllKs, y=-0.08, srt=35, adj=1, xpd=TRUE, labels=QUBO.labelNames, cex=1)
-mtext("QUBO: SNP, De novo (R80)", side=3, line=51, cex=0.8)
+mtext("QUBO: SNP, De novo (R80)", side=3, line=46, cex=0.8)
 # SNP: REFERENCE
 Plot_AllK(clumppPath = QUBO.SNP.REF.clumppDir, Ks=2:7, Colors = QUBO.colors, popNames = QUBO.popNames, 
-          tickMarks = QUBO.tickMarks_AllKs, parFlag = FALSE, majorClust = FALSE)
+          tickMarks = QUBO.tickMarks_AllKs, parFlag = FALSE, majorClust = majClustFlag)
 # Plot tick marks (along bottom) and add group labels and title
 axis(1, at=QUBO.tickMarks_AllKs, labels = FALSE, lwd.ticks = 2, tck=-0.16)
 text(x=QUBO.labelPositions_AllKs, y=-0.08, srt=35, adj=1, xpd=TRUE, labels=QUBO.labelNames, cex=1)
-mtext("QUBO: SNP, Reference (R80)", side=3, line=51, cex=0.8)
+mtext("QUBO: SNP, Reference (R80)", side=3, line=46, cex=0.8)
 # Turn off plotting device (to save PDF)
 dev.off()
