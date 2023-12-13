@@ -108,7 +108,7 @@ getTotalAlleleFreqProportions(QUAC.SNP.REF.R80.genind)
 # SNP: read in Tissue database names, and rename SNP genind matrix
 # Austin Koontz created this file, and it lives on the Hoban Lab Drive 
 # ("MSATcomparisons_TissueNames:QUAC_NextRAD_TissueDatabaseNames")
-QUAC.SNP.tissueNames_filepath <- paste0(SSRvSNP.wd,"exSituRepresentation/QUAC_SNP_TissueNames.csv")
+QUAC.SNP.tissueNames_filepath <- paste0(SSRvSNP.wd,"exSituRep/QUAC_SNP_TissueNames.csv")
 QUAC.SNP.tissueNames <- unlist(read.csv2(QUAC.SNP.tissueNames_filepath, header = TRUE, sep = ",")[3])
 rownames(QUAC.SNP.DN.R0.genind@tab) <- rownames(QUAC.SNP.REF.R0.genind@tab) <- QUAC.SNP.tissueNames
 rownames(QUAC.SNP.DN.R80.genind@tab) <- rownames(QUAC.SNP.REF.R80.genind@tab) <- QUAC.SNP.tissueNames
