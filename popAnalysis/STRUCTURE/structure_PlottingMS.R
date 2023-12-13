@@ -151,7 +151,7 @@ Plot_AllK <- function(clumppPath, Ks, Colors, sampleNames, popNames,
 
 # %%%% VARIABLES %%%% ----
 # Specify path to the directory (on the lab server), where STRUCTURE plots (PDFs) will be saved
-imageOutDir <- "/home/akoontz/Documents/SSRvSNP/Documentation/Images/EvolApp_2023_Images/"
+imageOutDir <- "/home/akoontz/Documents/SSRvSNP/Documentation/Images/EvolApp_2023_Images/FINAL/"
 
 # %%%% PLOTTING VARIABLES ----
 # QUAC ----
@@ -206,7 +206,7 @@ QUBO.popMap <-
 QUBO.sampleNames <- factor(read.table(QUBO.popMap, header=FALSE)[,1])
 QUBO.popNames <- factor(read.table(QUBO.popMap, header=FALSE)[,2])
 # Label positions (All Ks and K=4)
-QUBO.labelPositions_AllKs <- c(1.1, 6.1, 14.3, 23.2, 31.2, 50, 76.2, 90.6, 97.5)
+QUBO.labelPositions_AllKs <- c(1.1, 6.2, 14.3, 23.2, 31.2, 50, 76.2, 90.6, 97.6)
 QUBO.labelPositions_SingleK <- c(1.3, 7.7, 17.3, 27.5, 36.5, 58.1, 88.1, 104.3, 111.4)
 # Tick mark positions (All Ks and K=4)
 QUBO.tickMarks_AllKs <- c(2.2, 9.5, 19, 27.3, 34.7, 65.2, 87.2, 93.4)
@@ -285,19 +285,19 @@ par(mfrow=c(3,1), mar = c(4.5,3,0.9,3), oma=c(1,0,0.8,0))
 Plot_K(QUBO.MSAT.clumppDir, K=2, Colors = QUBO.colors, QUBO.sampleNames, QUBO.popNames, majorClust = majClustFlag)
 # Plot title, tick marks, and group labels
 title(main="QUBO MSAT: K2", line=-2)
-axis(1, at=QUBO.tickMarks_SingleK, labels = FALSE, lwd.ticks = 2, tck=-0.15)
+axis(1, at=QUBO.tickMarks_SingleK, labels = FALSE, lwd.ticks = 2, tck=-0.11)
 text(x=QUBO.labelPositions_SingleK, y=-0.063, srt=35, adj=1, xpd=TRUE, labels=QUBO.labelNames, cex=1.3)
 # SNP: DE NOVO 
 Plot_K(QUBO.SNP.DN.clumppDir, K=2, Colors = QUBO.colors, QUBO.sampleNames, QUBO.popNames, majorClust = majClustFlag)
 # Plot title, tick marks, and group labels
 title(main="QUBO SNP, De novo (R80): K2", line=-2)
-axis(1, at=QUBO.tickMarks_SingleK, labels = FALSE, lwd.ticks = 2, tck=-0.15)
+axis(1, at=QUBO.tickMarks_SingleK, labels = FALSE, lwd.ticks = 2, tck=-0.11)
 text(x=QUBO.labelPositions_SingleK, y=-0.063, srt=35, adj=1, xpd=TRUE, labels=QUBO.labelNames, cex=1.3)
 # SNP: REFERENCE
 Plot_K(QUBO.SNP.REF.clumppDir, K=2, Colors = QUBO.colors, QUBO.sampleNames, QUBO.popNames, majorClust = majClustFlag)
 # Plot title, tick marks, and group labels
 title(main="QUBO SNP, Reference (R80): K2", line=-2)
-axis(1, at=QUBO.tickMarks_SingleK, labels = FALSE, lwd.ticks = 2, tck=-0.15)
+axis(1, at=QUBO.tickMarks_SingleK, labels = FALSE, lwd.ticks = 2, tck=-0.11)
 text(x=QUBO.labelPositions_SingleK, y=-0.063, srt=35, adj=1, xpd=TRUE, labels=QUBO.labelNames, cex=1.3)
 # Turn off plotting device (to save PDF)
 dev.off()
@@ -309,7 +309,7 @@ dev.off()
 # %%%% QUAC ----
 # All Ks ----
 # Call pdf command, to save plots to disk
-pdf(file = paste0(imageOutDir, "supplement/Fig_S20.pdf"), width = 9, height = 7.5)
+pdf(file = paste0(imageOutDir, "supplement/Fig_S22.pdf"), width = 9, height = 7.5)
 # Graphing parameters: 6 K values (2-7), 3 datasets (MSAT, SNP: De novo, SNP: Reference)
 layout(mat = matrix(1:18, nrow = 6, ncol = 3))
 par(mar = c(3,1,1.2,0.75) + 0.1, oma = c(2,1,2.5,0), mgp = c(2,1,0))
@@ -317,21 +317,21 @@ par(mar = c(3,1,1.2,0.75) + 0.1, oma = c(2,1,2.5,0), mgp = c(2,1,0))
 Plot_AllK(clumppPath = QUAC.MSAT.clumppDir, Ks=2:7, Colors = QUAC.colors, popNames = QUAC.popNames, 
           tickMarks = QUAC.tickMarks_AllKs, parFlag = FALSE, majorClust = majClustFlag)
 # Plot tick marks (along bottom) and add group labels and title
-axis(1, at=QUAC.tickMarks_AllKs, labels = FALSE, lwd.ticks = 2, tck=-0.2)
+axis(1, at=QUAC.tickMarks_AllKs, labels = FALSE, lwd.ticks = 2, tck=-0.15)
 text(x=QUAC.labelPositions_AllKs, y=-0.1, srt=35, adj=1, xpd=TRUE, labels=QUAC.labelNames, cex=1)
 mtext("QUAC: MSAT", side=3, line=46, cex=0.8)
 # SNP: DE NOVO 
 Plot_AllK(clumppPath = QUAC.SNP.DN.clumppDir, Ks=2:7, Colors = QUAC.colors, popNames = QUAC.popNames, 
           tickMarks = QUAC.tickMarks_AllKs, parFlag = FALSE, majorClust = majClustFlag)
 # Plot tick marks (along bottom) and add group labels and title
-axis(1, at=QUAC.tickMarks_AllKs, labels = FALSE, lwd.ticks = 2, tck=-0.2)
+axis(1, at=QUAC.tickMarks_AllKs, labels = FALSE, lwd.ticks = 2, tck=-0.15)
 text(x=QUAC.labelPositions_AllKs, y=-0.1, srt=35, adj=1, xpd=TRUE, labels=QUAC.labelNames, cex=1)
 mtext("QUAC: SNP, De novo (R80)", side=3, line=46, cex=0.8)
 # SNP: REFERENCE
 Plot_AllK(clumppPath = QUAC.SNP.REF.clumppDir, Ks=2:7, Colors = QUAC.colors, popNames = QUAC.popNames, 
           tickMarks = QUAC.tickMarks_AllKs, parFlag = FALSE, majorClust = majClustFlag)
 # Plot tick marks (along bottom) and add group labels and title
-axis(1, at=QUAC.tickMarks_AllKs, labels = FALSE, lwd.ticks = 2, tck=-0.2)
+axis(1, at=QUAC.tickMarks_AllKs, labels = FALSE, lwd.ticks = 2, tck=-0.15)
 text(x=QUAC.labelPositions_AllKs, y=-0.1, srt=35, adj=1, xpd=TRUE, labels=QUAC.labelNames, cex=1)
 mtext("QUAC: SNP, Reference (R80)", side=3, line=46, cex=0.8)
 # Turn off plotting device (to save PDF)
@@ -339,30 +339,30 @@ dev.off()
 
 # QUAC Provenance ----
 # Call pdf command, to save plots to disk
-pdf(file = paste0(imageOutDir, "supplement/Fig_S22.pdf"), width = 9, height = 7.5)
+pdf(file = paste0(imageOutDir, "supplement/Fig_S24.pdf"), width = 9, height = 7.5)
 # Graphing parameters for K=4 across all 3 datasets (MSAT, SNP: De novo, SNP: Reference)
 par(mfrow=c(3,1), mar = c(4.5,1,1.1,3), oma=c(1,0,1,3))
 # MSAT
 Plot_K(QUAC.G.MSAT.clumppDir, K=4, Colors = QUAC.colors, QUAC.G.sampleNames, QUAC.G.popNames)
 title("QUAC MSAT  (Subset): K4", line=-1.5)
-axis(1, at=QUAC.G.tickMarks_K4, labels = FALSE, lwd.ticks = 2, tck=-0.08)
+axis(1, at=QUAC.G.tickMarks_K4, labels = FALSE, lwd.ticks = 2, tck=-0.07)
 text(x=QUAC.G.labelPositions_K4, y=-0.07, srt=35, adj=1, xpd=TRUE, labels=QUAC.G.labelNames, cex=1)
 # SNP: DE NOVO 
 Plot_K(QUAC.G.SNP.DN.clumppDir, K=4, Colors = QUAC.colors, QUAC.G.sampleNames, QUAC.G.popNames)
 title("QUAC SNP (Subset), De novo (R80): K4", line=-1.5)
-axis(1, at=QUAC.G.tickMarks_K4, labels = FALSE, lwd.ticks = 2, tck=-0.08)
+axis(1, at=QUAC.G.tickMarks_K4, labels = FALSE, lwd.ticks = 2, tck=-0.07)
 text(x=QUAC.G.labelPositions_K4, y=-0.07, srt=35, adj=1, xpd=TRUE, labels=QUAC.G.labelNames, cex=1)
 # SNP: REFERENCE
 Plot_K(QUAC.G.SNP.REF.clumppDir, K=4, Colors = QUAC.colors, QUAC.G.sampleNames, QUAC.G.popNames)
 title("QUAC SNP (Subset), Reference (R80): K4", line=-1.5)
-axis(1, at=QUAC.G.tickMarks_K4, labels = FALSE, lwd.ticks = 2, tck=-0.08)
+axis(1, at=QUAC.G.tickMarks_K4, labels = FALSE, lwd.ticks = 2, tck=-0.07)
 text(x=QUAC.G.labelPositions_K4, y=-0.07, srt=35, adj=1, xpd=TRUE, labels=QUAC.G.labelNames, cex=1)
 # Turn off plotting device (to save PDF)
 dev.off()
 
 # %%%% QUBO ----
 # Call pdf command, to save plots to disk
-pdf(file = paste0(imageOutDir, "supplement/Fig_S21.pdf"), width = 9, height = 7.5)
+pdf(file = paste0(imageOutDir, "supplement/Fig_S23.pdf"), width = 9, height = 7.5)
 # Graphing parameters: 6 K values (2-7), 3 datasets (MSAT, SNP: De novo, SNP: Reference)
 layout(mat = matrix(1:18, nrow = 6, ncol = 3))
 par(mar = c(3,2,1.2,0.75) + 0.1, oma = c(2,2,2.5,0), mgp = c(2,1,0))
@@ -370,21 +370,21 @@ par(mar = c(3,2,1.2,0.75) + 0.1, oma = c(2,2,2.5,0), mgp = c(2,1,0))
 Plot_AllK(clumppPath = QUBO.MSAT.clumppDir, Ks=2:7, Colors = QUBO.colors, popNames = QUBO.popNames, 
           tickMarks = QUBO.tickMarks_AllKs, parFlag = FALSE, majorClust = majClustFlag)
 # Plot tick marks (along bottom) and add group labels and title
-axis(1, at=QUBO.tickMarks_AllKs, labels = FALSE, lwd.ticks = 2, tck=-0.16)
+axis(1, at=QUBO.tickMarks_AllKs, labels = FALSE, lwd.ticks = 2, tck=-0.11)
 text(x=QUBO.labelPositions_AllKs, y=-0.08, srt=35, adj=1, xpd=TRUE, labels=QUBO.labelNames, cex=1)
 mtext("QUBO: MSAT", side=3, line=46, cex=0.8)
 # SNP: DE NOVO 
 Plot_AllK(clumppPath = QUBO.SNP.DN.clumppDir, Ks=2:7, Colors = QUBO.colors, popNames = QUBO.popNames, 
           tickMarks = QUBO.tickMarks_AllKs, parFlag = FALSE, majorClust = majClustFlag)
 # Plot tick marks (along bottom) and add group labels and title
-axis(1, at=QUBO.tickMarks_AllKs, labels = FALSE, lwd.ticks = 2, tck=-0.16)
+axis(1, at=QUBO.tickMarks_AllKs, labels = FALSE, lwd.ticks = 2, tck=-0.11)
 text(x=QUBO.labelPositions_AllKs, y=-0.08, srt=35, adj=1, xpd=TRUE, labels=QUBO.labelNames, cex=1)
 mtext("QUBO: SNP, De novo (R80)", side=3, line=46, cex=0.8)
 # SNP: REFERENCE
 Plot_AllK(clumppPath = QUBO.SNP.REF.clumppDir, Ks=2:7, Colors = QUBO.colors, popNames = QUBO.popNames, 
           tickMarks = QUBO.tickMarks_AllKs, parFlag = FALSE, majorClust = majClustFlag)
 # Plot tick marks (along bottom) and add group labels and title
-axis(1, at=QUBO.tickMarks_AllKs, labels = FALSE, lwd.ticks = 2, tck=-0.16)
+axis(1, at=QUBO.tickMarks_AllKs, labels = FALSE, lwd.ticks = 2, tck=-0.11)
 text(x=QUBO.labelPositions_AllKs, y=-0.08, srt=35, adj=1, xpd=TRUE, labels=QUBO.labelNames, cex=1)
 mtext("QUBO: SNP, Reference (R80)", side=3, line=46, cex=0.8)
 # Turn off plotting device (to save PDF)
