@@ -146,7 +146,7 @@ Plot_AllK <- function(clumppPath, Ks, Colors, sampleNames, popNames,
   # Plot specified K values
   clumppList <- list(K2clumpp, K3clumpp, K4clumpp, K5clumpp, K6clumpp, K7clumpp)
   plot_multipleK(kList = clumppList, kValues = Ks, kColors = Colors, tickMarks=tickMarks, 
-                 parFlag=parFlag, popNamesPresent = TRUE)
+                 parFlag=parFlag, popNamesPresent = popNamesPresent)
 }
 
 # %%%% VARIABLES %%%% ----
